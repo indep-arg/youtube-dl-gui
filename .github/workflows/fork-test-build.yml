@@ -15,7 +15,7 @@ concurrency:
 
 jobs:
   build:
-    if: github.repository == 'independent-arg/youtube-dl-gui'
+    if: github.repository == 'indep-arg/youtube-dl-gui'
     strategy:
       fail-fast: false
       matrix:
@@ -126,7 +126,7 @@ jobs:
 
   release:
     needs: build
-    if: github.repository == 'independent-arg/youtube-dl-gui'
+    if: github.repository == 'indep-arg/youtube-dl-gui'
     runs-on: ubuntu-24.04
     permissions:
       contents: write

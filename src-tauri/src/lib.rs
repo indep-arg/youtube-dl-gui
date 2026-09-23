@@ -73,12 +73,10 @@ pub fn run() {
 
       let sentry_client = sentry::init((
         "https://e5ff83f3c84f397db516955ec278c4c6@o762792.ingest.us.sentry.io/4510256640884736",
-        sentry::ClientOptions {
-          traces_sample_rate: 0.05,
-          sample_rate: 0.25,
-          release: sentry::release_name!(),
-          ..sentry::ClientOptions::default()
-        },
+        sentry::ClientOptions::new()
+          .traces_sample_rate(0.05)
+          .sample_rate(0.25)
+          .maybe_release(sentry::release_name!()),
       ));
       handle.manage::<ClientInitGuard>(sentry_client);
 

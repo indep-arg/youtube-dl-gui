@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - integration/all-fixes
+      - integration/all-fixes-23-september
 
 concurrency:
   group: fork-test-build

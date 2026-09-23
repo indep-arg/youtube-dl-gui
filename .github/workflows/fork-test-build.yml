@@ -1,0 +1,166 @@
+name: 'Fork test build'
+
+# Unsigned test builds of integration/all-fixes, published as a pre-release on this fork.
+# Not meant for upstream: the job guard below keeps it from running anywhere else.
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - integration/all-fixes
+
+concurrency:
+  group: fork-test-build
+  cancel-in-progress: true
+
+jobs:
+  build:
+    if: github.repository == 'indep-arg/youtube-dl-gui'
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: 'ubuntu-24.04'
+            bundles: 'appimage,deb'
+          - platform: 'windows-latest'
+            bundles: 'nsis'
+
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+
+      - name: Install dependencies (ubuntu only)
+        if: matrix.platform == 'ubuntu-24.04'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libwebkit2gtk-4.1-dev \
+            build-essential \
+            curl \
+            wget \
+            file \
+            libssl-dev \
+            libgtk-3-dev \
+            libayatana-appindicator3-dev \
+            librsvg2-dev \
+            patchelf \
+            xdg-utils
+
+      - name: Setup node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 24
+          cache: 'npm'
+
+      - name: Install Rust 1.94.1
+        uses: dtolnay/rust-toolchain@3c5f7ea28cd621ae0bf5283f0e981fb97b8a7af9
+        with:
+          toolchain: 1.94.1
+
+      - name: Install cargo-about
+        uses: taiki-e/install-action@0fde6d128a3d980ceac30be8c8b8739abd963b81 # v2
+        with:
+          tool: cargo-about
+
+      - name: Rust cache
+        uses: Swatinem/rust-cache@42dc69e1aa15d09112580998cf2ef0119e2e91ae # v2
+        with:
+          workspaces: './src-tauri -> target'
+
+      - name: Install frontend dependencies
+        run: npm ci
+
+      # Same patched tauri-cli as publish.yml, so the AppImage matches the official format.
+      - name: Install patched tauri-cli (ubuntu only)
+        if: matrix.platform == 'ubuntu-24.04'
+        shell: bash
+        run: |
+          TAURI_SRC="$RUNNER_TEMP/tauri-src"
+          git init -q "$TAURI_SRC"
+          git -C "$TAURI_SRC" fetch -q --depth 1 https://github.com/tauri-apps/tauri b5573c1db2bb6118594b586a6aa51aeb37aa7d84
+          git -C "$TAURI_SRC" checkout -q FETCH_HEAD
+          git -C "$TAURI_SRC" apply "$GITHUB_WORKSPACE/.github/patches/tauri-appimage-diricon.patch"
+          cargo install tauri-cli --path "$TAURI_SRC/crates/tauri-cli" --locked --force
+          echo "TAURI_BUNDLER_NEW_APPIMAGE_FORMAT=true" >> $GITHUB_ENV
+          echo "TAURI_CMD=cargo tauri" >> $GITHUB_ENV
+
+      - name: Use npm tauri-cli (windows only)
+        if: matrix.platform == 'windows-latest'
+        shell: bash
+        run: echo "TAURI_CMD=npx tauri" >> $GITHUB_ENV
+
+      # The updater artifacts need jely2002's signing key, which this fork does not have.
+      - name: Build
+        shell: bash
+        run: |
+          $TAURI_CMD build --bundles ${{ matrix.bundles }} \
+            --config '{"bundle":{"createUpdaterArtifacts":false}}'
+
+      - name: Bundle portable version (windows only)
+        if: matrix.platform == 'windows-latest'
+        shell: pwsh
+        run: |
+          $version = (Get-Content -Raw "package.json" | ConvertFrom-Json).version
+          $layoutRoot = "portable-layout"
+          $exe = Get-ChildItem -Path "src-tauri/target/release" -Filter "*.exe" | Where-Object { $_.Name -notmatch "setup" } | Select-Object -First 1
+          if (-not $exe) { Write-Error "Could not find main exe" }
+          New-Item -ItemType Directory -Path "$layoutRoot/ovd-portable" -Force | Out-Null
+          New-Item -ItemType File -Path "$layoutRoot/ovd-portable/.keep" -Value "Do not remove this file or directory." -Force | Out-Null
+          Copy-Item $exe.FullName -Destination "$layoutRoot/Open.Video.Downloader_$($version)_x64.exe" -Force
+          New-Item -ItemType Directory -Path "dist-release" -Force | Out-Null
+          Compress-Archive -Path "$layoutRoot/*" -DestinationPath "dist-release/Open.Video.Downloader_$($version)_x64-portable.zip" -Force
+
+      - name: Collect bundles
+        shell: bash
+        run: |
+          mkdir -p dist-release
+          find src-tauri/target/release/bundle \( -name '*.AppImage' -o -name '*.deb' -o -name '*-setup.exe' \) \
+            -exec cp {} dist-release/ \;
+          ls -la dist-release
+
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: bundles-${{ matrix.platform }}
+          path: dist-release/*
+          if-no-files-found: error
+
+  release:
+    needs: build
+    if: github.repository == 'indep-arg/youtube-dl-gui'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          path: assets
+          merge-multiple: true
+
+      - name: Publish pre-release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          SHORT_SHA="${GITHUB_SHA::7}"
+          TAG="test-build-${SHORT_SHA}"
+          cat > notes.md << EOF
+          **Unofficial test build** of \`integration/all-fixes\` (${SHORT_SHA}): the latest dependency updates plus fixes that are waiting for review upstream. Please report problems on this fork, not on jely2002/youtube-dl-gui.
+
+          Included:
+          - jely2002/youtube-dl-gui#819 OGG audio downloads fail (PR jely2002/youtube-dl-gui#872)
+          - jely2002/youtube-dl-gui#818 Reverse playlist numbering ignored (PR jely2002/youtube-dl-gui#873)
+          - jely2002/youtube-dl-gui#869, jely2002/youtube-dl-gui#865 Playlist download button hidden (PR jely2002/youtube-dl-gui#874)
+          - jely2002/youtube-dl-gui#840, jely2002/youtube-dl-gui#826 Audio languages greyed out (PR jely2002/youtube-dl-gui#875)
+          - jely2002/youtube-dl-gui#830 AppImage .DirIcon symlink (PR jely2002/youtube-dl-gui#876)
+          - jely2002/youtube-dl-gui#810 Option to skip certificate verification for HTTPS proxies (PR jely2002/youtube-dl-gui#877)
+          - jely2002/youtube-dl-gui#821 Posts with several videos (PR jely2002/youtube-dl-gui#878)
+
+          Notes:
+          - These builds are **not code-signed**. Windows SmartScreen will warn about an unknown publisher (More info → Run anyway).
+          - The app still checks jely2002's releases for updates. When a new official version is published, it will update to it.
+          EOF
+          gh release create "$TAG" assets/* \
+            --prerelease \
+            --target "$GITHUB_SHA" \
+            --title "Test build ${SHORT_SHA} (unofficial)" \
+            --notes-file notes.md

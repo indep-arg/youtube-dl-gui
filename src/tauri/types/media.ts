@@ -127,6 +127,7 @@ export type AuthOverrides = {
 export type NetworkOverrides = {
   enableProxy?: boolean;
   proxy?: string;
+  noCheckCertificates?: boolean;
   impersonate?: string;
   extractorArgs?: string;
 };
@@ -223,11 +224,18 @@ export interface MediaItem {
   playlistId?: string;
   playlistCount?: number;
   playlistIndex?: number;
+  /** See {@link EntryItem.playlistItem}. */
+  playlistItem?: number;
 }
 
 export interface EntryItem {
   index: number;
   videoUrl: string;
+  /**
+   * 1-based item selected with yt-dlp's `-I` when the entry has no URL of its own
+   * (e.g. a post with several videos). `videoUrl` is then shared by all such entries.
+   */
+  playlistItem?: number;
 }
 
 export interface MediaFormat {

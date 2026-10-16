@@ -84,6 +84,8 @@ pub enum TranscodePolicy {
 pub struct DownloadItem {
   pub id: String,
   pub url: String,
+  #[serde(default)]
+  pub playlist_item: Option<u64>,
   pub format: FormatOptions,
   #[serde(default)]
   pub subtitle_inventory: Option<SubtitleInventory>,
@@ -183,6 +185,7 @@ pub struct AuthOverrides {
 pub struct NetworkOverrides {
   pub enable_proxy: Option<bool>,
   pub proxy: Option<String>,
+  pub no_check_certificates: Option<bool>,
   pub impersonate: Option<String>,
   pub extractor_args: Option<String>,
 }

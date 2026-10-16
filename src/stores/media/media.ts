@@ -348,6 +348,7 @@ export const useMediaStore = defineStore('media', () => {
         items: itemsWithoutLeader.map(item => ({
           id: item.id,
           url: item.url,
+          playlistItem: item.playlistItem,
           format: resolvedOptions,
           subtitleInventory: item.subtitleInventory,
           overrides,
@@ -392,7 +393,10 @@ export const useMediaStore = defineStore('media', () => {
     group: Group,
     overrides?: DownloadOverrides,
   ): Record<string, string | undefined> {
-    const reversePlaylistNumbering = overrides?.output?.reversePlaylistNumbering === true;
+    // Overrides only contain values that differ from the global settings, so fall back to them.
+    const reversePlaylistNumbering = overrides?.output?.reversePlaylistNumbering
+      ?? settingsStore.settings.output.reversePlaylistNumbering
+      ?? false;
     const playlistIndex = resolvePlaylistIndex(item.playlistIndex, group.playlistCount, reversePlaylistNumbering);
 
     return {

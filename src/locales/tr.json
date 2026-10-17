@@ -194,10 +194,6 @@
           "title": "Tüm kayıtlar",
           "empty": "Kayıt bulunamadı."
         },
-        "toasts": {
-          "reported": "Hatalar bildirildi.",
-          "error": "Hata bildirilirken sorun oluştu."
-        },
         "skipped": {
           "count": "Atlanan öğeler ({count})",
           "empty": "Filtreler nedeniyle hiçbir öğe atlanmadı.",
@@ -338,7 +334,6 @@
       },
       "error": {
         "errorPrefix": "Hata - {message}",
-        "report": "Rapor",
         "showFull": "Kayıtlara bak",
         "signIn": "Giriş yap",
         "filters": "Filtreleri düzenle"
@@ -794,11 +789,9 @@
       "legendLabel": "Bu uygulamanın sistemle nasıl entegre olacağını yapılandır.",
       "trayEnabled": {
         "label": {
-          "mac": "Menü çubuğu simgesini göster",
           "generic": "Sistem tepsisi simgesini göster"
         },
         "hint": {
-          "mac": "Hızlı erişim için menü çubuğu simgesini gösterir..",
           "generic": "Sistem tepsisinde hızlı erişim için bir simge gösterir.."
         }
       },
@@ -812,12 +805,10 @@
       },
       "autoStartMinimised": {
         "label": {
-          "mac": "Oturum açışında gizli başlat",
           "windows": "Oturum açtığınızda tepsiye simge durumuna küçültülmüş olarak başlatır",
           "generic": "Oturum açışında gizli olarak başlat (önerilmez)"
         },
         "hint": {
-          "mac": "Uygulama oturum açma sırasında başlatıldığında bir pencere açmaz. Uygulamayı açmak için menü çubuğunu veya Dock simgesini kullanın.",
           "windows": "Uygulama oturum açıldığında pencere açmadan sistem tepsisinde başlayacaktır.",
           "generic": "Uygulama oturum açma sırasında başlatıldığında bir pencere açılmayacaktır."
         }

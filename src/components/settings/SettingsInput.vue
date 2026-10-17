@@ -45,36 +45,18 @@
       <div class="flex flex-col justify-end" :class="{ 'opacity-70': settings.input.globalShortcuts === false }">
         <p class="label">
           {{ t('settings.input.globalShortcuts.add_hint') }}
-          <template v-if="isMac">
-            <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
-            <kbd class="kbd">ctrl</kbd>+<kbd class="kbd">shift</kbd>+<kbd class="kbd">V</kbd>
-          </template>
-          <template v-else>
-            <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
-            <kbd class="kbd">alt</kbd>+<kbd class="kbd">shift</kbd>+<kbd class="kbd">V</kbd>
-          </template>
+          <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
+          <kbd class="kbd">alt</kbd>+<kbd class="kbd">shift</kbd>+<kbd class="kbd">V</kbd>
         </p>
         <p class="label">
           {{ t('settings.input.globalShortcuts.download_hint') }}
-          <template v-if="isMac">
-            <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
-            <kbd class="kbd">ctrl</kbd>+<kbd class="kbd">shift</kbd>+<kbd class="kbd">Enter</kbd>
-          </template>
-          <template v-else>
-            <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
-            <kbd class="kbd">alt</kbd>+<kbd class="kbd">shift</kbd>+<kbd class="kbd">Enter</kbd>
-          </template>
+          <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
+          <kbd class="kbd">alt</kbd>+<kbd class="kbd">shift</kbd>+<kbd class="kbd">Enter</kbd>
         </p>
         <p class="label">
           {{ t('settings.input.globalShortcuts.instant_hint') }}
-          <template v-if="isMac">
-            <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
-            <kbd class="kbd">ctrl</kbd>+<kbd class="kbd">shift</kbd>+<kbd class="kbd">D</kbd>
-          </template>
-          <template v-else>
-            <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
-            <kbd class="kbd">alt</kbd>+<kbd class="kbd">shift</kbd>+<kbd class="kbd">D</kbd>
-          </template>
+          <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
+          <kbd class="kbd">alt</kbd>+<kbd class="kbd">shift</kbd>+<kbd class="kbd">D</kbd>
         </p>
       </div>
     </section>
@@ -85,10 +67,8 @@ import { ArrowRightIcon } from '@heroicons/vue/24/solid';
 import BaseFieldset from '../base/BaseFieldset.vue';
 import { Settings } from '../../tauri/types/config.ts';
 import { useI18n } from 'vue-i18n';
-import { usePlatform } from '../../composables/usePlatform.ts';
 
 const { t } = useI18n();
-const { isMac } = usePlatform();
 const settings = defineModel<Settings>({ required: true });
 </script>
 

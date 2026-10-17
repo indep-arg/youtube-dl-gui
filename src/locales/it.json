@@ -194,10 +194,6 @@
           "title": "Tutti i registri eventi",
           "empty": "Nessun registro eventi."
         },
-        "toasts": {
-          "reported": "È stato segnalato un errore.",
-          "error": "Impossibile segnalare l'errore."
-        },
         "skipped": {
           "count": "Elementi ignorati ({count})",
           "empty": "Nessun elemento è stato escluso dai filtri.",
@@ -338,7 +334,6 @@
       },
       "error": {
         "errorPrefix": "Errore - {message}",
-        "report": "Rapporto",
         "showFull": "Visualizza registro",
         "signIn": "Accedi",
         "filters": "Modifica filtri"
@@ -795,11 +790,9 @@
       "legendLabel": "Configura come l'applicazione si integra con il sistema.",
       "trayEnabled": {
         "label": {
-          "mac": "Visualizza icona nella barra dei menu",
           "generic": "Visualizza icona nella barra di sistema"
         },
         "hint": {
-          "mac": "Visualizza un'icona nella barra dei menu per un accesso rapido.",
           "generic": "Visualizza un'icona nella barra di sistema per un accesso rapido."
         }
       },
@@ -813,12 +806,10 @@
       },
       "autoStartMinimised": {
         "label": {
-          "mac": "Esegui in modo nascosto",
           "windows": "Avvia ridotto nella barra di sistema",
           "generic": "Avvia nascosto (non consigliato)"
         },
         "hint": {
-          "mac": "Quando l’app si avvia, non viene aperta alcuna finestra. Usa l’icona nella barra dei menu o nel Dock per aprirla.",
           "windows": "Quando l’app si avvia all’accesso, viene avviata nella barra di sistema senza aprire una finestra.",
           "generic": "Quando l’app si avvia all’accesso, non viene aperta alcuna finestra."
         }

@@ -194,10 +194,6 @@
           "title": "所有記錄",
           "empty": "找不到記錄。"
         },
-        "toasts": {
-          "reported": "錯誤已回報。",
-          "error": "無法回報錯誤。"
-        },
         "skipped": {
           "count": "已略過項目 ({count})",
           "empty": "沒有任何項目被篩選條件略過。",
@@ -338,7 +334,6 @@
       },
       "error": {
         "errorPrefix": "錯誤 - {message}",
-        "report": "回報",
         "showFull": "查看記錄",
         "signIn": "登入",
         "filters": "編輯篩選條件"
@@ -794,11 +789,9 @@
       "legendLabel": "設定此應用程式與系統的整合方式。",
       "trayEnabled": {
         "label": {
-          "mac": "顯示選單列圖示",
           "generic": "顯示系統匣圖示"
         },
         "hint": {
-          "mac": "顯示選單列圖示以便快速存取。",
           "generic": "在系統匣中顯示圖示以便快速存取。"
         }
       },
@@ -812,12 +805,10 @@
       },
       "autoStartMinimised": {
         "label": {
-          "mac": "登入時隱藏啟動",
           "windows": "登入時最小化至系統匣啟動",
           "generic": "登入時隱藏啟動 (不建議)"
         },
         "hint": {
-          "mac": "登入時啟動應用程式但不開啟視窗。使用選單列或 Dock 圖示開啟。",
           "windows": "登入時啟動後會在系統匣中執行，不會開啟視窗。",
           "generic": "登入時啟動應用程式但不開啟視窗。"
         }

@@ -14,7 +14,6 @@ export function usePlatform() {
   });
 
   const isWindows = computed(() => platform.value === Platform.Windows);
-  const isMac = computed(() => platform.value === Platform.MacOS);
 
-  return { isWindows, isMac, platform };
+  return { isWindows, platform };
 }

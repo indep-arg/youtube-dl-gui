@@ -299,7 +299,6 @@ pub fn setup_close_behaviour(app: &AppHandle<Wry>) {
       return;
     };
 
-    #[cfg(not(target_os = "macos"))]
     {
       use crate::state::config_models::CloseBehavior;
       use crate::SharedConfig;
@@ -325,14 +324,6 @@ pub fn setup_close_behaviour(app: &AppHandle<Wry>) {
             tracing::warn!("Failed to hide window on close: {e}");
           }
         }
-      }
-    }
-
-    #[cfg(target_os = "macos")]
-    {
-      api.prevent_close();
-      if let Err(e) = window_for_events.hide() {
-        tracing::warn!("Failed to hide window on close: {e}");
       }
     }
   });

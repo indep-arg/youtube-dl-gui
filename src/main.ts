@@ -15,14 +15,11 @@ import { updateHandlers } from '../tests/utils/mocks/updateHandlers';
 import { invoke } from '@tauri-apps/api/core';
 import { strongholdHandlers } from '../tests/utils/mocks/strongholdHandlers';
 import { getDefaultLocale, i18n, type Locale } from './i18n';
-import { createSentryPiniaPlugin } from '@sentry/vue';
-import { createSentry } from './sentry.ts';
 import { startWindowWatcher } from './tauri/window.ts';
 import { usePreferencesStore } from './stores/preferences.ts';
 import { useMediaStore } from './stores/media/media.ts';
 
 const pinia = createPinia();
-pinia.use(createSentryPiniaPlugin());
 const app = createApp(App);
 
 if (import.meta.env.DEV) {
@@ -36,8 +33,6 @@ if (import.meta.env.DEV) {
     getStore: (id: string) => (pinia as typeof pinia & { _s: Map<string, unknown> })._s.get(id),
   };
 }
-
-createSentry(app);
 
 if (__E2E__) {
   clearMocks();

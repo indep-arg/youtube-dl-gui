@@ -375,8 +375,8 @@ impl<'a> YtdlpRunner<'a> {
   }
 }
 
-/// Presence-only summary of a yt-dlp invocation, safe to log or send to
-/// Sentry at any log level. Unlike a redaction blacklist, an omission here
+/// Presence-only summary of a yt-dlp invocation, safe to log at any
+/// level. Unlike a redaction blacklist, an omission here
 /// can only under-report metadata — it can never leak a secret value,
 /// because no argument *values* are ever inspected or stored, only whether
 /// certain flags are present.

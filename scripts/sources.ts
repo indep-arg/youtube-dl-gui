@@ -119,24 +119,6 @@ export async function fetchSources(): Promise<ToolSource[]> {
             rename_entry_to: 'yt-dlp.exe',
           },
         },
-        'darwin-x86_64': {
-          url: assetUrl(ytRel, 'yt-dlp_macos.zip'),
-          bundle: {
-            keep_folder: true,
-            folder_name: 'yt-dlp_macos',
-            entry: 'yt-dlp_macos',
-            rename_entry_to: 'yt-dlp',
-          },
-        },
-        'darwin-aarch64': {
-          url: assetUrl(ytRel, 'yt-dlp_macos.zip'),
-          bundle: {
-            keep_folder: true,
-            folder_name: 'yt-dlp_macos',
-            entry: 'yt-dlp_macos',
-            rename_entry_to: 'yt-dlp',
-          },
-        },
       },
     },
     {
@@ -150,8 +132,6 @@ export async function fetchSources(): Promise<ToolSource[]> {
           url: assetUrl(ffBuildsRel, 'ffmpeg-master-latest-winarm64-gpl.zip'),
           entry: 'ffmpeg-master-latest-winarm64-gpl/bin/ffmpeg.exe',
         },
-        'darwin-x86_64': { url: assetUrl(ffRel, 'ffmpeg-darwin-x64') },
-        'darwin-aarch64': { url: assetUrl(ffRel, 'ffmpeg-darwin-arm64') },
       },
     },
     {
@@ -165,8 +145,6 @@ export async function fetchSources(): Promise<ToolSource[]> {
           url: assetUrl(ffBuildsRel, 'ffmpeg-master-latest-winarm64-gpl.zip'),
           entry: 'ffmpeg-master-latest-winarm64-gpl/bin/ffprobe.exe',
         },
-        'darwin-x86_64': { url: assetUrl(ffRel, 'ffprobe-darwin-x64') },
-        'darwin-aarch64': { url: assetUrl(ffRel, 'ffprobe-darwin-arm64') },
       },
     },
     {
@@ -177,8 +155,6 @@ export async function fetchSources(): Promise<ToolSource[]> {
         'linux-aarch64': { entry: 'deno', url: assetUrl(denoRel, 'deno-aarch64-unknown-linux-gnu.zip') },
         'windows-x86_64': { entry: 'deno.exe', url: assetUrl(denoRel, 'deno-x86_64-pc-windows-msvc.zip') },
         'windows-aarch64': { entry: 'deno.exe', url: assetUrl(denoRel, 'deno-aarch64-pc-windows-msvc.zip') },
-        'darwin-x86_64': { entry: 'deno', url: assetUrl(denoRel, 'deno-x86_64-apple-darwin.zip') },
-        'darwin-aarch64': { entry: 'deno', url: assetUrl(denoRel, 'deno-aarch64-apple-darwin.zip') },
       },
     },
     {
@@ -188,7 +164,6 @@ export async function fetchSources(): Promise<ToolSource[]> {
         'linux-x86_64': { entry: 'AtomicParsley', url: assetUrl(apRel, 'AtomicParsleyLinux.zip') },
         'windows-x86_64': { entry: 'AtomicParsley.exe', url: assetUrl(apRel, 'AtomicParsleyWindows.zip') },
         'windows-aarch64': { entry: 'AtomicParsley.exe', url: assetUrl(apRel, 'AtomicParsleyWindows.zip') },
-        'darwin-x86_64': { entry: 'AtomicParsley', url: assetUrl(apRel, 'AtomicParsleyMacOS.zip') },
       },
     },
   ];

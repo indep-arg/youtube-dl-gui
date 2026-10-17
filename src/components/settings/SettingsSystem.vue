@@ -3,10 +3,7 @@
       :legend="t('settings.system.legend')"
       :label="t('settings.system.legendLabel')"
   >
-    <label v-if="isMac" class="font-semibold mt-2" for="trayEnabled">
-      {{ t('settings.system.trayEnabled.label.mac') }}
-    </label>
-    <label v-else class="font-semibold mt-2" for="trayEnabled">
+    <label class="font-semibold mt-2" for="trayEnabled">
       {{ t('settings.system.trayEnabled.label.generic') }}
     </label>
     <input
@@ -15,22 +12,19 @@
         v-model="settings.system.trayEnabled"
         class="toggle toggle-primary"
     />
-    <p class="label" v-if="isMac">{{ t('settings.system.trayEnabled.hint.mac') }}</p>
-    <p class="label" v-else>{{ t('settings.system.trayEnabled.hint.generic') }}</p>
+    <p class="label">{{ t('settings.system.trayEnabled.hint.generic') }}</p>
 
-    <template v-if="!isMac">
-      <label class="font-semibold mt-2" for="minimiseToTray">
-        {{ t('settings.system.minimiseToTray.label') }}
-      </label>
-      <input
-          :disabled="settings.system.trayEnabled === false"
-          id="minimiseToTray"
-          type="checkbox"
-          v-model="minimiseToTray"
-          class="toggle toggle-primary"
-      />
-      <p class="label">{{ t('settings.system.minimiseToTray.hint') }}</p>
-    </template>
+    <label class="font-semibold mt-2" for="minimiseToTray">
+      {{ t('settings.system.minimiseToTray.label') }}
+    </label>
+    <input
+        :disabled="settings.system.trayEnabled === false"
+        id="minimiseToTray"
+        type="checkbox"
+        v-model="minimiseToTray"
+        class="toggle toggle-primary"
+    />
+    <p class="label">{{ t('settings.system.minimiseToTray.hint') }}</p>
     <label class="font-semibold mt-2" for="autoStart">
       {{ t('settings.system.autoStart.label') }}
     </label>
@@ -41,24 +35,17 @@
         class="toggle toggle-primary"
     />
     <p class="label">{{ t('settings.system.autoStart.hint') }}</p>
-    <label v-if="!isMac" class="font-semibold mt-2" for="autoStartMinimised">
+    <label class="font-semibold mt-2" for="autoStartMinimised">
       {{ t('settings.system.autoStartMinimised.label.windows') }}
     </label>
-    <label v-else-if="isMac" class="font-semibold mt-2" for="autoStartMinimised">
-      {{ t('settings.system.autoStartMinimised.label.mac') }}
-    </label>
-    <label v-else class="font-semibold mt-2" for="autoStartMinimised">
-      {{ t('settings.system.autoStartMinimised.label.generic') }}
-    </label>
     <input
-        :disabled="!settings.system.autoStartEnabled || (!isMac && !settings.system.trayEnabled)"
+        :disabled="!settings.system.autoStartEnabled || !settings.system.trayEnabled"
         id="autoStartMinimised"
         type="checkbox"
         v-model="settings.system.autoStartMinimised"
         class="toggle toggle-primary"
     />
-    <p class="label" v-if="isMac">{{ t('settings.system.autoStartMinimised.hint.mac') }}</p>
-    <p class="label" v-else-if="isWindows">{{ t('settings.system.autoStartMinimised.hint.windows') }}</p>
+    <p class="label" v-if="isWindows">{{ t('settings.system.autoStartMinimised.hint.windows') }}</p>
     <p class="label" v-else>{{ t('settings.system.autoStartMinimised.hint.generic') }}</p>  </base-fieldset>
 </template>
 
@@ -70,7 +57,7 @@ import { computed, watch } from 'vue';
 import { usePlatform } from '../../composables/usePlatform.ts';
 
 const { t } = useI18n();
-const { isWindows, isMac } = usePlatform();
+const { isWindows } = usePlatform();
 
 const settings = defineModel<Settings>({ required: true });
 const minimiseToTray = computed<boolean>({
@@ -84,9 +71,7 @@ watch(() => settings.value.system.trayEnabled, (newVal, oldVal) => {
   if (oldVal && !newVal) {
     minimiseToTray.value = false;
   }
-  if (!isMac.value) {
-    settings.value.system.autoStartMinimised = false;
-  }
+  settings.value.system.autoStartMinimised = false;
 });
 
 watch(() => settings.value.system.autoStartEnabled, (newVal, oldVal) => {

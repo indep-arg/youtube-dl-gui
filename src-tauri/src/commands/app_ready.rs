@@ -12,8 +12,4 @@ pub fn app_ready(app: AppHandle, cfg_handle: State<'_, SharedConfig>) {
   }
 
   app.get_webview_window("main").unwrap().show().unwrap();
-  #[cfg(target_os = "macos")]
-  {
-    app.get_webview_window("main").unwrap().set_focus().unwrap();
-  }
 }

@@ -54,11 +54,7 @@ pub fn create_tray(app: &AppHandle) {
     "add_to_queue",
     i18n_handle.t("tray.addToQueue"),
     true,
-    Some(if cfg!(target_os = "macos") {
-      i18n_handle.t("tray.shortcuts.ctrlShiftV")
-    } else {
-      i18n_handle.t("tray.shortcuts.altShiftV")
-    }),
+    Some(i18n_handle.t("tray.shortcuts.altShiftV")),
   ) {
     Ok(i) => i,
     Err(e) => {
@@ -72,11 +68,7 @@ pub fn create_tray(app: &AppHandle) {
     "download",
     i18n_handle.t("tray.downloadQueue"),
     true,
-    Some(if cfg!(target_os = "macos") {
-      i18n_handle.t("tray.shortcuts.ctrlShiftEnter")
-    } else {
-      i18n_handle.t("tray.shortcuts.altShiftEnter")
-    }),
+    Some(i18n_handle.t("tray.shortcuts.altShiftEnter")),
   ) {
     Ok(i) => i,
     Err(e) => {
@@ -90,11 +82,7 @@ pub fn create_tray(app: &AppHandle) {
     "add_and_download",
     i18n_handle.t("tray.addAndDownload"),
     true,
-    Some(if cfg!(target_os = "macos") {
-      i18n_handle.t("tray.shortcuts.ctrlShiftD")
-    } else {
-      i18n_handle.t("tray.shortcuts.altShiftD")
-    }),
+    Some(i18n_handle.t("tray.shortcuts.altShiftD")),
   ) {
     Ok(i) => i,
     Err(e) => {
@@ -122,7 +110,7 @@ pub fn create_tray(app: &AppHandle) {
   let tray = match TrayIconBuilder::new()
     .menu(&menu)
     .icon(app.default_window_icon().unwrap().clone())
-    .show_menu_on_left_click(cfg!(target_os = "macos"))
+    .show_menu_on_left_click(false)
     .on_menu_event(|app, event| match event.id.as_ref() {
       "quit" => app.exit(0),
 

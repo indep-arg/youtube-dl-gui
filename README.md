@@ -9,7 +9,7 @@ It provides an easy-to-use interface around [yt-dlp](https://github.com/yt-dlp/y
 
 ## Features
 
-- **Cross-platform:** works on Windows, macOS and Linux.
+- **Cross-platform:** works on Windows and Linux.
 - **Audio or video downloads:** grab full videos or extract only the audio track.
 - **Subtitles and metadata:** automatically saves available captions and video information.
 - **Quality control:** choose your preferred resolution, frame rate, and output format like MP4 or MKV.
@@ -23,8 +23,10 @@ It provides an easy-to-use interface around [yt-dlp](https://github.com/yt-dlp/y
 
 ## Download
 
-The latest versions for **Windows**, **macOS** and **Linux** are available on the  
-[GitHub Releases page](https://github.com/jely2002/youtube-dl-gui/releases).
+The latest versions for **Windows** and **Linux** are available on the  
+[GitHub Releases page](https://github.com/indep-arg/youtube-dl-gui/releases).
+
+This is an independent fork of [jely2002/youtube-dl-gui](https://github.com/jely2002/youtube-dl-gui). macOS builds are not provided.
 
 Download the installer or archive for your platform and follow the normal installation steps.  
 No command-line setup is required.
@@ -33,33 +35,12 @@ No command-line setup is required.
 | Your Computer                         | Download                                       |
 |---------------------------------------|------------------------------------------------|
 | **Windows**                           | `Open.Video.Downloader_x.x.x_x64-setup.exe`    |
-| **Mac (Intel)**                       | `Open.Video.Downloader_x.x.x_x64.dmg`          |
-| **Mac (Apple Silicon – M1, M2 … M5)** | `Open.Video.Downloader_x.x.x_aarch64.dmg`      |
 | **Linux generic (x64)**               | `Open.Video.Downloader_x.x.x_amd64.AppImage`   |
 | **Linux generic (aarch64)**           | `Open.Video.Downloader_x.x.x_aarch64.AppImage` |
 | **Linux Debian/Ubuntu (x64)**         | `Open.Video.Downloader_x.x.x_amd64.deb`        |
 | **Linux Debian/Ubuntu (aarch64)**     | `Open.Video.Downloader_x.x.x_arm64.deb`        |
 | **Linux Fedora/RHEL (x64)**           | `Open.Video.Downloader_x.x.x-x_amd64.rpm`      |
 | **Linux Fedora/RHEL (aarch64)**       | `Open.Video.Downloader_x.x.x-x_aarch64.rpm`    |
-
-#### Download using the command line
-Open Video Downloader can be downloaded using command line tools like [Homebrew](https://brew.sh/) on Mac or [WinGet](https://github.com/microsoft/winget-cli) on Windows.
-
-```shell
-brew install --cask open-video-downloader
-```
-
-```shell
-winget install -e --id jely2002.youtube-dl-gui
-```
-
-#### Download from the Microsoft Store
-Open Video Downloader is available on the Microsoft Store, although we recommend using the GitHub releases download instead.
-This is due to updates taking longer to arrive and auto-updating yt-dlp is also not supported.
-
-<a href="https://apps.microsoft.com/detail/9p53s4t9znj5?referrer=appbadge&cid=gh-readme&mode=full" target="_blank"  rel="noopener noreferrer">
-	<img src="https://get.microsoft.com/images/en-us%20dark.svg" width="200" alt="OVD download badge for Microsoft Store"/>
-</a>
 
 ## How it works
 

@@ -1,7 +1,7 @@
 use crate::models::download::{DownloadOverrides, FormatOptions};
 use crate::models::payloads::MediaAddWithFormatPayload;
 use crate::models::{MediaAddPayload, MediaFatalPayload, PlaylistEntry};
-use crate::runners::ytdlp_info::{run_ytdlp_info_fetch, YtdlpInfoFetchError};
+use crate::runners::ytdlp_info::run_ytdlp_info_fetch;
 use crate::{
   models::{ParsedMedia, ParsedPlaylist},
   scheduling::concurrency::DynamicSemaphore,
@@ -199,9 +199,6 @@ async fn handle_fetch_entry(
         error = %e,
         "run_ytdlp_info_fetch failed"
       );
-      if should_report_to_sentry(&e) {
-        sentry::capture_error(&e);
-      }
 
       None
     }
@@ -273,13 +270,4 @@ async fn handle_fetch_entry(
       // Do nothing if no parsed result is returned. The events have already been sent.
     }
   }
-}
-
-fn should_report_to_sentry(err: &YtdlpInfoFetchError) -> bool {
-  matches!(
-    err,
-    YtdlpInfoFetchError::InvalidDiagnosticRules(_)
-      | YtdlpInfoFetchError::RunnerFailed(_)
-      | YtdlpInfoFetchError::ParseFailed(_)
-  )
 }

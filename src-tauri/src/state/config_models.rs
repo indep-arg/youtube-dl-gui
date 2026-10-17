@@ -299,34 +299,11 @@ pub struct SystemConfig {
 
 impl Default for SystemConfig {
   fn default() -> Self {
-    #[cfg(target_os = "windows")]
-    {
-      Self {
-        tray_enabled: false,
-        auto_start_enabled: false,
-        auto_start_minimised: false,
-        close_behavior: CloseBehavior::Exit,
-      }
-    }
-
-    #[cfg(target_os = "macos")]
-    {
-      Self {
-        tray_enabled: false,
-        auto_start_enabled: false,
-        auto_start_minimised: false,
-        close_behavior: CloseBehavior::Hide,
-      }
-    }
-
-    #[cfg(target_os = "linux")]
-    {
-      Self {
-        tray_enabled: false,
-        auto_start_enabled: false,
-        auto_start_minimised: false,
-        close_behavior: CloseBehavior::Exit,
-      }
+    Self {
+      tray_enabled: false,
+      auto_start_enabled: false,
+      auto_start_minimised: false,
+      close_behavior: CloseBehavior::Exit,
     }
   }
 }

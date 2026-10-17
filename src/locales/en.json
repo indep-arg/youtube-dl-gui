@@ -198,10 +198,6 @@
         "all": {
           "title": "All logs",
           "empty": "No logs found."
-        },
-        "toasts": {
-          "reported": "Error has been reported.",
-          "error": "Unable to report error."
         }
       }
     },
@@ -338,7 +334,6 @@
       },
       "error": {
         "errorPrefix": "Error - {message}",
-        "report": "Report",
         "showFull": "View logs",
         "signIn": "Sign in",
         "filters": "Edit filters"
@@ -891,11 +886,9 @@
       "legendLabel": "Configure how this application integrates with the system.",
       "trayEnabled": {
         "label": {
-          "mac": "Show menu bar icon",
           "generic": "Show system tray icon"
         },
         "hint": {
-          "mac": "Shows a menu bar icon for quick access.",
           "generic": "Shows an icon in the system tray for quick access."
         }
       },
@@ -909,12 +902,10 @@
       },
       "autoStartMinimised": {
         "label": {
-          "mac": "Start hidden at login",
           "windows": "Start minimized to tray at login",
           "generic": "Start hidden at login (not recommended)"
         },
         "hint": {
-          "mac": "When the app starts at login, it won’t open a window. Use the menu bar or Dock icon to open it.",
           "windows": "When the app starts at login, it will start in the system tray without opening a window.",
           "generic": "When the app starts at login, it won’t open a window."
         }

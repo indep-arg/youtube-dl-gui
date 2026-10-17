@@ -33,7 +33,7 @@
       },
       "csp": {
         "default-src": "'self' asset:",
-        "connect-src": "ipc: http://ipc.localhost https://*.sentry.io",
+        "connect-src": "ipc: http://ipc.localhost",
         "img-src": "'self' asset: http://asset.localhost blob: data: http: https:",
         "style-src": "'self'",
         "font-src": "'self'",
@@ -44,7 +44,7 @@
   "bundle": {
     "active": true,
     "createUpdaterArtifacts": true,
-    "targets": ["nsis", "app", "dmg", "appimage", "deb", "rpm"],
+    "targets": ["nsis", "appimage", "deb", "rpm"],
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",
@@ -54,9 +54,6 @@
     ],
     "resources": {
       "../licenses/3rdpartylicenses.txt": "licenses/3rdpartylicenses.txt"
-    },
-    "macOS": {
-      "signingIdentity": "Developer ID Application"
     },
     "windows": {
       "nsis": {
@@ -79,9 +76,9 @@
   },
   "plugins": {
     "updater": {
-      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDNBRTI0NDIwNzRDQUIzRUMKUldUc3M4cDBJRVRpT21CaVE1VmRZQ3pLSGZKb2F3OGRkM2ZCYXEyYStUQ0UyNnJ0aDBKMXh3eU4K",
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEYwNzI3RDcyMTc2RDNGMjYKUldRbVAyMFhjbjF5OEFWczFVdmVqQUJhbXN0ZC9mN0I3MDJtd2FQUDY5a3RWZmNhRUdzTnVsdzMK",
       "endpoints": [
-        "https://github.com/jely2002/youtube-dl-gui/releases/latest/download/latest.json"
+        "https://github.com/indep-arg/youtube-dl-gui/releases/latest/download/latest.json"
       ],
       "windows": {
         "installMode": "passive"

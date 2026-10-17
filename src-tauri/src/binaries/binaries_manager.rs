@@ -16,9 +16,9 @@ use tauri::{AppHandle, Emitter, Error, Manager, Wry};
 use tokio::fs;
 use tokio::io::AsyncWriteExt;
 
-const MANIFEST_URL: &str = "https://jely2002.github.io/youtube-dl-gui/manifest/manifest.json";
-const MANIFEST_SIG_URL: &str = "https://jely2002.github.io/youtube-dl-gui/manifest/manifest.sig";
-const MANIFEST_PUB_KEY: &str = "ae7988a00d92349e55ff560369e7ec6afdb4b22a7e1dbe62a6769e1f347fa073";
+const MANIFEST_URL: &str = "https://indep-arg.github.io/youtube-dl-gui/manifest/manifest.json";
+const MANIFEST_SIG_URL: &str = "https://indep-arg.github.io/youtube-dl-gui/manifest/manifest.sig";
+const MANIFEST_PUB_KEY: &str = "848e34a863b4c3e5358ec8d338cc065f0b6f025f93edb4fd0a25976b07f26c8e";
 
 type AnyError = Box<dyn std::error::Error + Send + Sync + 'static>;
 
@@ -124,11 +124,7 @@ impl BinariesManager {
   }
 
   fn current_platform() -> String {
-    let os = match std::env::consts::OS {
-      "macos" => "darwin",
-      other => other,
-    };
-    format!("{}-{}", os, std::env::consts::ARCH)
+    format!("{}-{}", std::env::consts::OS, std::env::consts::ARCH)
   }
 
   fn select_file<'a>(

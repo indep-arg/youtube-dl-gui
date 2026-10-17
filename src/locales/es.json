@@ -198,10 +198,6 @@
         "all": {
           "title": "Todos los registros",
           "empty": "No se encontraron registros."
-        },
-        "toasts": {
-          "reported": "Error reportado.",
-          "error": "No se pudo reportar el error."
         }
       }
     },
@@ -338,7 +334,6 @@
       },
       "error": {
         "errorPrefix": "Error - {message}",
-        "report": "Reportar",
         "showFull": "Ver registros (logs)",
         "signIn": "Iniciar sesión",
         "filters": "Editar filtros"
@@ -891,11 +886,9 @@
       "legendLabel": "Configura cómo se integra esta aplicación con el sistema.",
       "trayEnabled": {
         "label": {
-          "mac": "Mostrar ícono en la barra de menús",
           "generic": "Mostrar ícono en la bandeja del sistema"
         },
         "hint": {
-          "mac": "Muestra un ícono en la barra de menús para acceso rápido.",
           "generic": "Muestra un ícono en la bandeja del sistema para acceso rápido."
         }
       },
@@ -909,12 +902,10 @@
       },
       "autoStartMinimised": {
         "label": {
-          "mac": "Iniciar oculto al iniciar sesión",
           "windows": "Iniciar minimizado en la bandeja al iniciar sesión",
           "generic": "Iniciar oculto al iniciar sesión (no recomendado)"
         },
         "hint": {
-          "mac": "Al iniciar sesión, la app no abrirá una ventana. Usa la barra de menú o el icono del Dock para abrirla.",
           "windows": "Al iniciar sesión, la app se ejecutará en la bandeja del sistema sin abrir una ventana.",
           "generic": "Al iniciar sesión, la app se ejecutará de fondo sin abrir una ventana."
         }

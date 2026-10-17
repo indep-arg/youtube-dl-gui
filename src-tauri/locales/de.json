@@ -6,9 +6,6 @@
     "addAndDownload": "Aus Zwischenablage hinzufügen und herunterladen",
     "downloadQueue": "Warteschlange herunterladen",
     "shortcuts": {
-      "ctrlShiftV": "Strg + Umschalt + V",
-      "ctrlShiftD": "Strg + Umschalt + D",
-      "ctrlShiftEnter": "Strg + Umschalt + Eingabe",
       "altShiftV": "Alt + Umschalt + V",
       "altShiftD": "Alt + Umschalt + D",
       "altShiftEnter": "Alt + Umschalt + Eingabe"

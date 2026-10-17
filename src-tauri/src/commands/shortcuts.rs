@@ -4,11 +4,7 @@ use tauri::{AppHandle, Emitter, Manager};
 use tauri_plugin_global_shortcut::{Code, GlobalShortcutExt, Modifiers, Shortcut, ShortcutState};
 
 fn shortcut_mods() -> Modifiers {
-  if cfg!(not(target_os = "macos")) {
-    Modifiers::ALT | Modifiers::SHIFT
-  } else {
-    Modifiers::CONTROL | Modifiers::SHIFT
-  }
+  Modifiers::ALT | Modifiers::SHIFT
 }
 
 pub fn register_shortcuts(app_handle: &AppHandle) {

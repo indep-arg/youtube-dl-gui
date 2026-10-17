@@ -194,10 +194,6 @@
           "title": "Alle logberichten",
           "empty": "Geen logberichten gevonden."
         },
-        "toasts": {
-          "reported": "Foutmelding gerapporteerd.",
-          "error": "De foutmelding kon niet worden gerapporteerd."
-        },
         "skipped": {
           "count": "Overgeslagen items ({count})",
           "empty": "Er zijn geen items door filters overgeslagen.",
@@ -338,7 +334,6 @@
       },
       "error": {
         "errorPrefix": "Fout – {message}",
-        "report": "Rapporteren",
         "showFull": "Bekijk log",
         "signIn": "Inloggen",
         "filters": "Filters bewerken"
@@ -794,11 +789,9 @@
       "legendLabel": "Configureer hoe deze applicatie met het systeem integreert.",
       "trayEnabled": {
         "label": {
-          "mac": "Menubalkpictogram tonen",
           "generic": "Systeemvakpictogram tonen"
         },
         "hint": {
-          "mac": "Toont een pictogram in de menubalk voor snelle toegang.",
           "generic": "Toont een pictogram in het systeemvak voor snelle toegang."
         }
       },
@@ -812,12 +805,10 @@
       },
       "autoStartMinimised": {
         "label": {
-          "mac": "Verborgen starten bij aanmelden",
           "windows": "Geminimaliseerd naar systeemvak starten bij aanmelden",
           "generic": "Verborgen starten bij aanmelden (niet aanbevolen)"
         },
         "hint": {
-          "mac": "Wanneer de app bij het aanmelden start, wordt er geen venster geopend. Gebruik het menubalk- of Dock-pictogram om het te openen.",
           "windows": "Wanneer de app bij het aanmelden start, wordt deze in het systeemvak gestart zonder een venster te openen.",
           "generic": "Wanneer de app bij het aanmelden start, wordt er geen venster geopend."
         }

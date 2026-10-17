@@ -4,7 +4,6 @@ export interface NavigatePayload {
 
 export enum Platform {
   Windows = 'windows',
-  MacOS = 'macos',
   Linux = 'linux',
   Unknown = 'unknown',
 }

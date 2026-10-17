@@ -6,9 +6,6 @@
     "addAndDownload": "Adicionar e baixar da área de transferência",
     "downloadQueue": "Baixar fila",
     "shortcuts": {
-      "ctrlShiftV": "Ctrl + Shift + V",
-      "ctrlShiftD": "Ctrl + Shift + D",
-      "ctrlShiftEnter": "Ctrl + Shift + Enter",
       "altShiftV": "Alt + Shift + V",
       "altShiftD": "Alt + Shift + D",
       "altShiftEnter": "Alt + Shift + Enter"

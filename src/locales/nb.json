@@ -194,10 +194,6 @@
           "title": "Alle logger",
           "empty": "Ingen logger funnet."
         },
-        "toasts": {
-          "reported": "Feil har blitt rapportert.",
-          "error": "Kan ikke rapportere feil."
-        },
         "skipped": {
           "count": "Hoppede over elementer ({count})",
           "empty": "Ingen elementer ble hoppet over av filtrene.",
@@ -338,7 +334,6 @@
       },
       "error": {
         "errorPrefix": "Feil - {message}",
-        "report": "Rapporter",
         "showFull": "Se logger",
         "signIn": "Logg inn",
         "filters": "Rediger filtre"
@@ -794,11 +789,9 @@
       "legendLabel": "Konfigurer hvordan denne applikasjonen integreres med systemet.",
       "trayEnabled": {
         "label": {
-          "mac": "Vis ikon i menylinjen",
           "generic": "Vis ikon i systemstatusfeltet"
         },
         "hint": {
-          "mac": "Viser et ikon i menylinjen for rask tilgang.",
           "generic": "Viser et ikon i systemstatusfeltet for rask tilgang."
         }
       },
@@ -812,12 +805,10 @@
       },
       "autoStartMinimised": {
         "label": {
-          "mac": "Start skjult ved pålogging",
           "windows": "Start minimert til systemstatusfeltet ved pålogging",
           "generic": "Start skjult ved pålogging (ikke anbefalt)"
         },
         "hint": {
-          "mac": "Når appen starter ved pålogging, åpnes ingen vindu. Bruk menylinjen eller Dock-ikonet for å åpne den.",
           "windows": "Når appen starter ved pålogging, starter den i systemstatusfeltet uten å åpne et vindu.",
           "generic": "Når appen starter ved pålogging, åpnes ingen vindu."
         }

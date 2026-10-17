@@ -178,10 +178,6 @@
         "all": {
           "title": "Todos os registos",
           "empty": "Nenhum registo encontrado."
-        },
-        "toasts": {
-          "reported": "O erro foi reportado.",
-          "error": "Não foi possível reportar o erro."
         }
       }
     },
@@ -316,7 +312,6 @@
       },
       "error": {
         "errorPrefix": "Erro - {message}",
-        "report": "Reportar",
         "showFull": "Ver registos",
         "signIn": "Iniciar sessão"
       }
@@ -766,11 +761,9 @@
       "legendLabel": "Configura como esta aplicação se integra no sistema.",
       "trayEnabled": {
         "label": {
-          "mac": "Mostrar ícone na barra de menus",
           "generic": "Mostrar ícone na área de notificação"
         },
         "hint": {
-          "mac": "Mostra um ícone na barra de menus para acesso rápido.",
           "generic": "Mostra um ícone na área de notificação para acesso rápido."
         }
       },
@@ -784,12 +777,10 @@
       },
       "autoStartMinimised": {
         "label": {
-          "mac": "Iniciar oculto ao iniciar sessão",
           "windows": "Iniciar minimizado na área de notificação ao iniciar sessão",
           "generic": "Iniciar oculto ao iniciar sessão (não recomendado)"
         },
         "hint": {
-          "mac": "Quando a aplicação iniciar com a sessão, não abrirá nenhuma janela. Utiliza a barra de menus ou o ícone na Dock para a abrir.",
           "windows": "Quando a aplicação iniciar com a sessão, ficará na área de notificação sem abrir nenhuma janela.",
           "generic": "Quando a aplicação iniciar com a sessão, não abrirá nenhuma janela."
         }

@@ -27,7 +27,6 @@ use crate::state::config::ConfigHandle;
 use crate::state::preferences::PreferencesHandle;
 use crate::tray::{create_tray, TrayState};
 use crate::window::{restore_main_window, setup_close_behaviour, track_main_window};
-use sentry::ClientInitGuard;
 use std::sync::{Arc, Mutex as StdMutex};
 use stronghold::stronghold_state;
 use tauri::{AppHandle, Manager};
@@ -70,17 +69,6 @@ pub fn run() {
     }))
     .setup(|app| {
       let handle = app.handle();
-
-      let sentry_client = sentry::init((
-        "https://e5ff83f3c84f397db516955ec278c4c6@o762792.ingest.us.sentry.io/4510256640884736",
-        sentry::ClientOptions {
-          traces_sample_rate: 0.05,
-          sample_rate: 0.25,
-          release: sentry::release_name!(),
-          ..sentry::ClientOptions::default()
-        },
-      ));
-      handle.manage::<ClientInitGuard>(sentry_client);
 
       init_tracing();
 
@@ -191,20 +179,7 @@ pub fn run() {
     .build(tauri::generate_context!())
     .expect("error while running tauri application");
 
-  app.run(|_app_handle, _event| {
-    #[cfg(target_os = "macos")]
-    {
-      if let tauri::RunEvent::Reopen {
-        has_visible_windows,
-        ..
-      } = _event
-      {
-        if !has_visible_windows {
-          reopen_window(_app_handle);
-        }
-      }
-    }
-  });
+  app.run(|_, _| {});
 }
 
 fn create_main_window(app: &AppHandle, paths: &PathsManager) -> tauri::Result<()> {
@@ -245,16 +220,7 @@ pub fn init_tracing() {
       .with_default(tracing_levels()),
   );
 
-  let sentry_layer = sentry::integrations::tracing::layer().with_filter(
-    Targets::new()
-      .with_target("tauri_plugin_updater", LevelFilter::OFF)
-      .with_default(tracing_levels()),
-  );
-
-  tracing_subscriber::registry()
-    .with(fmt_layer)
-    .with(sentry_layer)
-    .init();
+  tracing_subscriber::registry().with(fmt_layer).init();
 }
 
 pub fn init_autostart(app: &AppHandle) {

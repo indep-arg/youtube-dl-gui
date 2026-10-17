@@ -31,15 +31,6 @@
           v-if="diagnostic.raw"
           v-html="diagnosticDisplay.raw"
       />
-      <button @click="report" v-if="isReportable" :disabled="hasReported" class="btn btn-subtle">
-        <template v-if="isReporting">
-          <span class="sr-only">{{ t('common.loading') }}</span>
-          <span class="loading loading-spinner loading-sm"></span>
-        </template>
-        <template v-else>
-          <span>{{ t('media.steps.error.report') }}</span>
-        </template>
-      </button>
     </div>
   </component>
 </template>
@@ -70,10 +61,6 @@ const hasDetails = computed(() => diagnostic.raw != '');
 
 const {
   diagnosticDisplay,
-  report,
-  isReportable,
-  isReporting,
-  hasReported,
   relatedFatal,
 } = useDiagnostic(ref(diagnostic));
 

@@ -6,9 +6,6 @@
     "addAndDownload": "클립보드에서 추가 및 다운로드",
     "downloadQueue": "대기열 다운로드",
     "shortcuts": {
-      "ctrlShiftV": "Ctrl + Shift + V",
-      "ctrlShiftD": "Ctrl + Shift + D",
-      "ctrlShiftEnter": "Ctrl + Shift + Enter",
       "altShiftV": "Alt + Shift + V",
       "altShiftD": "Alt + Shift + D",
       "altShiftEnter": "Alt + Shift + Enter"

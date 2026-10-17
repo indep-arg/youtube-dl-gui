@@ -6,9 +6,6 @@
     "addAndDownload": "Aggiungi e scarica dagli appunti",
     "downloadQueue": "Scarica coda",
     "shortcuts": {
-      "ctrlShiftV": "Ctrl + Shift + V",
-      "ctrlShiftD": "Ctrl + Shift + D",
-      "ctrlShiftEnter": "Ctrl + Shift + Invio",
       "altShiftV": "Alt + Shift + V",
       "altShiftD": "Alt + Shift + D",
       "altShiftEnter": "Alt + Shift + Invio"

@@ -194,10 +194,6 @@
           "title": "Todos os registros",
           "empty": "Nenhum registro encontrado."
         },
-        "toasts": {
-          "reported": "Foi relatado um erro.",
-          "error": "Não foi possível relatar o erro."
-        },
         "skipped": {
           "count": "Itens ignorados ({count})",
           "empty": "Nenhum item foi ignorado pelos filtros.",
@@ -338,7 +334,6 @@
       },
       "error": {
         "errorPrefix": "Erro - {message}",
-        "report": "Relatar",
         "showFull": "Ver logs",
         "signIn": "Entrar",
         "filters": "Editar filtros"
@@ -794,11 +789,9 @@
       "legendLabel": "Configure como este aplicativo se integra ao sistema.",
       "trayEnabled": {
         "label": {
-          "mac": "Mostrar ícone na barra de menus",
           "generic": "Mostrar ícone na bandeja do sistema"
         },
         "hint": {
-          "mac": "Mostra um ícone na barra de menus para acesso rápido.",
           "generic": "Mostra um ícone na bandeja do sistema para acesso rápido."
         }
       },
@@ -812,12 +805,10 @@
       },
       "autoStartMinimised": {
         "label": {
-          "mac": "Iniciar oculto ao entrar",
           "windows": "Iniciar minimizado na bandeja ao entrar",
           "generic": "Iniciar oculto ao entrar (não recomendado)"
         },
         "hint": {
-          "mac": "Quando o aplicativo inicia ao entrar, nenhuma janela é aberta. Use o ícone da barra de menus ou do Dock para abri-lo.",
           "windows": "Quando o aplicativo inicia ao entrar, ele é iniciado na bandeja do sistema sem abrir uma janela.",
           "generic": "Quando o aplicativo inicia ao entrar, nenhuma janela é aberta."
         }

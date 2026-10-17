@@ -17,15 +17,6 @@
     </base-progress>
     <p class="min-h-0 overflow-y-auto break-words leading-5">{{ diagnosticDisplay.message }}</p>
     <div class="w-full flex shrink-0 gap-4">
-      <button @click="report" v-if="isReportable" :disabled="hasReported" class="btn btn-subtle">
-        <template v-if="isReporting">
-          <span class="sr-only">{{ t('common.loading') }}</span>
-          <span class="loading loading-spinner loading-sm"></span>
-        </template>
-        <template v-else>
-          <span>{{ t('media.steps.error.report') }}</span>
-        </template>
-      </button>
       <router-link :to="{ name: 'group.logs', params: { groupId: group.id } }" class="btn btn-subtle">{{ t('media.steps.error.showFull') }}</router-link>
       <router-link v-if="errorAction" :to="errorAction.to" class="btn btn-subtle">{{ errorAction.label }}</router-link>
     </div>
@@ -94,7 +85,7 @@ const error = computed(() => {
   return diagnostic;
 });
 
-const { diagnosticDisplay, report, isReportable, isReporting, hasReported } = useDiagnostic(error, true);
+const { diagnosticDisplay } = useDiagnostic(error, true);
 const errorAction = computed(() => {
   if (error.value.code.includes('signIn')) {
     return {

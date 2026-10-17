@@ -38,10 +38,10 @@ arc-swap = "1.9.2"
 tokio = { version = "1.53", features = ["full"] }
 reqwest = { version = "0.13", features = ["json"] }
 sha2 = "0.11"
-ed25519-dalek = { version = "2", features = ["std"] }
-base64 = "0.22.1"
+ed25519-dalek = "3.0"
+base64 = "0.23"
 hex = "0.4"
-zip = "8.1.0"
+zip = "9.0"
 tar = "0.4"
 bzip2 = "0.6.1"
 tauri-plugin-keyring = "0.1.0"

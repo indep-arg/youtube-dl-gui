@@ -143,7 +143,7 @@ pub async fn extract_zip(
     for i in 0..zip.len() {
       let e = zip.by_index(i)?;
       if e.is_file() {
-        files.push((i, e.name().to_string()));
+        files.push((i, e.name()?.to_string()));
       }
     }
     let available = EntriesDisplay(files.iter().map(|(_, n)| n.clone()).collect());
@@ -167,11 +167,12 @@ pub async fn extract_zip(
 
     let mut e = zip.by_index(chosen_index)?;
     let base = {
-      let b = zip_basename(e.name());
+      let name = e.name()?;
+      let b = zip_basename(&name);
       if b.is_empty() {
-        tool_name.as_str()
+        tool_name.clone()
       } else {
-        b
+        b.to_string()
       }
     };
 
@@ -294,9 +295,9 @@ pub async fn extract_zip_bundle(
 
     for i in 0..zip.len() {
       let mut e = zip.by_index(i)?;
-      let entry_name = e.name();
+      let entry_name = e.name()?;
 
-      let rel_path = Path::new(entry_name);
+      let rel_path = Path::new(&*entry_name);
       let out_path = safe_join(&temp_root, rel_path)?;
 
       if e.is_dir() {

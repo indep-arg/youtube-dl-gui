@@ -30,6 +30,9 @@ on:
       - '*.config.*'
       - 'tsconfig.*'
 
+  # Also called by publish.yml, so a release only builds once the same checks pass.
+  workflow_call:
+
 permissions:
   contents: read
 
@@ -37,6 +40,7 @@ jobs:
   lint:
     name: 'Lint'
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -52,9 +56,13 @@ jobs:
           npm ci
           npm run lint
 
+      - name: Check the version
+        run: npm run version:check
+
   unit-tests:
     name: 'Unit Tests'
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     env:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
     steps:
@@ -84,6 +92,7 @@ jobs:
   e2e-tests:
     name: 'E2E Tests'
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     container:
       image: mcr.microsoft.com/playwright:v1.64.1-noble
       options: --ipc=host --shm-size=1g
@@ -119,6 +128,7 @@ jobs:
   build:
     name: 'Build'
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1

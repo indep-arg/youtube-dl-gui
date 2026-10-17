@@ -14,6 +14,9 @@ on:
       - '.github/actions/install-tauri-deps/**'
       - 'src-tauri/**'
 
+  # Also called by publish.yml, so a release only builds once the same checks pass.
+  workflow_call:
+
 permissions:
   contents: read
 
@@ -21,6 +24,7 @@ jobs:
   lint:
     name: 'Lint'
     runs-on: ubuntu-latest
+    timeout-minutes: 40
     env:
       CARGO_TERM_COLOR: always
       TAURI_SKIP_UPDATE_CHECK: 1
@@ -66,7 +70,7 @@ jobs:
           components: clippy,rustfmt
 
       - name: Run clippy
-        run: cargo clippy --manifest-path=src-tauri/Cargo.toml --all-features --all-targets -- -D warnings
+        run: cargo clippy --manifest-path=src-tauri/Cargo.toml --all-features --all-targets --locked -- -D warnings
 
       - name: Run cargo fmt
         run: cargo fmt --manifest-path=src-tauri/Cargo.toml --all -- --check
@@ -74,6 +78,7 @@ jobs:
   unit-tests:
     name: 'Unit Tests'
     runs-on: ubuntu-latest
+    timeout-minutes: 40
     env:
       CARGO_TERM_COLOR: always
       TAURI_SKIP_UPDATE_CHECK: 1
@@ -125,7 +130,7 @@ jobs:
       - name: Generate Rust coverage
         run: |
           mkdir -p coverage/rust
-          cargo llvm-cov --manifest-path=src-tauri/Cargo.toml --lcov --output-path=coverage/rust/lcov.info --remap-path-prefix --all-features --all-targets
+          cargo llvm-cov --manifest-path=src-tauri/Cargo.toml --lcov --output-path=coverage/rust/lcov.info --remap-path-prefix --all-features --all-targets --locked
 
       - name: Upload Rust coverage to Codecov
         if: ${{ env.CODECOV_TOKEN != '' }}
@@ -135,3 +140,58 @@ jobs:
           flags: rust-units
           token: ${{ env.CODECOV_TOKEN }}
           fail_ci_if_error: true
+
+  # The Windows builds are published too, so they get checked as well.
+  windows:
+    name: 'Windows'
+    runs-on: windows-latest
+    timeout-minutes: 60
+    env:
+      CARGO_TERM_COLOR: always
+      TAURI_SKIP_UPDATE_CHECK: 1
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up Node.js for isolation build
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Build isolation frontend
+        run: |
+          npm ci
+          npm run build:isolation
+
+      - name: Set up Rust toolchain (1.99.1 + Clippy)
+        uses: dtolnay/rust-toolchain@683b588c487a69d01f6c6ddf40f036ff682cc2c8 # rust-toolchain action
+        with:
+          toolchain: 1.99.1
+          components: clippy
+
+      - name: Rust cache
+        uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+        with:
+          workspaces: './src-tauri -> target'
+
+      - name: Run clippy
+        run: cargo clippy --manifest-path=src-tauri/Cargo.toml --all-features --all-targets --locked -- -D warnings
+
+      - name: Run tests
+        run: cargo test --manifest-path=src-tauri/Cargo.toml --all-features --all-targets --locked
+
+      - name: Build
+        run: cargo build --manifest-path=src-tauri/Cargo.toml --locked
+
+      # The build embeds the icon and the version information in the .exe; if it
+      # went missing it would only show as a blank icon on someone's desktop.
+      - name: Check the embedded version information
+        shell: pwsh
+        run: |
+          $info = (Get-Item src-tauri/target/debug/open-video-downloader.exe).VersionInfo
+          if ($info.ProductName -ne 'Open Video Downloader') {
+            Write-Error "The .exe has no version resource (ProductName: '$($info.ProductName)')"
+            exit 1
+          }
+          "ProductName: $($info.ProductName), FileVersion: $($info.FileVersion)"

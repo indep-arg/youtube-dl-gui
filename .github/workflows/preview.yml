@@ -1,0 +1,126 @@
+name: 'Preview build'
+
+# Unsigned installers for trying a change before releasing it: run it from the
+# Actions tab ("Run workflow", on any branch). Nothing is published; the builds
+# are attached to the run as artifacts, kept for 14 days.
+#
+# Updater artifacts are turned off because they need the release signing key.
+# A preview build still points at the official update feed, so once a newer
+# release exists the app offers to update to it.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: 'ubuntu-24.04'
+            bundles: 'appimage,deb'
+          - platform: 'windows-latest'
+            bundles: 'nsis'
+
+    runs-on: ${{ matrix.platform }}
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install system dependencies (ubuntu only)
+        if: matrix.platform == 'ubuntu-24.04'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libwebkit2gtk-4.1-dev \
+            build-essential \
+            curl \
+            wget \
+            file \
+            libssl-dev \
+            libgtk-3-dev \
+            libayatana-appindicator3-dev \
+            librsvg2-dev \
+            patchelf \
+            xdg-utils
+
+      - name: Setup node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          cache: 'npm'
+
+      - name: Install Rust 1.99.1
+        uses: dtolnay/rust-toolchain@683b588c487a69d01f6c6ddf40f036ff682cc2c8 # rust-toolchain action
+        with:
+          toolchain: 1.99.1
+
+      - name: Install cargo-about
+        uses: taiki-e/install-action@8cca0918f8471c33515202b73f56ab27f2bed283 # v2.87.29
+        with:
+          tool: cargo-about
+
+      - name: Rust cache
+        uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+        with:
+          workspaces: './src-tauri -> target'
+
+      - name: Install frontend dependencies
+        run: npm ci
+
+      # Same patched tauri-cli as publish.yml, so the AppImage matches the official format.
+      - name: Install patched tauri-cli (ubuntu only)
+        if: matrix.platform == 'ubuntu-24.04'
+        shell: bash
+        run: |
+          TAURI_SRC="$RUNNER_TEMP/tauri-src"
+          git init -q "$TAURI_SRC"
+          git -C "$TAURI_SRC" fetch -q --depth 1 https://github.com/tauri-apps/tauri b5573c1db2bb6118594b586a6aa51aeb37aa7d84
+          git -C "$TAURI_SRC" checkout -q FETCH_HEAD
+          git -C "$TAURI_SRC" apply "$GITHUB_WORKSPACE/.github/patches/tauri-appimage-diricon.patch"
+          cargo install tauri-cli --path "$TAURI_SRC/crates/tauri-cli" --locked --force
+          echo "TAURI_BUNDLER_NEW_APPIMAGE_FORMAT=true" >> $GITHUB_ENV
+          echo "TAURI_CMD=cargo tauri" >> $GITHUB_ENV
+
+      - name: Use npm tauri-cli (windows only)
+        if: matrix.platform == 'windows-latest'
+        shell: bash
+        run: echo "TAURI_CMD=npx tauri" >> $GITHUB_ENV
+
+      - name: Build
+        shell: bash
+        run: |
+          $TAURI_CMD build --bundles ${{ matrix.bundles }} \
+            --config '{"bundle":{"createUpdaterArtifacts":false}}'
+
+      - name: Bundle portable version (windows only)
+        if: matrix.platform == 'windows-latest'
+        shell: pwsh
+        run: |
+          $version = (Get-Content -Raw "package.json" | ConvertFrom-Json).version
+          $layoutRoot = "portable-layout"
+          $exe = Get-ChildItem -Path "src-tauri/target/release" -Filter "*.exe" | Where-Object { $_.Name -notmatch "setup" } | Select-Object -First 1
+          if (-not $exe) { Write-Error "Could not find main exe" }
+          New-Item -ItemType Directory -Path "$layoutRoot/ovd-portable" -Force | Out-Null
+          New-Item -ItemType File -Path "$layoutRoot/ovd-portable/.keep" -Value "Do not remove this file or directory." -Force | Out-Null
+          Copy-Item $exe.FullName -Destination "$layoutRoot/Open.Video.Downloader_$($version)_x64.exe" -Force
+          New-Item -ItemType Directory -Path "dist-release" -Force | Out-Null
+          Compress-Archive -Path "$layoutRoot/*" -DestinationPath "dist-release/Open.Video.Downloader_$($version)_x64-portable.zip" -Force
+
+      - name: Collect bundles
+        shell: bash
+        run: |
+          mkdir -p dist-release
+          find src-tauri/target/release/bundle \( -name '*.AppImage' -o -name '*.deb' -o -name '*-setup.exe' \) \
+            -exec cp {} dist-release/ \;
+          ls -la dist-release
+
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: preview-${{ matrix.platform }}-${{ github.sha }}
+          path: dist-release/*
+          retention-days: 14
+          if-no-files-found: error

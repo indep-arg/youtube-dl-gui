@@ -9,7 +9,7 @@
 Open Video Downloader is a simple, cross-platform desktop application that lets you download videos, audio, subtitles and metadata from hundreds of supported websites, not just YouTube.  
 It provides an easy-to-use interface around [yt-dlp](https://github.com/yt-dlp/yt-dlp) so you don’t have to touch the command line.
 
-<p align="center">
+<p align="left">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="./docs/images/queue-dark.png">
     <img src="./docs/images/queue-light.png" alt="Videos waiting in the queue, ready to download" width="560">

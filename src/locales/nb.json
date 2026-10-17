@@ -277,6 +277,7 @@
           "duration": "Varighet: {duration}",
           "size": "Størrelse: ",
           "sizeInfo": "Mengden data som vil bli lastet ned.\nIkke den endelige filstørrelsen.",
+          "live": "Live stream: it is recorded until it ends.",
           "items": "Elementer: {amount} {details}",
           "failedCount": "({amount} mislyktes)",
           "skippedCount": "({amount} hoppet over)",
@@ -292,6 +293,7 @@
         "progress": "Laster ned {category}… — {percentage}%",
         "progressList": "Laster ned… {percentage}% — {done} av {total}",
         "indeterminate": "{status}…",
+        "recording": "Recording live stream…",
         "category": {
           "video": "video",
           "audio": "lyd",
@@ -350,7 +352,8 @@
       "toasts": {
         "retry": "Prøver nedlasting på nytt.",
         "retryError": "Kunne ikke prøve nedlasting på nytt."
-      }
+      },
+      "live": "LIVE"
     }
   },
   "subtitles": {
@@ -683,6 +686,10 @@
       "splitChapters": {
         "label": "Split chapters into files:",
         "hint": "Save each chapter as a separate file, next to the full video."
+      },
+      "liveFromStart": {
+        "label": "Record live streams from the start:",
+        "hint": "For live streams that are still going on: download them from the beginning instead of from now. Some sites support it, like YouTube."
       },
       "addMetadata": {
         "label": "Legg til tittel- og artistinformasjon:",

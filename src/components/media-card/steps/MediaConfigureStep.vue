@@ -29,29 +29,34 @@
         :track-type="selectedTrackType"
         class="flex gap-4 w-full col-start-1 col-end-3"
     />
-    <p class="flex items-center">
-      {{ t('media.steps.configure.metadata.duration', { duration: useDuration(group).value }) }}
+    <p v-if="group.isLive" class="flex items-center col-span-2">
+      {{ t('media.steps.configure.metadata.live') }}
     </p>
-    <p v-if="!group.isCombined" class="gap-1 flex items-center">
-      {{ t('media.steps.configure.metadata.size') }}
-      <template v-if="size">
-        <span v-if="size">{{ size }}</span>
-        <div class="tooltip tooltip-bottom" :data-tip="t('media.steps.configure.metadata.sizeInfo')">
-          <information-circle-icon class="h-5 w-5 hover:opacity-60 transition-opacity"/>
-        </div>
-      </template>
-      <button
-        v-else-if="!settingsStore.settings.performance.autoLoadSize && !isSizeLoading"
-        class="btn btn-soft btn-xs"
-        @click="loadSize"
-      >
-        {{ t('common.load') }}
-      </button>
-      <span v-else class="loading loading-spinner loading-xs"></span>
-    </p>
-    <p v-else class="flex items-center">
-      {{ t('media.steps.configure.metadata.items', { amount: group.total, details: itemOutcomeDisplay }) }}
-    </p>
+    <template v-else>
+      <p class="flex items-center">
+        {{ t('media.steps.configure.metadata.duration', { duration: useDuration(group).value }) }}
+      </p>
+      <p v-if="!group.isCombined" class="gap-1 flex items-center">
+        {{ t('media.steps.configure.metadata.size') }}
+        <template v-if="size">
+          <span v-if="size">{{ size }}</span>
+          <div class="tooltip tooltip-bottom" :data-tip="t('media.steps.configure.metadata.sizeInfo')">
+            <information-circle-icon class="h-5 w-5 hover:opacity-60 transition-opacity"/>
+          </div>
+        </template>
+        <button
+          v-else-if="!settingsStore.settings.performance.autoLoadSize && !isSizeLoading"
+          class="btn btn-soft btn-xs"
+          @click="loadSize"
+        >
+          {{ t('common.load') }}
+        </button>
+        <span v-else class="loading loading-spinner loading-xs"></span>
+      </p>
+      <p v-else class="flex items-center">
+        {{ t('media.steps.configure.metadata.items', { amount: group.total, details: itemOutcomeDisplay }) }}
+      </p>
+    </template>
   </div>
 </template>
 
@@ -199,6 +204,7 @@ watch(selectedOptions, () => {
     : undefined;
   if (
     !group?.isCombined
+    && !group?.isLive
     && settingsStore.settings.performance.autoLoadSize
     && selectedOptions.value
     && (!existingSize || existingSize.size == null)

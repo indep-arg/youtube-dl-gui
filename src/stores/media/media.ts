@@ -349,6 +349,7 @@ export const useMediaStore = defineStore('media', () => {
           id: item.id,
           url: item.url,
           playlistItem: item.playlistItem,
+          isLive: item.isLive ?? false,
           format: resolvedOptions,
           subtitleInventory: item.subtitleInventory,
           overrides,

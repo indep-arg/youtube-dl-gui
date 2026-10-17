@@ -1,6 +1,6 @@
 use crate::models::download::{DownloadOverrides, FormatOptions};
 use crate::models::payloads::MediaAddWithFormatPayload;
-use crate::models::{MediaAddPayload, MediaFatalPayload, PlaylistEntry};
+use crate::models::{MediaAddPayload, PlaylistEntry};
 use crate::runners::ytdlp_info::run_ytdlp_info_fetch;
 use crate::{
   models::{ParsedMedia, ParsedPlaylist},
@@ -249,21 +249,6 @@ async fn handle_fetch_entry(
           item: pl,
         };
         let _ = app.emit("media_add", payload);
-      }
-    }
-    Some(ParsedMedia::Livestream(_)) => {
-      let payload =
-        MediaFatalPayload::internal(group_id.clone(), id, "Livestreams unsupported".into(), None);
-      let _ = app.emit("media_fatal", payload);
-      let mut counters = GROUP_COUNTERS.lock().unwrap();
-      if let Some(cnt) = counters.get_mut(&group_id) {
-        *cnt -= 1;
-        if *cnt == 0 {
-          counters.remove(&group_id);
-          let _ = tx.send(DispatchRequest::Cleanup {
-            group_id: group_id.clone(),
-          });
-        }
       }
     }
     None => {

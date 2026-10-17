@@ -277,6 +277,7 @@
           "duration": "재생 시간: {duration}",
           "size": "크기: ",
           "sizeInfo": "다운로드될 데이터의 양입니다.\n최종 파일 크기가 아닙니다.",
+          "live": "Live stream: it is recorded until it ends.",
           "items": "항목: {amount}개 {details}",
           "failedCount": "(실패 {amount}개)",
           "skippedCount": "(건너뜀 {amount}개)",
@@ -292,6 +293,7 @@
         "progress": "{category} 다운로드 중… — {percentage}%",
         "progressList": "다운로드 중… {percentage}% — {total}개 중 {done}개",
         "indeterminate": "{status}…",
+        "recording": "Recording live stream…",
         "category": {
           "video": "영상",
           "audio": "오디오",
@@ -350,7 +352,8 @@
       "toasts": {
         "retry": "다운로드를 재시도합니다.",
         "retryError": "다운로드를 재시도할 수 없습니다."
-      }
+      },
+      "live": "LIVE"
     }
   },
   "subtitles": {
@@ -683,6 +686,10 @@
       "splitChapters": {
         "label": "Split chapters into files:",
         "hint": "Save each chapter as a separate file, next to the full video."
+      },
+      "liveFromStart": {
+        "label": "Record live streams from the start:",
+        "hint": "For live streams that are still going on: download them from the beginning instead of from now. Some sites support it, like YouTube."
       },
       "addMetadata": {
         "label": "제목 및 아티스트 정보 추가:",

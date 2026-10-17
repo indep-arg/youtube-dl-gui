@@ -35,4 +35,5 @@ export type Group = {
   playlistUploaderId?: string;
   fromShortcut?: boolean;
   skipPlaylistSelection?: boolean;
+  isLive?: boolean;
 };

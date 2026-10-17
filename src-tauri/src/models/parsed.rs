@@ -6,7 +6,6 @@ use serde::{Deserialize, Serialize};
 pub enum ParsedMedia {
   Single(ParsedSingleVideo),
   Playlist(ParsedPlaylist),
-  Livestream(ParsedLivestream),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -81,6 +80,9 @@ pub struct ParsedSingleVideo {
   pub subtitle_inventory: SubtitleInventory,
   pub chapters: Vec<Chapter>,
   pub filesize: Option<u64>,
+  /// A live stream that is still going on; it has no final size or duration.
+  #[serde(default)]
+  pub is_live: bool,
   /// See [`PlaylistEntry::playlist_item`].
   #[serde(default, skip_serializing_if = "Option::is_none")]
   pub playlist_item: Option<u64>,
@@ -109,13 +111,4 @@ pub struct PlaylistEntry {
   /// (e.g. a post with several videos), in which case `video_url` is the playlist URL.
   #[serde(default, skip_serializing_if = "Option::is_none")]
   pub playlist_item: Option<u64>,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct ParsedLivestream {
-  pub id: String,
-  pub url: Option<String>,
-  pub title: Option<String>,
-  pub uploader: Option<String>,
 }

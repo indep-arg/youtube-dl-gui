@@ -1,6 +1,9 @@
 <template>
   <article class="card card-side w-full max-w-175 h-48 bg-base-300 p-4 shadow-md" :class="[statusOutline]">
-    <figure class="shrink-0 w-64 aspect-video rounded-md overflow-hidden bg-base-100">
+    <figure class="relative shrink-0 w-64 aspect-video rounded-md overflow-hidden bg-base-100">
+      <span v-if="group.isLive" class="badge badge-error badge-sm absolute top-2 left-2 font-semibold">
+        {{ t('media.card.live') }}
+      </span>
       <img
           :src="group.thumbnail ?? placeholderUrl"
           :alt="t('media.view.thumbnailAlt', { title: group.title ?? '' })"

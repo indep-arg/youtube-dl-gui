@@ -1,19 +1,16 @@
 use crate::models::{ParsedMedia, YtdlpInfo};
-use crate::parsers::ytdlp_livestream::parse_livestream;
 use crate::parsers::ytdlp_playlist::parse_playlist;
 use crate::parsers::ytdlp_single::parse_single;
 
 pub enum InfoType {
   Single,
   Playlist,
-  Livestream,
 }
 
 pub fn parse_ytdlp_info(json: &str, id: String) -> Result<ParsedMedia, String> {
   let info: YtdlpInfo = serde_json::from_str(json).map_err(|e| format!("JSON parse error: {e}"))?;
 
   Ok(match detect_info_type(&info) {
-    InfoType::Livestream => parse_livestream(info, id),
     InfoType::Playlist => parse_playlist(info, id),
     InfoType::Single => parse_single(info, id),
   })
@@ -32,10 +29,9 @@ pub fn unwrap_selected_playlist_entry(json: &str) -> Option<String> {
   }
 }
 
+/// A live stream is handled as a single video (with `is_live` set).
 pub fn detect_info_type(info: &YtdlpInfo) -> InfoType {
-  if info.is_live.unwrap_or(false) {
-    InfoType::Livestream
-  } else if info.type_.as_deref() == Some("playlist")
+  if info.type_.as_deref() == Some("playlist")
     || info.entries.as_ref().is_some_and(|e| !e.is_empty())
   {
     InfoType::Playlist
@@ -124,5 +120,23 @@ mod tests {
     assert!(unwrap_selected_playlist_entry(playlist).is_none());
     assert!(unwrap_selected_playlist_entry(flat_entry).is_none());
     assert!(unwrap_selected_playlist_entry(single).is_none());
+  }
+
+  #[test]
+  fn live_streams_are_parsed_as_live_single_videos() {
+    let live = r#"{"title": "Live now", "is_live": true, "webpage_url": "https://example.com/live", "formats": []}"#;
+    let video = r#"{"title": "A video", "is_live": false, "formats": []}"#;
+
+    match parse_ytdlp_info(live, "id".into()).unwrap() {
+      ParsedMedia::Single(single) => {
+        assert!(single.is_live);
+        assert_eq!(single.title.as_deref(), Some("Live now"));
+      }
+      ParsedMedia::Playlist(_) => panic!("a live stream must not be a playlist"),
+    }
+    match parse_ytdlp_info(video, "id".into()).unwrap() {
+      ParsedMedia::Single(single) => assert!(!single.is_live),
+      ParsedMedia::Playlist(_) => panic!("a video must not be a playlist"),
+    }
   }
 }

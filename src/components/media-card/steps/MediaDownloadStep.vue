@@ -8,7 +8,13 @@
     </h2>
 
     <base-progress
-        v-if="isIndeterminate"
+        v-if="group.isLive"
+        :id="`${group.id}-progress`"
+    >
+      {{ t('media.steps.download.recording') }}
+    </base-progress>
+    <base-progress
+        v-else-if="isIndeterminate"
         :id="`${group.id}-progress`"
     >
       {{ t('media.steps.download.indeterminate', { status: indeterminateDisplay }) }}
@@ -27,7 +33,12 @@
       }}
     </base-progress>
 
-    <div v-if="!isIndeterminate" class="w-full flex gap-4">
+    <div v-if="group.isLive" class="w-full flex gap-4">
+      <p>
+        {{ t('media.steps.download.metadata.speed', { speed: speedDisplay }) }}
+      </p>
+    </div>
+    <div v-else-if="!isIndeterminate" class="w-full flex gap-4">
       <p>
         {{ t('media.steps.download.metadata.eta', { eta: etaDisplay }) }}
       </p>

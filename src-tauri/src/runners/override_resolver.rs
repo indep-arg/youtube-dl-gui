@@ -81,6 +81,7 @@ impl ApplyPatch<OutputSettings> for OutputOverrides {
     apply_copy_patch!(self, target, write_info_json);
     apply_copy_patch!(self, target, write_description);
     apply_copy_patch!(self, target, split_chapters);
+    apply_copy_patch!(self, target, live_from_start);
   }
 }
 

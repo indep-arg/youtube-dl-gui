@@ -187,6 +187,7 @@ const outputOverride = computed<DownloadOverrides['output'] | undefined>(() => {
       writeInfoJson: outputState.value.writeInfoJson,
       writeDescription: outputState.value.writeDescription,
       splitChapters: outputState.value.splitChapters,
+      liveFromStart: outputState.value.liveFromStart,
     },
     {
       fileNameTemplate: global.fileNameTemplate,
@@ -200,6 +201,7 @@ const outputOverride = computed<DownloadOverrides['output'] | undefined>(() => {
       writeInfoJson: global.writeInfoJson,
       writeDescription: global.writeDescription,
       splitChapters: global.splitChapters,
+      liveFromStart: global.liveFromStart,
     },
   );
 

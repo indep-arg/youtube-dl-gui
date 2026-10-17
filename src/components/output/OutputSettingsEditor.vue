@@ -231,7 +231,7 @@ import { useOutputSettingsEditor } from '../../composables/useOutputSettingsEdit
 const outputState = defineModel<OutputSettings>({ required: true });
 
 // Extra files saved next to the download, each one a simple on/off option.
-const extraFileOptions = ['writeInfoJson', 'writeDescription', 'splitChapters'] as const;
+const extraFileOptions = ['writeInfoJson', 'writeDescription', 'splitChapters', 'liveFromStart'] as const;
 
 const { idPrefix } = defineProps({
   idPrefix: {

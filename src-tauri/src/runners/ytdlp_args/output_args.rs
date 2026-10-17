@@ -155,6 +155,15 @@ fn push_common_output_flags(
   }
 }
 
+/// Extra arguments for a live stream; nothing for other videos.
+pub fn build_live_args(is_live: bool, output_settings: &OutputSettings) -> Vec<String> {
+  if is_live && output_settings.live_from_start {
+    vec!["--live-from-start".into()]
+  } else {
+    Vec::new()
+  }
+}
+
 fn audio_format_arg(format: AudioFormat) -> &'static str {
   match format {
     AudioFormat::Mp3 => "mp3",

@@ -70,6 +70,7 @@ pub fn parse_single(info: YtdlpInfo, id: String) -> ParsedMedia {
     extractor: info.extractor_key,
     comments: i64_to_u64(info.comment_count),
     filesize: i64_to_u64(info.filesize.or(info.filesize_approx)),
+    is_live: info.is_live.unwrap_or(false),
     video_codecs,
     audio_codecs,
     video_tracks,

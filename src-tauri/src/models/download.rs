@@ -92,6 +92,8 @@ pub struct DownloadItem {
   #[serde(default)]
   pub overrides: Option<DownloadOverrides>,
   pub template_context: TemplateContext,
+  #[serde(default)]
+  pub is_live: bool,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -135,6 +137,7 @@ pub struct OutputOverrides {
   pub write_info_json: Option<bool>,
   pub write_description: Option<bool>,
   pub split_chapters: Option<bool>,
+  pub live_from_start: Option<bool>,
   pub partial_download: Option<PartialDownloadOverride>,
 }
 

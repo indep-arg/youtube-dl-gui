@@ -277,6 +277,7 @@
           "duration": "Duur: {duration}",
           "size": "Grootte: ",
           "sizeInfo": "De hoeveelheid data die wordt gedownload.\nNiet de uiteindelijke bestandsgrootte.",
+          "live": "Live stream: it is recorded until it ends.",
           "items": "Items: {amount} {details}",
           "failedCount": "({amount} mislukt)",
           "skippedCount": "({amount} overgeslagen)",
@@ -292,6 +293,7 @@
         "progress": "{category} downloaden… — {percentage}%",
         "progressList": "Downloaden… {percentage}% — {done} van {total}",
         "indeterminate": "{status}…",
+        "recording": "Recording live stream…",
         "category": {
           "video": "video",
           "audio": "audio",
@@ -350,7 +352,8 @@
       "toasts": {
         "retry": "De video wordt opnieuw gedownload.",
         "retryError": "Er is een fout opgetreden bij het opnieuw downloaden."
-      }
+      },
+      "live": "LIVE"
     }
   },
   "subtitles": {
@@ -683,6 +686,10 @@
       "splitChapters": {
         "label": "Split chapters into files:",
         "hint": "Save each chapter as a separate file, next to the full video."
+      },
+      "liveFromStart": {
+        "label": "Record live streams from the start:",
+        "hint": "For live streams that are still going on: download them from the beginning instead of from now. Some sites support it, like YouTube."
       },
       "addMetadata": {
         "label": "Titel & artiest opslaan:",

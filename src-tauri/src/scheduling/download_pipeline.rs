@@ -32,6 +32,7 @@ pub struct DownloadEntry {
   pub subtitle_inventory: Option<SubtitleInventory>,
   pub overrides: Option<DownloadOverrides>,
   pub template_context: TemplateContext,
+  pub is_live: bool,
 }
 
 impl From<(DownloadItem, String)> for DownloadEntry {
@@ -45,6 +46,7 @@ impl From<(DownloadItem, String)> for DownloadEntry {
       subtitle_inventory: item.0.subtitle_inventory,
       overrides: item.0.overrides,
       template_context: item.0.template_context,
+      is_live: item.0.is_live,
     }
   }
 }

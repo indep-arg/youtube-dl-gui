@@ -192,6 +192,8 @@ pub struct OutputSettings {
   pub write_info_json: bool,
   pub write_description: bool,
   pub split_chapters: bool,
+  /// For live streams: record from the beginning instead of from now.
+  pub live_from_start: bool,
 }
 
 impl Default for OutputSettings {
@@ -211,6 +213,7 @@ impl Default for OutputSettings {
       write_info_json: false,
       write_description: false,
       split_chapters: false,
+      live_from_start: false,
     }
   }
 }

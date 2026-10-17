@@ -1,6 +1,6 @@
 use super::{
-  build_format_args, build_input_filter_args, build_location_args, build_output_args,
-  build_performance_args,
+  build_format_args, build_input_filter_args, build_live_args, build_location_args,
+  build_output_args, build_performance_args,
 };
 use crate::models::download::{
   AudioFormat, AudioPostprocessPreset, DownloadSection, FormatOptions, InputFilterOptions,
@@ -1031,4 +1031,19 @@ fn a_zero_rate_limit_means_no_limit() {
   };
 
   assert!(build_performance_args(&performance).is_empty());
+}
+
+#[test]
+fn live_from_start_is_only_added_for_live_streams() {
+  let from_start = OutputSettings {
+    live_from_start: true,
+    ..OutputSettings::default()
+  };
+
+  assert_eq!(
+    build_live_args(true, &from_start),
+    vec!["--live-from-start"]
+  );
+  assert!(build_live_args(false, &from_start).is_empty());
+  assert!(build_live_args(true, &OutputSettings::default()).is_empty());
 }

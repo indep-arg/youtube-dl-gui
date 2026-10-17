@@ -277,6 +277,7 @@
           "duration": "Duración: {duration}",
           "size": "Tamaño: ",
           "sizeInfo": "La cantidad de datos que se descargarán.\nNo es el tamaño final del archivo.",
+          "live": "Directo: se graba hasta que termine.",
           "items": "Elementos: {amount} {details}",
           "failedCount": "({amount} fallidos)",
           "skippedCount": "({amount} omitidos)",
@@ -292,6 +293,7 @@
         "progress": "Descargando {category}… — {percentage}%",
         "progressList": "Descargando… {percentage}% — {done} de {total}",
         "indeterminate": "{status}…",
+        "recording": "Grabando directo…",
         "category": {
           "video": "video",
           "audio": "audio",
@@ -350,7 +352,8 @@
       "toasts": {
         "retry": "Reintentando descarga.",
         "retryError": "No se pudo reintentar la descarga."
-      }
+      },
+      "live": "EN DIRECTO"
     }
   },
   "subtitles": {
@@ -683,6 +686,10 @@
       "splitChapters": {
         "label": "Separar capítulos en archivos:",
         "hint": "Guarda cada capítulo como un archivo aparte, junto al video completo."
+      },
+      "liveFromStart": {
+        "label": "Grabar directos desde el principio:",
+        "hint": "Para directos que siguen en curso: los descarga desde el inicio en vez de desde ahora. Lo admiten algunos sitios, como YouTube."
       },
       "addMetadata": {
         "label": "Agregar información de título y artista:",

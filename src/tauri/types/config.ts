@@ -107,6 +107,7 @@ export interface OutputSettings {
   writeInfoJson: boolean;
   writeDescription: boolean;
   splitChapters: boolean;
+  liveFromStart: boolean;
 }
 
 export interface PerformanceSettings {
@@ -251,6 +252,7 @@ export const defaultOutputSettings: OutputSettings = {
   writeInfoJson: false,
   writeDescription: false,
   splitChapters: false,
+  liveFromStart: false,
 };
 
 export const defaultPerformanceSettings: PerformanceSettings = {

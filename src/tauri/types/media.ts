@@ -98,6 +98,7 @@ export type OutputOverrides = {
   writeInfoJson?: boolean;
   writeDescription?: boolean;
   splitChapters?: boolean;
+  liveFromStart?: boolean;
   partialDownload?: PartialDownload;
 };
 
@@ -229,6 +230,8 @@ export interface MediaItem {
   playlistIndex?: number;
   /** See {@link EntryItem.playlistItem}. */
   playlistItem?: number;
+  /** A live stream that is still going on. */
+  isLive?: boolean;
 }
 
 export interface EntryItem {

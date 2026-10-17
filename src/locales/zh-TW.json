@@ -277,6 +277,7 @@
           "duration": "時長: {duration}",
           "size": "大小: ",
           "sizeInfo": "即將下載的資料大小。\n非檔案最終大小。",
+          "live": "Live stream: it is recorded until it ends.",
           "items": "項目: {amount} {details}",
           "failedCount": "({amount} 失敗)",
           "skippedCount": "({amount} 個已略過)",
@@ -292,6 +293,7 @@
         "progress": "正在下載 {category}… — {percentage}%",
         "progressList": "正在下載… {percentage}% — {done} / {total}",
         "indeterminate": "{status}…",
+        "recording": "Recording live stream…",
         "category": {
           "video": "影片",
           "audio": "音訊",
@@ -350,7 +352,8 @@
       "toasts": {
         "retry": "正在重試下載。",
         "retryError": "無法重試下載。"
-      }
+      },
+      "live": "LIVE"
     }
   },
   "subtitles": {
@@ -683,6 +686,10 @@
       "splitChapters": {
         "label": "Split chapters into files:",
         "hint": "Save each chapter as a separate file, next to the full video."
+      },
+      "liveFromStart": {
+        "label": "Record live streams from the start:",
+        "hint": "For live streams that are still going on: download them from the beginning instead of from now. Some sites support it, like YouTube."
       },
       "addMetadata": {
         "label": "加入標題與演出者資訊:",

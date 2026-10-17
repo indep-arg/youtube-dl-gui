@@ -277,6 +277,7 @@
           "duration": "Длительность: {duration}",
           "size": "Размер: ",
           "sizeInfo": "Объём данных, который будет скачан.\nЭто не финальный размер файла.",
+          "live": "Live stream: it is recorded until it ends.",
           "items": "Элементы: {amount} {details}",
           "failedCount": "({amount} с ошибкой)",
           "skippedCount": "({amount} пропущено)",
@@ -292,6 +293,7 @@
         "progress": "Скачивание {category}… — {percentage}%",
         "progressList": "Скачивание… {percentage}% — {done} из {total}",
         "indeterminate": "{status}…",
+        "recording": "Recording live stream…",
         "category": {
           "video": "видео",
           "audio": "аудио",
@@ -350,7 +352,8 @@
       "toasts": {
         "retry": "Повторяем скачивание.",
         "retryError": "Не удалось повторить скачивание."
-      }
+      },
+      "live": "LIVE"
     }
   },
   "subtitles": {
@@ -683,6 +686,10 @@
       "splitChapters": {
         "label": "Split chapters into files:",
         "hint": "Save each chapter as a separate file, next to the full video."
+      },
+      "liveFromStart": {
+        "label": "Record live streams from the start:",
+        "hint": "For live streams that are still going on: download them from the beginning instead of from now. Some sites support it, like YouTube."
       },
       "addMetadata": {
         "label": "Добавить название и автора:",

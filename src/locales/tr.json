@@ -277,6 +277,7 @@
           "duration": "Uzunluk: {duration}",
           "size": "Boyut: ",
           "sizeInfo": "İndirilecek olan verinin boyutu.\nDosyanın nihai boyutu değil.",
+          "live": "Live stream: it is recorded until it ends.",
           "items": "İçerik: {amount} {details}",
           "failedCount": "({amount} başarısız oldu)",
           "skippedCount": "({amount} atlandı)",
@@ -292,6 +293,7 @@
         "progress": "{category} indiriliyor… — %{percentage}",
         "progressList": "İndiriliyor… %{percentage} — {total} taneden {done} tanesi tamamlandı",
         "indeterminate": "{status}…",
+        "recording": "Recording live stream…",
         "category": {
           "video": "video",
           "audio": "ses",
@@ -350,7 +352,8 @@
       "toasts": {
         "retry": "İndirme yeniden deneniyor.",
         "retryError": "İndirme yeniden denenemedi."
-      }
+      },
+      "live": "LIVE"
     }
   },
   "subtitles": {
@@ -683,6 +686,10 @@
       "splitChapters": {
         "label": "Split chapters into files:",
         "hint": "Save each chapter as a separate file, next to the full video."
+      },
+      "liveFromStart": {
+        "label": "Record live streams from the start:",
+        "hint": "For live streams that are still going on: download them from the beginning instead of from now. Some sites support it, like YouTube."
       },
       "addMetadata": {
         "label": "Başlık ve sanatçı bilgisi ekle:",

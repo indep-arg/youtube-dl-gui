@@ -129,9 +129,7 @@ impl BinariesManager {
     format!("{}-{}", std::env::consts::OS, std::env::consts::ARCH)
   }
 
-  /// The file for this platform. A `-v2` key (e.g. `linux-x86_64-v2`) wins: it
-  /// holds a build that only newer versions of the app install, while older
-  /// versions keep using the plain key.
+  /// The file for this platform.
   ///
   /// Windows on ARM runs x64 programs, so a tool without an ARM build uses the x64
   /// one there. Linux on ARM cannot, so such a tool is left out.
@@ -139,9 +137,6 @@ impl BinariesManager {
     files: &'a HashMap<String, FileInfo>,
     arch: &'a str,
   ) -> Option<(&'a str, &'a FileInfo)> {
-    if let Some((key, f)) = files.get_key_value(format!("{arch}-v2").as_str()) {
-      return Some((key.as_str(), f));
-    }
     if let Some(f) = files.get(arch) {
       return Some((arch, f));
     }
@@ -149,17 +144,6 @@ impl BinariesManager {
       return Self::select_file(files, "windows-x86_64");
     }
     None
-  }
-
-  /// The version recorded for an installed tool. A `-v2` file gets its own
-  /// version, so a tool installed from the plain file (by an older version of the
-  /// app) is replaced once by the `-v2` build, even if the tool version is the same.
-  fn installed_version(info: &ToolInfo, key: &str) -> String {
-    if key.ends_with("-v2") {
-      format!("{}+v2", info.version)
-    } else {
-      info.version.clone()
-    }
   }
 
   async fn build_plan<'a>(
@@ -177,14 +161,11 @@ impl BinariesManager {
         }
       }
 
-      let Some((key, _)) = Self::select_file(&info.files, arch) else {
+      if Self::select_file(&info.files, arch).is_none() {
         continue;
-      };
+      }
 
-      let version_ok = meta
-        .versions
-        .get(name)
-        .is_some_and(|v| *v == Self::installed_version(info, key));
+      let version_ok = meta.versions.get(name).is_some_and(|v| *v == info.version);
       let canonical = self.canonical_path(name)?;
       let exists = tokio::fs::metadata(&canonical).await.is_ok();
 
@@ -250,10 +231,7 @@ impl BinariesManager {
       {
         Ok(()) => {
           // only update meta + successes on fully successful install
-          let key = Self::select_file(&info.files, &arch).map_or("", |(key, _)| key);
-          meta
-            .versions
-            .insert(name.to_string(), Self::installed_version(info, key));
+          meta.versions.insert(name.to_string(), info.version.clone());
           successes.push(name.to_string());
         }
         Err(err) => {
@@ -641,7 +619,7 @@ async fn file_sha256(path: &Path) -> Option<String> {
 
 #[cfg(test)]
 mod tests {
-  use super::{BinariesManager, FileInfo, ToolInfo};
+  use super::{BinariesManager, FileInfo};
   use std::collections::HashMap;
 
   fn file(url: &str) -> FileInfo {
@@ -654,44 +632,21 @@ mod tests {
   }
 
   #[test]
-  fn a_v2_file_wins_over_the_plain_one() {
+  fn the_file_of_the_platform_is_used() {
     let files = HashMap::from([
-      ("linux-x86_64".to_string(), file("old.tar.bz2")),
-      ("linux-x86_64-v2".to_string(), file("new.tar.xz")),
+      ("windows-x86_64".to_string(), file("tool.zip")),
+      ("linux-x86_64".to_string(), file("tool.tar.xz")),
     ]);
     let (key, chosen) = BinariesManager::select_file(&files, "linux-x86_64").unwrap();
-    assert_eq!(key, "linux-x86_64-v2");
-    assert_eq!(chosen.url, "new.tar.xz");
+    assert_eq!(key, "linux-x86_64");
+    assert_eq!(chosen.url, "tool.tar.xz");
   }
 
   #[test]
-  fn the_plain_file_is_used_without_a_v2_one() {
-    let files = HashMap::from([("windows-x86_64".to_string(), file("tool.zip"))]);
-    let (key, _) = BinariesManager::select_file(&files, "windows-x86_64").unwrap();
-    assert_eq!(key, "windows-x86_64");
-  }
-
-  #[test]
-  fn a_v2_file_has_its_own_installed_version() {
-    let info = ToolInfo {
-      version: "b6.1.1".into(),
-      files: HashMap::new(),
-    };
-    assert_eq!(
-      BinariesManager::installed_version(&info, "linux-x86_64-v2"),
-      "b6.1.1+v2"
-    );
-    assert_eq!(
-      BinariesManager::installed_version(&info, "linux-x86_64"),
-      "b6.1.1"
-    );
-  }
-
-  #[test]
-  fn a_v2_file_of_another_architecture_is_not_used() {
+  fn another_architecture_is_not_used() {
     let files = HashMap::from([
       ("linux-aarch64".to_string(), file("arm.bin")),
-      ("linux-x86_64-v2".to_string(), file("x86.tar.xz")),
+      ("linux-x86_64".to_string(), file("x86.bin")),
     ]);
     let (key, _) = BinariesManager::select_file(&files, "linux-aarch64").unwrap();
     assert_eq!(key, "linux-aarch64");

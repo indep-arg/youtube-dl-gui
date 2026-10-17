@@ -20,6 +20,13 @@ this file under **Breaking changes**.
 
 ## 2026.10.2
 
+### Breaking changes
+
+- ffmpeg and ffprobe are no longer published in the format used before. Versions `2026.10.0` and
+  `2026.10.1` cannot install the new one on Linux and will show an installation error when they start,
+  and they do not offer the update from that screen. Download `2026.10.2` from the releases page and
+  install it over them. On Windows they just download the new ffmpeg and keep working.
+
 ### New
 
 - Live streams can be recorded, from the start if the site allows it.
@@ -34,7 +41,8 @@ this file under **Breaking changes**.
 
 - ffmpeg and ffprobe now come from yt-dlp's FFmpeg builds on Windows and Linux. The Linux one used
   before crashed on some systems (for example Fedora) as soon as it opened a link, which broke live
-  streams and partial downloads. They are installed again once after updating.
+  streams and partial downloads. They are installed again once after updating, and then replaced
+  at most once a month.
 - Tools that have no build for the computer (AtomicParsley on Linux ARM) are skipped, instead of
   installing one that cannot run.
 - Empty playlists show an error instead of nothing.

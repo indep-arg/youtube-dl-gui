@@ -106,8 +106,10 @@ function assetUrl(rel: GitHubRelease, name: string): string {
 export async function fetchSources(): Promise<ToolSource[]> {
   console.log('[sources] Resolving tool sources');
   const ytRel = await latestRelease('yt-dlp', 'yt-dlp');
-  const ffRel = await latestRelease('eugeneware', 'ffmpeg-static');
   const ffBuildsRel = await latestAutobuild('yt-dlp', 'FFmpeg-Builds');
+  // The build changes every day, but installed copies are only replaced when this
+  // label changes (once a month, e.g. `2026-10`): the archives are 130-200 MB.
+  const ffmpegVersion = ffBuildsRel.tag_name.replace(/^autobuild-(\d{4}-\d{2}).*$/, '$1');
   const denoRel = await latestRelease('denoland', 'deno');
   const apRel = await latestRelease('wez', 'atomicparsley');
 
@@ -158,31 +160,21 @@ export async function fetchSources(): Promise<ToolSource[]> {
     },
     {
       name: 'ffmpeg',
-      version: ffRel.tag_name,
+      version: ffmpegVersion,
       files: {
-        // Old versions of the app read the plain keys. On Linux this static build
-        // crashes as soon as it resolves a host name, so newer versions use the -v2
-        // files from FFmpeg-Builds (on Windows too, to have the same build everywhere).
-        'linux-x86_64': { url: assetUrl(ffRel, 'ffmpeg-linux-x64') },
-        'linux-aarch64': { url: assetUrl(ffRel, 'ffmpeg-linux-arm64') },
-        // The Linux ones are .tar.xz archives, which only versions from 2026.10.2 on can open.
-        'linux-x86_64-v2': ffmpegBuildsFile(ffBuildsRel, '-linux64-gpl.tar.xz', 'ffmpeg'),
-        'linux-aarch64-v2': ffmpegBuildsFile(ffBuildsRel, '-linuxarm64-gpl.tar.xz', 'ffmpeg'),
-        'windows-x86_64': { url: assetUrl(ffRel, 'ffmpeg-win32-x64') },
-        'windows-x86_64-v2': ffmpegBuildsFile(ffBuildsRel, '-win64-gpl.zip', 'ffmpeg.exe'),
+        'linux-x86_64': ffmpegBuildsFile(ffBuildsRel, '-linux64-gpl.tar.xz', 'ffmpeg'),
+        'linux-aarch64': ffmpegBuildsFile(ffBuildsRel, '-linuxarm64-gpl.tar.xz', 'ffmpeg'),
+        'windows-x86_64': ffmpegBuildsFile(ffBuildsRel, '-win64-gpl.zip', 'ffmpeg.exe'),
         'windows-aarch64': ffmpegBuildsFile(ffBuildsRel, '-winarm64-gpl.zip', 'ffmpeg.exe'),
       },
     },
     {
       name: 'ffprobe',
-      version: ffRel.tag_name,
+      version: ffmpegVersion,
       files: {
-        'linux-x86_64': { url: assetUrl(ffRel, 'ffprobe-linux-x64') },
-        'linux-aarch64': { url: assetUrl(ffRel, 'ffprobe-linux-arm64') },
-        'linux-x86_64-v2': ffmpegBuildsFile(ffBuildsRel, '-linux64-gpl.tar.xz', 'ffprobe'),
-        'linux-aarch64-v2': ffmpegBuildsFile(ffBuildsRel, '-linuxarm64-gpl.tar.xz', 'ffprobe'),
-        'windows-x86_64': { url: assetUrl(ffRel, 'ffprobe-win32-x64') },
-        'windows-x86_64-v2': ffmpegBuildsFile(ffBuildsRel, '-win64-gpl.zip', 'ffprobe.exe'),
+        'linux-x86_64': ffmpegBuildsFile(ffBuildsRel, '-linux64-gpl.tar.xz', 'ffprobe'),
+        'linux-aarch64': ffmpegBuildsFile(ffBuildsRel, '-linuxarm64-gpl.tar.xz', 'ffprobe'),
+        'windows-x86_64': ffmpegBuildsFile(ffBuildsRel, '-win64-gpl.zip', 'ffprobe.exe'),
         'windows-aarch64': ffmpegBuildsFile(ffBuildsRel, '-winarm64-gpl.zip', 'ffprobe.exe'),
       },
     },

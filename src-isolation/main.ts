@@ -6,7 +6,6 @@ const allowedCommands: Set<string> = new Set([
     'media_download',
     'media_fatal',
     'media_diagnostic',
-    'navigate',
     'binaries_check',
     'binaries_ensure',
     'updater_check',

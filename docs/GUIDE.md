@@ -76,13 +76,18 @@ download; the global defaults are in the settings.
 The tabs of **Settings**:
 
 - **Downloads:** output (cover image, metadata, thumbnail file, precise cuts, post-processing, location
-  and file names), subtitles, SponsorBlock and performance (how many downloads run at once, when to
-  split playlists, whether to load the size automatically).
+  and file names), extra files (an `.info.json` file, the description, and each chapter as its own file),
+  subtitles, SponsorBlock and performance (how many downloads run at once, when to split playlists,
+  whether to load the size automatically, a speed limit, retries, and how many parts of a video are
+  downloaded at once).
 - **App:** appearance (theme, language), input, notifications and updates.
 - **Network:** proxy, skipping certificate verification (only if you trust the proxy), browser
   impersonation and yt-dlp extractor arguments.
 - **System:** tray icon, start with the system and what happens when you close the window.
 - **About:** version, links and licenses.
+
+The menu next to **Save** can also reset the settings, or export them to a file and import them again,
+for example to move them to another computer.
 
 Other screens in the menu: **Location** (folders and file name templates), **Subtitles**,
 **Authentication** and **Input filters**.

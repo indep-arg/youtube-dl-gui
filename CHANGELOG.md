@@ -18,6 +18,16 @@ Releases are tagged `app-vYEAR.MONTH.N` and the version is kept equal in
 The number does not say whether a release breaks anything. Breaking changes are listed in
 this file under **Breaking changes**.
 
+## 2026.10.1
+
+### Changes
+
+- New indigo color scheme, in both the light and the dark theme.
+- Fixed a white strip that appeared under the footer when scrolling on Linux: only the content area
+  scrolls now, not the whole page.
+- Fixed the text of the item count (`{details}`) in ten languages, and Korean can be selected now.
+- Releases are now built only after the CI checks pass, including a Windows build and tests.
+
 ## 2026.10.0
 
 First release of the fork, based on upstream `3.2.1`.

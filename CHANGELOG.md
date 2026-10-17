@@ -18,6 +18,32 @@ Releases are tagged `app-vYEAR.MONTH.N` and the version is kept equal in
 The number does not say whether a release breaks anything. Breaking changes are listed in
 this file under **Breaking changes**.
 
+## 2026.10.2
+
+### New
+
+- Live streams can be recorded, from the start if the site allows it.
+- History of finished downloads, with buttons to open the folder, download again or remove an entry.
+- Links that were still in the queue come back when the app is opened again (can be turned off).
+- Settings per site: a folder and video or audio for each website.
+- Limit the download speed, choose how many times to retry and how many parts download at once.
+- Save the info file and the description next to a video, or split it into its chapters.
+- Export and import the settings as a file.
+
+### Changes
+
+- ffmpeg and ffprobe now come from yt-dlp's FFmpeg builds on Windows and Linux. The Linux one used
+  before crashed on some systems (for example Fedora) as soon as it opened a link, which broke live
+  streams and partial downloads. They are installed again once after updating.
+- Tools that have no build for the computer (AtomicParsley on Linux ARM) are skipped, instead of
+  installing one that cannot run.
+- Empty playlists show an error instead of nothing.
+- Fixed the light and dark themes losing the indigo colors when chosen by hand in the settings.
+- Fixed a white strip that could still appear when the page moved by itself.
+- Saving settings no longer leaves the button spinning when it fails, and the queue keeps its order
+  when it is restored.
+- Screenshots and the new features in the README.
+
 ## 2026.10.1
 
 ### Changes

@@ -178,6 +178,32 @@ jobs:
       - name: Run clippy
         run: cargo clippy --manifest-path=src-tauri/Cargo.toml --all-features --all-targets --locked -- -D warnings
 
+      - name: Build the tests
+        run: cargo test --manifest-path=src-tauri/Cargo.toml --all-features --all-targets --locked --no-run
+
+      # The test executable has no application manifest, so Windows loads the old
+      # common controls and the program cannot start (STATUS_ENTRYPOINT_NOT_FOUND).
+      # A manifest file next to the executable fixes that.
+      - name: Add the manifest the test executables need
+        shell: pwsh
+        run: |
+          $lines = @(
+            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>',
+            '<assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0">',
+            '  <dependency>',
+            '    <dependentAssembly>',
+            '      <assemblyIdentity type="win32" name="Microsoft.Windows.Common-Controls" version="6.0.0.0" processorArchitecture="*" publicKeyToken="6595b64144ccf1df" language="*"/>',
+            '    </dependentAssembly>',
+            '  </dependency>',
+            '</assembly>'
+          )
+          $tests = Get-ChildItem src-tauri/target/debug/deps -Filter 'open_video_downloader_lib-*.exe'
+          if (-not $tests) { Write-Error "No test executable found"; exit 1 }
+          foreach ($test in $tests) {
+            Set-Content -Path "$($test.FullName).manifest" -Value ($lines -join "`n") -Encoding UTF8
+            "Manifest added to $($test.Name)"
+          }
+
       - name: Run tests
         run: cargo test --manifest-path=src-tauri/Cargo.toml --all-features --all-targets --locked
 

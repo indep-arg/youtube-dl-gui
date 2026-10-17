@@ -51,7 +51,7 @@ watchEffect(() => {
 <style>
 #app {
   @apply flex;
-  @apply h-screen;
+  @apply h-full;
   @apply flex-col;
 }
 </style>

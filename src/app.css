@@ -100,6 +100,16 @@
     --noise: 0;
 }
 
+/*
+ * Only the content area scrolls, never the page itself. WebKitGTK can make the page a bit taller
+ * than the window, and scrolling it then shows an unpainted white strip under the footer.
+ */
+html,
+body {
+    height: 100%;
+    overflow: hidden;
+}
+
 ::-ms-reveal {
     display: none;
 }

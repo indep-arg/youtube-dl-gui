@@ -15,7 +15,9 @@ This is the guide of the [indep-arg fork](../README.md#credits-and-fork-notice).
 - Partial downloads: only a time range, or only some chapters.
 - Filters by size and date, and raw yt-dlp match filters.
 - Private videos, through browser cookies, a cookie file or a user and password.
-- A queue that balances several downloads at once.
+- A queue that balances several downloads at once, and that is kept when you close the app.
+- Live streams, recorded until they end, or from the beginning on sites that allow it.
+- A history of finished downloads, and presets that set the type and folder for each site.
 - Windows and Linux (x64 and ARM64). Light and dark themes, and 13 languages.
 
 ## Installing
@@ -68,6 +70,19 @@ Keyboard shortcuts (they work even when the app is in the background; turn them 
 | `Alt+Shift+D` | Add the link in the clipboard and download it |
 | `Alt+Shift+Enter` | Download the whole queue |
 
+### Live streams
+
+A link to a live stream gets a **LIVE** badge. It is recorded until the stream ends, so it has no size
+or duration while it is going on. To record it from the beginning instead of from now, turn on
+**Record live streams from the start** (in the output settings, or only for that download). YouTube
+supports it; other sites start recording from the moment you start it. Stopping a recording before
+the stream ends may leave an incomplete file.
+
+### History
+
+The clock button at the bottom opens the history of finished downloads. From there you can show a
+file in its folder, add a link to the queue again, or remove entries.
+
 Each download also has its own preferences, metadata and logs. Changes there only affect that
 download; the global defaults are in the settings.
 
@@ -88,6 +103,12 @@ The tabs of **Settings**:
 
 The menu next to **Save** can also reset the settings, or export them to a file and import them again,
 for example to move them to another computer.
+
+**Site presets** (in the Downloads tab) apply a download type and a folder to every link of a site,
+for example audio only for `music.youtube.com`. A preset also applies to the subdomains of its site.
+
+**Keep the queue between sessions** (App tab) adds the links that were still in the queue when the app
+was closed again when it starts.
 
 Other screens in the menu: **Location** (folders and file name templates), **Subtitles**,
 **Authentication** and **Input filters**.

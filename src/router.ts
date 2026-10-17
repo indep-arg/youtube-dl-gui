@@ -21,6 +21,7 @@ import SettingsAppTab from './views/app/settings/SettingsAppTab.vue';
 import SettingsDownloadsTab from './views/app/settings/SettingsDownloadsTab.vue';
 import SettingsNetworkTab from './views/app/settings/SettingsNetworkTab.vue';
 import SettingsSystemTab from './views/app/settings/SettingsSystemTab.vue';
+import HistoryView from './views/app/HistoryView.vue';
 
 const routes = [
   {
@@ -84,6 +85,12 @@ const routes = [
             meta: { index: 1 },
           },
         ],
+      },
+      {
+        path: 'history',
+        name: 'history',
+        component: HistoryView,
+        meta: { index: 1 },
       },
       {
         path: 'location',

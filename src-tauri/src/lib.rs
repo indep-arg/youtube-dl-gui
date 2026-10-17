@@ -28,6 +28,7 @@ use crate::scheduling::concurrency::DynamicSemaphore;
 use crate::scheduling::download_pipeline::{setup_download_dispatcher, DownloadSender};
 use crate::scheduling::fetch_pipeline::{setup_fetch_dispatcher, FetchSender};
 use crate::state::config::ConfigHandle;
+use crate::state::library::LibraryHandle;
 use crate::state::preferences::PreferencesHandle;
 use crate::tray::{create_tray, TrayState};
 use crate::window::{restore_main_window, setup_close_behaviour, track_main_window};
@@ -41,6 +42,7 @@ use tracing_subscriber::{fmt, prelude::*};
 
 type SharedConfig = Arc<ConfigHandle>;
 type SharedPreferences = Arc<PreferencesHandle>;
+type SharedLibrary = Arc<LibraryHandle>;
 
 #[derive(Clone)]
 pub struct DownloadLimiter(pub Arc<DynamicSemaphore>);
@@ -88,6 +90,9 @@ pub fn run() {
       let preferences_handle = PreferencesHandle::init(handle)?;
       let shared_preferences = Arc::new(preferences_handle);
       handle.manage::<SharedPreferences>(shared_preferences);
+
+      let library_handle = LibraryHandle::init(handle)?;
+      handle.manage::<SharedLibrary>(Arc::new(library_handle));
 
       create_main_window(handle, &path_handle)?;
 
@@ -166,6 +171,11 @@ pub fn run() {
       config_set,
       config_export,
       config_import,
+      library_get,
+      history_add,
+      history_remove,
+      history_clear,
+      queue_save,
       preferences_get,
       preferences_reset,
       preferences_set,

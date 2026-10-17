@@ -901,6 +901,7 @@ fn location_args_use_track_specific_preferences() {
     &output,
     &prefs,
     PathBuf::from("/tmp/fallback"),
+    None,
   );
 
   assert_eq!(args[0], "-o");
@@ -957,6 +958,7 @@ fn location_args_with(output: &OutputSettings) -> Vec<String> {
     output,
     &prefs,
     PathBuf::from("/tmp/fallback"),
+    None,
   )
 }
 
@@ -1046,4 +1048,37 @@ fn live_from_start_is_only_added_for_live_streams() {
   );
   assert!(build_live_args(false, &from_start).is_empty());
   assert!(build_live_args(true, &OutputSettings::default()).is_empty());
+}
+
+#[test]
+fn a_site_preset_folder_wins_over_the_location_settings() {
+  let template_context = TemplateContext {
+    values: HashMap::new(),
+  };
+  let prefs = PathPreferences {
+    audio_download_dir: None,
+    video_download_dir: Some("/tmp/video".into()),
+    video_directory_template: "".into(),
+    audio_directory_template: "".into(),
+  };
+
+  let args = build_location_args(
+    &TrackType::Video,
+    &template_context,
+    &OutputSettings::default(),
+    &prefs,
+    PathBuf::from("/tmp/fallback"),
+    Some("/tmp/site"),
+  );
+  assert!(args[1].starts_with("/tmp/site"));
+
+  let blank = build_location_args(
+    &TrackType::Video,
+    &template_context,
+    &OutputSettings::default(),
+    &prefs,
+    PathBuf::from("/tmp/fallback"),
+    Some("  "),
+  );
+  assert!(blank[1].starts_with("/tmp/video"));
 }

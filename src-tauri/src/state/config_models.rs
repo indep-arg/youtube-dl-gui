@@ -1,7 +1,7 @@
 use crate::commands::NotificationKind;
 use crate::models::download::{
-  AudioFormat, AudioPostprocessPreset, TranscodePolicy, VideoContainer, VideoPostprocessMode,
-  VideoPostprocessPreset,
+  AudioFormat, AudioPostprocessPreset, TrackType, TranscodePolicy, VideoContainer,
+  VideoPostprocessMode, VideoPostprocessPreset,
 };
 use serde::{Deserialize, Serialize};
 use std::thread;
@@ -68,6 +68,19 @@ pub struct InputSettings {
   pub auto_fill_clipboard: bool,
   pub prefer_video_in_mixed_links: bool,
   pub global_shortcuts: bool,
+  /// Bring back the links that were in the queue when the app was closed.
+  pub restore_queue: bool,
+  /// Settings applied to links of a site when they are added.
+  pub site_presets: Vec<SitePreset>,
+}
+
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+#[serde(default, rename_all = "camelCase")]
+pub struct SitePreset {
+  /// The site, e.g. `youtube.com`; it also matches its subdomains.
+  pub domain: String,
+  pub track_type: Option<TrackType>,
+  pub download_dir: Option<String>,
 }
 
 impl Default for InputSettings {
@@ -76,6 +89,8 @@ impl Default for InputSettings {
       auto_fill_clipboard: true,
       prefer_video_in_mixed_links: false,
       global_shortcuts: true,
+      restore_queue: true,
+      site_presets: Vec::new(),
     }
   }
 }

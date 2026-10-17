@@ -65,7 +65,8 @@
             "off": "Editar subtítulos (actualmente deshabilitados)"
           },
           "tooltip": "Subtítulos"
-        }
+        },
+        "history": "Historial de descargas"
       },
       "format": {
         "trackSelect": {
@@ -354,7 +355,8 @@
         "retryError": "No se pudo reintentar la descarga."
       },
       "live": "EN DIRECTO"
-    }
+    },
+    "restored": "Se recuperó {count} enlace de la sesión anterior. | Se recuperaron {count} enlaces de la sesión anterior."
   },
   "subtitles": {
     "title": "Subtítulos",
@@ -487,6 +489,24 @@
     "toasts": {
       "saved": "¡Rutas de descarga guardadas!",
       "error": "No se pudieron guardar las rutas de descarga."
+    }
+  },
+  "history": {
+    "title": "Historial",
+    "empty": "Las descargas terminadas aparecerán aquí.",
+    "clear": "Borrar historial",
+    "confirmClear": "Pulsa otra vez para borrar",
+    "items": "{count} archivo | {count} archivos",
+    "live": "Directo",
+    "actions": {
+      "show": "Mostrar en la carpeta",
+      "addAgain": "Volver a añadir a la cola",
+      "remove": "Quitar del historial"
+    },
+    "toasts": {
+      "added": "Añadido a la cola.",
+      "notFound": "El archivo ya no está ahí.",
+      "error": "No se pudo actualizar el historial: {error}"
     }
   },
   "inputFilters": {
@@ -642,6 +662,28 @@
         "hint": "Algunos sitios dividen los videos en partes. Descargar varias a la vez puede ser más rápido."
       }
     },
+    "sitePresets": {
+      "legend": "Ajustes por sitio",
+      "legendLabel": "Aplica automáticamente un tipo y una carpeta a los enlaces de un sitio.",
+      "empty": "Todavía no hay ajustes por sitio.",
+      "domain": {
+        "label": "Sitio:",
+        "placeholder": "youtube.com"
+      },
+      "trackType": {
+        "label": "Descargar:",
+        "any": "Como siempre",
+        "both": "Video + audio",
+        "video": "Solo video",
+        "audio": "Solo audio"
+      },
+      "folder": {
+        "label": "Carpeta:",
+        "hint": "Déjala vacía para usar la carpeta habitual."
+      },
+      "add": "Añadir un sitio",
+      "remove": "Quitar"
+    },
     "input": {
       "legend": "Entrada",
       "legendLabel": "Elige cómo comenzar a descargar con Open Video Downloader.",
@@ -652,6 +694,10 @@
       "preferVideoInMixedLinks": {
         "label": "Preferir video individual en enlaces de listas de reproducción:",
         "hint": "Cuando un enlace contiene tanto un video individual como una lista de reproducción, descarga solo el video en lugar de la lista completa."
+      },
+      "restoreQueue": {
+        "label": "Conservar la cola entre sesiones:",
+        "hint": "Al abrir la app, vuelve a añadir los enlaces que estaban en la cola al cerrarla. Su información se carga de nuevo."
       },
       "globalShortcuts": {
         "label": "Habilitar atajos:",

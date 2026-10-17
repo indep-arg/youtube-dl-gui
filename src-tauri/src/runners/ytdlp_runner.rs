@@ -268,12 +268,16 @@ impl<'a> YtdlpRunner<'a> {
       .path()
       .download_dir()
       .unwrap_or_else(|_| std::env::current_dir().expect("couldn’t get current dir"));
+    let override_dir = overrides
+      .and_then(|value| value.output.as_ref())
+      .and_then(|output| output.download_dir.as_deref());
     self.args.extend(build_location_args(
       track_type,
       template_context,
       &output_settings,
       &self.prefs.paths,
       fallback_dir,
+      override_dir,
     ));
     self
   }

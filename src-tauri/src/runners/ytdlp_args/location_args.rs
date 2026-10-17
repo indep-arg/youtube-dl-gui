@@ -10,6 +10,7 @@ pub fn build_location_args(
   output_settings: &OutputSettings,
   path_preferences: &PathPreferences,
   fallback_dir: PathBuf,
+  override_dir: Option<&str>,
 ) -> Vec<String> {
   let global_dir = output_settings
     .download_dir
@@ -30,7 +31,9 @@ pub fn build_location_args(
     ),
   };
 
-  let base_dir = preferred_dir
+  let base_dir = override_dir
+    .filter(|dir| !dir.trim().is_empty())
+    .or(preferred_dir.map(String::as_str))
     .map(PathBuf::from)
     .unwrap_or_else(|| global_dir.clone());
 

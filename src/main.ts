@@ -14,6 +14,7 @@ import { binaryHandlers } from '../tests/utils/mocks/binaryHandlers';
 import { updateHandlers } from '../tests/utils/mocks/updateHandlers';
 import { invoke } from '@tauri-apps/api/core';
 import { strongholdHandlers } from '../tests/utils/mocks/strongholdHandlers';
+import { libraryHandlers } from '../tests/utils/mocks/libraryHandlers';
 import { getDefaultLocale, i18n, type Locale } from './i18n';
 import { startWindowWatcher } from './tauri/window.ts';
 import { usePreferencesStore } from './stores/preferences.ts';
@@ -42,6 +43,7 @@ if (__E2E__) {
     ...binaryHandlers,
     ...updateHandlers,
     ...strongholdHandlers,
+    ...libraryHandlers,
   });
 }
 

@@ -23,6 +23,16 @@
         class="toggle toggle-primary"
     />
     <p class="label">{{ t('settings.input.preferVideoInMixedLinks.hint') }}</p>
+    <label class="font-semibold mt-2" for="restoreQueue">
+      {{ t('settings.input.restoreQueue.label') }}
+    </label>
+    <input
+        id="restoreQueue"
+        type="checkbox"
+        v-model="settings.input.restoreQueue"
+        class="toggle toggle-primary"
+    />
+    <p class="label">{{ t('settings.input.restoreQueue.hint') }}</p>
     <p class="font-semibold mt-2">
       {{ t('settings.input.authentication.label') }}
     </p>

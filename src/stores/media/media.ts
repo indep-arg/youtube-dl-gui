@@ -16,6 +16,7 @@ import { NotificationKind } from '../../tauri/types/app';
 import { resolvePlaylistIndex } from '../../helpers/playlistNumbering';
 import { useWatchClipboardStore } from '../watchClipboard.ts';
 import { settingsToInputFilterOverride } from '../../helpers/inputFilters.ts';
+import { findSitePreset } from '../../helpers/sitePresets.ts';
 import {
   applyPlaylistSelectionToEntries,
   buildPlaylistItemsSpec,
@@ -239,6 +240,7 @@ export const useMediaStore = defineStore('media', () => {
     if (inputFiltersOverride) {
       optionsStore.setOverrides(groupId, { inputFilters: inputFiltersOverride });
     }
+    applySitePreset(groupId, url);
 
     await invoke('media_info', {
       url,
@@ -248,6 +250,26 @@ export const useMediaStore = defineStore('media', () => {
     });
     await notifyGroup(NotificationKind.QueueAdded, newGroup);
     return groupId;
+  }
+
+  function applySitePreset(groupId: string, url: string) {
+    const preset = findSitePreset(url, settingsStore.settings.input.sitePresets ?? []);
+    if (!preset) return;
+
+    const downloadDir = preset.downloadDir?.trim();
+    if (downloadDir) {
+      const overrides = optionsStore.getOverrides(groupId) ?? {};
+      optionsStore.setOverrides(groupId, {
+        ...overrides,
+        output: { ...overrides.output, downloadDir },
+      });
+    }
+    if (preset.trackType) {
+      optionsStore.setOptions(groupId, {
+        ...getDownloadOptions(groupId),
+        trackType: preset.trackType,
+      });
+    }
   }
 
   function migrateOverrides(

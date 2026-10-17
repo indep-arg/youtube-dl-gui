@@ -1,6 +1,7 @@
 import {
   AudioFormat,
   AudioPostprocessPreset,
+  TrackType,
   TranscodePolicy,
   VideoContainer,
   VideoPostprocessMode,
@@ -52,6 +53,17 @@ export interface InputSettings {
   autoFillClipboard: boolean;
   preferVideoInMixedLinks: boolean;
   globalShortcuts: boolean;
+  /** Bring back the links that were in the queue when the app was closed. */
+  restoreQueue: boolean;
+  /** Settings applied to the links of a site when they are added. */
+  sitePresets: SitePreset[];
+}
+
+export interface SitePreset {
+  /** The site, e.g. `youtube.com`; it also matches its subdomains. */
+  domain: string;
+  trackType: TrackType | null;
+  downloadDir: string | null;
 }
 
 export type InputFilterSizeUnit = 'B' | 'KB' | 'MB' | 'GB' | 'TB';
@@ -200,6 +212,8 @@ export const defaultInputSettings: InputSettings = {
   autoFillClipboard: true,
   preferVideoInMixedLinks: false,
   globalShortcuts: true,
+  restoreQueue: true,
+  sitePresets: [],
 };
 
 export const defaultInputFilterSizeFilter: InputFilterSizeFilter = {

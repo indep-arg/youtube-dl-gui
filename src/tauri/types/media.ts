@@ -99,6 +99,8 @@ export type OutputOverrides = {
   writeDescription?: boolean;
   splitChapters?: boolean;
   liveFromStart?: boolean;
+  /** A folder that wins over the download folders in the settings (set by a site preset). */
+  downloadDir?: string;
   partialDownload?: PartialDownload;
 };
 

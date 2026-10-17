@@ -65,7 +65,8 @@
             "off": "Editar legendas (desativadas)"
           },
           "tooltip": "Legendas"
-        }
+        },
+        "history": "Download history"
       },
       "format": {
         "trackSelect": {
@@ -354,7 +355,8 @@
         "retryError": "Não foi possível voltar a tentar a transferência."
       },
       "live": "LIVE"
-    }
+    },
+    "restored": "Restored {count} link from the last session. | Restored {count} links from the last session."
   },
   "subtitles": {
     "title": "Legendas",
@@ -487,6 +489,24 @@
     "toasts": {
       "saved": "Localizações guardadas!",
       "error": "Não foi possível guardar as localizações."
+    }
+  },
+  "history": {
+    "title": "History",
+    "empty": "Finished downloads will show up here.",
+    "clear": "Clear history",
+    "confirmClear": "Click again to clear",
+    "items": "{count} file | {count} files",
+    "live": "Live stream",
+    "actions": {
+      "show": "Show in folder",
+      "addAgain": "Add to the queue again",
+      "remove": "Remove from history"
+    },
+    "toasts": {
+      "added": "Added to the queue.",
+      "notFound": "The file is no longer there.",
+      "error": "Could not update the history: {error}"
     }
   },
   "inputFilters": {
@@ -642,6 +662,28 @@
         "hint": "Some sites split videos into parts. Downloading several at a time can be faster."
       }
     },
+    "sitePresets": {
+      "legend": "Site presets",
+      "legendLabel": "Apply a type and a folder automatically to the links of a site.",
+      "empty": "No site presets yet.",
+      "domain": {
+        "label": "Site:",
+        "placeholder": "youtube.com"
+      },
+      "trackType": {
+        "label": "Download:",
+        "any": "As usual",
+        "both": "Video + audio",
+        "video": "Video only",
+        "audio": "Audio only"
+      },
+      "folder": {
+        "label": "Folder:",
+        "hint": "Leave it empty to use the usual folder."
+      },
+      "add": "Add a site",
+      "remove": "Remove"
+    },
     "input": {
       "legend": "Entrada",
       "legendLabel": "Escolhe como inicias transferências com o OVD.",
@@ -652,6 +694,10 @@
       "preferVideoInMixedLinks": {
         "label": "Preferir vídeo único em links de playlists:",
         "hint": "Quando um link contém um vídeo e uma playlist, transfere apenas o vídeo em vez da playlist completa."
+      },
+      "restoreQueue": {
+        "label": "Keep the queue between sessions:",
+        "hint": "When the app starts, add again the links that were in the queue when it was closed. Their details are loaded again."
       },
       "globalShortcuts": {
         "label": "Ativar atalhos:",

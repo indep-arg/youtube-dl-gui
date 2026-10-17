@@ -138,6 +138,8 @@ pub struct OutputOverrides {
   pub write_description: Option<bool>,
   pub split_chapters: Option<bool>,
   pub live_from_start: Option<bool>,
+  /// A folder that wins over the download folders in the settings (set by a site preset).
+  pub download_dir: Option<String>,
   pub partial_download: Option<PartialDownloadOverride>,
 }
 

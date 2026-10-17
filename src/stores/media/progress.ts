@@ -13,6 +13,8 @@ import {
 } from '../../tauri/types/progress';
 import { notifyGroup } from '../../tauri/notifications';
 import { NotificationKind } from '../../tauri/types/app';
+import { useHistoryStore } from '../history.ts';
+import type { Group } from '../../tauri/types/group.ts';
 
 export type MediaProgress = MediaProgressPayload & MediaProgressStagePayload;
 export type MediaGroupProgress = MediaGroupProgressPayload & MediaProgressStagePayload;
@@ -54,6 +56,12 @@ export const useMediaProgressStore = defineStore('media-progress', () => {
     }
   }
 
+  function recordInHistory(group: Group) {
+    useHistoryStore().record(group).catch((e) => {
+      console.error('Unable to add the download to the history:', e);
+    });
+  }
+
   function processMediaCompletePayload(payload: MediaProgressCompletePayload) {
     stateStore.setState(payload.id, MediaState.done);
     const group = groupStore.findGroupById(payload.groupId);
@@ -68,11 +76,14 @@ export const useMediaProgressStore = defineStore('media-progress', () => {
       if (allItemsAreDone) {
         void notifyGroup(NotificationKind.PlaylistFinished, group, {}, items.length);
         stateStore.setGroupState(group.id, MediaState.done);
+        recordInHistory(group);
       } else if (allItemsAreTerminal) {
         stateStore.setGroupState(group.id, MediaState.done);
+        recordInHistory(group);
       }
     } else {
       void notifyGroup(NotificationKind.VideoFinished, group);
+      recordInHistory(group);
     }
   }
 

@@ -11,6 +11,10 @@
     </base-progress>
     <div class="w-full flex max-w-4xl self-center justify-center">
       <div class="join divide-x-2">
+        <base-button class="join-item" :to="{ name: 'history' }" :tooltip="t('layout.footer.nav.history')">
+          <span class="sr-only">{{ t('layout.footer.nav.history') }}</span>
+          <clock-icon class="w-5 h-5"/>
+        </base-button>
         <base-button class="join-item" :to="{ name: 'location' }" :tooltip="t('layout.footer.nav.downloadLocation')">
           <span class="sr-only">{{ t('layout.footer.nav.downloadLocation') }}</span>
           <folder-icon class="w-5 h-5"/>
@@ -119,7 +123,15 @@
 </template>
 
 <script setup lang="ts">
-import { FolderIcon, KeyIcon as KeyIconSolid, PauseIcon, PlayIcon, TrashIcon, XMarkIcon } from '@heroicons/vue/24/solid';
+import {
+  ClockIcon,
+  FolderIcon,
+  KeyIcon as KeyIconSolid,
+  PauseIcon,
+  PlayIcon,
+  TrashIcon,
+  XMarkIcon,
+} from '@heroicons/vue/24/solid';
 import {
   ChatBubbleBottomCenterIcon,
   ChatBubbleBottomCenterTextIcon,

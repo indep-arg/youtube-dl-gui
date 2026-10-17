@@ -21,12 +21,33 @@ export const mediaHandlers: Record<string, IPCHandler> = {
       void emitPlaylistLeader(id, url, groupId, 50);
       return groupId;
     }
+    if (url.includes('live')) {
+      void emit<MediaAddPayload>('media_add', {
+        groupId,
+        total: 1,
+        item: { id, url, title: 'Live Video', audioCodecs: ['aac'], formats: sampleFormats, filesize: 0, isLeader: true, isLive: true },
+      });
+      return groupId;
+    }
     void emit<MediaAddPayload>('media_add', {
       groupId,
       total: 1,
       item: { id, url, title: 'Test Video', audioCodecs: ['aac'], formats: sampleFormats, filesize: 123, isLeader: true },
     });
     return 'test-group';
+  },
+  // Links with "finish" in them finish downloading right away; others keep downloading.
+  media_download: (_cmd: string, args: InvokeArgs | undefined): null => {
+    const { groupId, items } = ensureInvokeArgsObject<{ groupId: string; items: { id: string; url: string }[] }>(
+      args,
+      'media_download',
+    );
+    for (const item of items) {
+      if (item.url.includes('finish')) {
+        void finishDownload(groupId, item.id);
+      }
+    }
+    return null;
   },
   media_playlist_expand: (_cmd: string, args: InvokeArgs | undefined): string => {
     const { groupId, entries } = ensureInvokeArgsObject<{ groupId: string; entries: EntryItem[] }>(
@@ -77,4 +98,13 @@ async function emitExpandedPlaylist(groupId: string, entries: EntryItem[]): Prom
       },
     });
   }
+}
+
+async function finishDownload(groupId: string, id: string): Promise<void> {
+  await emit('media_destination', {
+    groupId,
+    id,
+    destination: { path: '/downloads/Test Video.mp4', confidence: 1 },
+  });
+  await emit('media_complete', { groupId, id });
 }

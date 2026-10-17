@@ -3703,6 +3703,7 @@ dependencies = [
  "include_dir",
  "indexmap 2.14.2",
  "libc",
+ "lzma-rust2",
  "notify-rust",
  "rand 0.10.3",
  "regex",

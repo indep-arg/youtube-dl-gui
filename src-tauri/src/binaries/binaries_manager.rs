@@ -2,7 +2,7 @@ use std::collections::HashMap;
 use std::path::{Path, PathBuf};
 
 use crate::binaries::binaries_extractor::{
-  extract_tar_bz2, extract_tar_bz2_bundle, extract_zip, extract_zip_bundle,
+  extract_tar, extract_tar_bundle, extract_zip, extract_zip_bundle, TarCompression,
 };
 use crate::binaries::binaries_state::CheckResult;
 use crate::paths::PathsManager;
@@ -129,10 +129,16 @@ impl BinariesManager {
     format!("{}-{}", std::env::consts::OS, std::env::consts::ARCH)
   }
 
+  /// The file for this platform. A `-v2` key (e.g. `linux-x86_64-v2`) wins: it
+  /// holds a build that only this version of the app can install (a `.tar.xz`
+  /// archive), while older versions keep using the plain key.
   fn select_file<'a>(
     files: &'a HashMap<String, FileInfo>,
     arch: &'a str,
   ) -> Option<(&'a str, &'a FileInfo)> {
+    if let Some((key, f)) = files.get_key_value(format!("{arch}-v2").as_str()) {
+      return Some((key.as_str(), f));
+    }
     if let Some(f) = files.get(arch) {
       return Some((arch, f));
     }
@@ -141,6 +147,17 @@ impl BinariesManager {
       .iter()
       .find(|(k, _)| k.starts_with(platform))
       .map(|(k, v)| (k.as_str(), v))
+  }
+
+  /// The version recorded for an installed tool. A `-v2` file gets its own
+  /// version, so a tool installed from the plain file (by an older version of the
+  /// app) is replaced once by the `-v2` build, even if the tool version is the same.
+  fn installed_version(info: &ToolInfo, key: &str) -> String {
+    if key.ends_with("-v2") {
+      format!("{}+v2", info.version)
+    } else {
+      info.version.clone()
+    }
   }
 
   async fn build_plan<'a>(
@@ -158,11 +175,14 @@ impl BinariesManager {
         }
       }
 
-      if Self::select_file(&info.files, arch).is_none() {
+      let Some((key, _)) = Self::select_file(&info.files, arch) else {
         continue;
-      }
+      };
 
-      let version_ok = meta.versions.get(name).is_some_and(|v| v == &info.version);
+      let version_ok = meta
+        .versions
+        .get(name)
+        .is_some_and(|v| *v == Self::installed_version(info, key));
       let canonical = self.canonical_path(name)?;
       let exists = tokio::fs::metadata(&canonical).await.is_ok();
 
@@ -211,11 +231,27 @@ impl BinariesManager {
     let mut successes: Vec<String> = Vec::new();
     let mut failures: Vec<ToolError> = Vec::new();
 
-    for (name, info) in plan {
-      match self.install_single_tool(bin, &arch, name, info).await {
+    // ffmpeg and ffprobe can come from the same (large) archive: it is
+    // downloaded once and kept until the last tool that needs it is installed.
+    let urls: Vec<Option<String>> = plan
+      .iter()
+      .map(|(_, info)| Self::select_file(&info.files, &arch).map(|(_, f)| f.url.clone()))
+      .collect();
+
+    for (index, (name, info)) in plan.into_iter().enumerate() {
+      let keep_archive = urls[index]
+        .as_ref()
+        .is_some_and(|url| urls[index + 1..].iter().flatten().any(|later| later == url));
+      match self
+        .install_single_tool(bin, &arch, name, info, keep_archive)
+        .await
+      {
         Ok(()) => {
           // only update meta + successes on fully successful install
-          meta.versions.insert(name.to_string(), info.version.clone());
+          let key = Self::select_file(&info.files, &arch).map_or("", |(key, _)| key);
+          meta
+            .versions
+            .insert(name.to_string(), Self::installed_version(info, key));
           successes.push(name.to_string());
         }
         Err(err) => {
@@ -261,6 +297,7 @@ impl BinariesManager {
     arch: &str,
     name: &str,
     info: &ToolInfo,
+    keep_archive: bool,
   ) -> Result<(), ToolError> {
     let Some((_key, file)) = Self::select_file(&info.files, arch) else {
       return self.fail_stage(
@@ -291,14 +328,7 @@ impl BinariesManager {
     );
 
     if let Err(e) = self
-      .download_and_verify(
-        name,
-        url,
-        &file.sha256,
-        &dest,
-        file.entry.as_deref(),
-        file.bundle.as_ref(),
-      )
+      .download_and_verify(name, file, &dest, keep_archive)
       .await
     {
       return self.fail_stage(name, &info.version, "download_verify", e.to_string());
@@ -376,12 +406,49 @@ impl BinariesManager {
   async fn download_and_verify(
     &self,
     tool: &str,
+    file: &FileInfo,
+    dest: &Path,
+    keep_archive: bool,
+  ) -> Result<(), AnyError> {
+    // Already downloaded for another tool in this run, and still intact.
+    let reuse = file_sha256(dest).await.as_deref() == Some(file.sha256.as_str());
+    self
+      .download_file(tool, &file.url, &file.sha256, dest, reuse)
+      .await?;
+    self
+      .install_from_download(
+        tool,
+        dest,
+        file.entry.as_deref(),
+        file.bundle.as_ref(),
+        keep_archive,
+      )
+      .await
+  }
+
+  /// Downloads `url` to `dest` and checks its hash. With `reuse`, the file is
+  /// already there and only the progress is reported.
+  async fn download_file(
+    &self,
+    tool: &str,
     url: &str,
     sha256: &str,
     dest: &Path,
-    entry: Option<&str>,
-    bundle: Option<&BundleInfo>,
+    reuse: bool,
   ) -> Result<(), AnyError> {
+    if reuse {
+      let size = fs::metadata(dest).await?.len();
+      let _ = self.app.emit(
+        "binary_download_progress",
+        ToolProgress {
+          tool: tool.to_string(),
+          received: size,
+          total: size,
+        },
+      );
+      return Ok(());
+    }
+
     let mut res = self.client.get(url).send().await?;
 
     let tmp = dest.with_extension("tmp");
@@ -411,7 +478,17 @@ impl BinariesManager {
     }
 
     fs::rename(&tmp, dest).await?;
+    Ok(())
+  }
 
+  async fn install_from_download(
+    &self,
+    tool: &str,
+    dest: &Path,
+    entry: Option<&str>,
+    bundle: Option<&BundleInfo>,
+    keep_archive: bool,
+  ) -> Result<(), AnyError> {
     let canonical = self.canonical_path(tool)?;
     let parent = dest.parent().unwrap();
 
@@ -427,32 +504,34 @@ impl BinariesManager {
               b.rename_entry_to.as_deref(),
             )
             .await?;
-            fs::remove_file(dest).await?;
+            remove_archive(dest, keep_archive).await?;
             self
               .hoist_bundle_contents_into_bin(&dir, &canonical)
               .await?;
           } else {
             extract_zip(tool, canonical.clone(), dest, parent, entry).await?;
-            fs::remove_file(dest).await?;
+            remove_archive(dest, keep_archive).await?;
           }
         }
-        "bz2" => {
+        "bz2" | "xz" => {
+          let compression = TarCompression::from_extension(ext).expect("bz2 or xz");
           if let Some(b) = bundle {
-            let (dir, _entry_abs) = extract_tar_bz2_bundle(
+            let (dir, _entry_abs) = extract_tar_bundle(
               dest,
               parent,
               b.folder_name.as_deref(),
               Path::new(&b.entry),
               b.rename_entry_to.as_deref(),
+              compression,
             )
             .await?;
-            fs::remove_file(dest).await?;
+            remove_archive(dest, keep_archive).await?;
             self
               .hoist_bundle_contents_into_bin(&dir, &canonical)
               .await?;
           } else {
-            extract_tar_bz2(tool, canonical.clone(), dest, parent, entry).await?;
-            fs::remove_file(dest).await?;
+            extract_tar(tool, canonical.clone(), dest, parent, entry, compression).await?;
+            remove_archive(dest, keep_archive).await?;
           }
         }
         _ => {
@@ -531,5 +610,88 @@ impl BinariesManager {
     let _ = fs::remove_dir_all(bundle_root).await;
 
     Ok(())
+  }
+}
+
+async fn remove_archive(archive: &Path, keep: bool) -> std::io::Result<()> {
+  if keep {
+    Ok(())
+  } else {
+    fs::remove_file(archive).await
+  }
+}
+
+/// The SHA-256 of a file, or `None` when it cannot be read (e.g. it does not exist).
+async fn file_sha256(path: &Path) -> Option<String> {
+  use tokio::io::AsyncReadExt;
+  let mut file = fs::File::open(path).await.ok()?;
+  let mut hasher = Sha256::new();
+  let mut buf = vec![0u8; 1 << 20];
+  loop {
+    let read = file.read(&mut buf).await.ok()?;
+    if read == 0 {
+      break;
+    }
+    hasher.update(&buf[..read]);
+  }
+  Some(hex::encode(hasher.finalize()))
+}
+
+#[cfg(test)]
+mod tests {
+  use super::{BinariesManager, FileInfo, ToolInfo};
+  use std::collections::HashMap;
+
+  fn file(url: &str) -> FileInfo {
+    FileInfo {
+      url: url.into(),
+      sha256: String::new(),
+      entry: None,
+      bundle: None,
+    }
+  }
+
+  #[test]
+  fn a_v2_file_wins_over_the_plain_one() {
+    let files = HashMap::from([
+      ("linux-x86_64".to_string(), file("old.tar.bz2")),
+      ("linux-x86_64-v2".to_string(), file("new.tar.xz")),
+    ]);
+    let (key, chosen) = BinariesManager::select_file(&files, "linux-x86_64").unwrap();
+    assert_eq!(key, "linux-x86_64-v2");
+    assert_eq!(chosen.url, "new.tar.xz");
+  }
+
+  #[test]
+  fn the_plain_file_is_used_without_a_v2_one() {
+    let files = HashMap::from([("windows-x86_64".to_string(), file("tool.zip"))]);
+    let (key, _) = BinariesManager::select_file(&files, "windows-x86_64").unwrap();
+    assert_eq!(key, "windows-x86_64");
+  }
+
+  #[test]
+  fn a_v2_file_has_its_own_installed_version() {
+    let info = ToolInfo {
+      version: "b6.1.1".into(),
+      files: HashMap::new(),
+    };
+    assert_eq!(
+      BinariesManager::installed_version(&info, "linux-x86_64-v2"),
+      "b6.1.1+v2"
+    );
+    assert_eq!(
+      BinariesManager::installed_version(&info, "linux-x86_64"),
+      "b6.1.1"
+    );
+  }
+
+  #[test]
+  fn a_v2_file_of_another_architecture_is_not_used() {
+    let files = HashMap::from([
+      ("linux-aarch64".to_string(), file("arm.bin")),
+      ("linux-x86_64-v2".to_string(), file("x86.tar.xz")),
+    ]);
+    let (key, _) = BinariesManager::select_file(&files, "linux-aarch64").unwrap();
+    assert_eq!(key, "linux-aarch64");
   }
 }

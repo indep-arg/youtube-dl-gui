@@ -56,9 +56,12 @@ include_dir = "0.7.4"
 sys-locale = "0.3.2"
 notify-rust = "4.18"
 shlex = "2.0.1"
+lzma-rust2 = { version = "0.22.0", default-features = false, features = ["std", "xz", "optimization"] }
 
 [dev-dependencies]
 tauri = { version = "2.12.4", features = ["test"] }
+# Only the tests write .tar.xz files.
+lzma-rust2 = { version = "0.22.0", default-features = false, features = ["std", "xz", "encoder"] }
 
 [target.'cfg(unix)'.dependencies]
 libc = "0.2.191"

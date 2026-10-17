@@ -35,6 +35,8 @@ export interface ToolLicense {
 interface GitHubAsset {
   name: string;
   browser_download_url: string;
+  /** e.g. `sha256:…`, when GitHub provides it. */
+  digest?: string | null;
 }
 
 interface GitHubRelease {
@@ -62,6 +64,39 @@ async function latestRelease(owner: string, repo: string): Promise<GitHubRelease
   return release;
 }
 
+/**
+ * The newest dated build of yt-dlp/FFmpeg-Builds. Its files never change, unlike
+ * the ones of the `latest` release, which are replaced every day under the same
+ * name (so a manifest hash would stop matching until the next manifest).
+ */
+async function latestAutobuild(owner: string, repo: string): Promise<GitHubRelease> {
+  console.log(`[sources] Fetching the newest dated build of ${owner}/${repo}`);
+  const headers: Record<string, string> = {};
+  const githubToken = process.env.GITHUB_TOKEN ?? process.env.GH_TOKEN ?? null;
+  if (githubToken) {
+    headers['Authorization'] = `Bearer ${githubToken}`;
+  }
+  const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/releases?per_page=20`, { headers });
+  if (!res.ok) throw new Error(`failed to fetch ${owner}/${repo}: ${res.status}`);
+  const releases = (await res.json()) as (GitHubRelease & { draft: boolean; prerelease: boolean })[];
+  const release = releases.find(r => r.tag_name.startsWith('autobuild-') && !r.draft);
+  if (!release) throw new Error(`no dated build found in ${owner}/${repo}`);
+  console.log(`[sources] Newest ${owner}/${repo} build ${release.tag_name} published at ${release.published_at}`);
+  return release;
+}
+
+/**
+ * A file of an FFmpeg-Builds archive: the archive is downloaded and `binary` is
+ * extracted from its `bin` folder. The hash comes from GitHub when it has one.
+ */
+function ffmpegBuildsFile(rel: GitHubRelease, suffix: string, binary: string): ToolSourceFile {
+  const asset = rel.assets.find(a => a.name.endsWith(suffix) && !a.name.includes('shared'));
+  if (!asset) throw new Error(`missing asset *${suffix}`);
+  const folder = asset.name.replace(/\.(tar\.xz|zip)$/, '');
+  const sha256 = asset.digest?.startsWith('sha256:') ? asset.digest.slice('sha256:'.length) : undefined;
+  return { url: asset.browser_download_url, sha256, entry: `${folder}/bin/${binary}` };
+}
+
 function assetUrl(rel: GitHubRelease, name: string): string {
   const asset = rel.assets.find(a => a.name === name);
   if (!asset) throw new Error(`missing asset ${name}`);
@@ -72,7 +107,7 @@ export async function fetchSources(): Promise<ToolSource[]> {
   console.log('[sources] Resolving tool sources');
   const ytRel = await latestRelease('yt-dlp', 'yt-dlp');
   const ffRel = await latestRelease('eugeneware', 'ffmpeg-static');
-  const ffBuildsRel = await latestRelease('yt-dlp', 'FFmpeg-Builds');
+  const ffBuildsRel = await latestAutobuild('yt-dlp', 'FFmpeg-Builds');
   const denoRel = await latestRelease('denoland', 'deno');
   const apRel = await latestRelease('wez', 'atomicparsley');
 
@@ -125,13 +160,15 @@ export async function fetchSources(): Promise<ToolSource[]> {
       name: 'ffmpeg',
       version: ffRel.tag_name,
       files: {
+        // Old versions of the app read these. On Linux this static build crashes
+        // as soon as it resolves a host name, so newer versions use the -v2 files.
         'linux-x86_64': { url: assetUrl(ffRel, 'ffmpeg-linux-x64') },
         'linux-aarch64': { url: assetUrl(ffRel, 'ffmpeg-linux-arm64') },
+        // .tar.xz archives, which only versions from 2026.10.2 on can open.
+        'linux-x86_64-v2': ffmpegBuildsFile(ffBuildsRel, '-linux64-gpl.tar.xz', 'ffmpeg'),
+        'linux-aarch64-v2': ffmpegBuildsFile(ffBuildsRel, '-linuxarm64-gpl.tar.xz', 'ffmpeg'),
         'windows-x86_64': { url: assetUrl(ffRel, 'ffmpeg-win32-x64') },
-        'windows-aarch64': {
-          url: assetUrl(ffBuildsRel, 'ffmpeg-master-latest-winarm64-gpl.zip'),
-          entry: 'ffmpeg-master-latest-winarm64-gpl/bin/ffmpeg.exe',
-        },
+        'windows-aarch64': ffmpegBuildsFile(ffBuildsRel, '-winarm64-gpl.zip', 'ffmpeg.exe'),
       },
     },
     {
@@ -140,11 +177,10 @@ export async function fetchSources(): Promise<ToolSource[]> {
       files: {
         'linux-x86_64': { url: assetUrl(ffRel, 'ffprobe-linux-x64') },
         'linux-aarch64': { url: assetUrl(ffRel, 'ffprobe-linux-arm64') },
+        'linux-x86_64-v2': ffmpegBuildsFile(ffBuildsRel, '-linux64-gpl.tar.xz', 'ffprobe'),
+        'linux-aarch64-v2': ffmpegBuildsFile(ffBuildsRel, '-linuxarm64-gpl.tar.xz', 'ffprobe'),
         'windows-x86_64': { url: assetUrl(ffRel, 'ffprobe-win32-x64') },
-        'windows-aarch64': {
-          url: assetUrl(ffBuildsRel, 'ffmpeg-master-latest-winarm64-gpl.zip'),
-          entry: 'ffmpeg-master-latest-winarm64-gpl/bin/ffprobe.exe',
-        },
+        'windows-aarch64': ffmpegBuildsFile(ffBuildsRel, '-winarm64-gpl.zip', 'ffprobe.exe'),
       },
     },
     {

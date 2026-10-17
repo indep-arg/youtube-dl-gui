@@ -1,9 +1,10 @@
 use std::error::Error;
 use std::fmt;
-use std::io;
+use std::io::{self, Read};
 use std::path::{Component, Path, PathBuf};
 
 use bzip2::read::BzDecoder;
+use lzma_rust2::XzReader;
 use tar::{Archive as TarArchive, EntryType as TarEntryType};
 use tokio::task::JoinError;
 use zip::ZipArchive;
@@ -188,12 +189,40 @@ pub async fn extract_zip(
   .await?
 }
 
-pub async fn extract_tar_bz2(
+/// How a `.tar` archive is compressed.
+#[derive(Clone, Copy, Debug)]
+pub enum TarCompression {
+  Bzip2,
+  Xz,
+}
+
+impl TarCompression {
+  /// The compression of an archive, from the extension of its file name.
+  pub fn from_extension(ext: &str) -> Option<Self> {
+    match ext {
+      "bz2" => Some(Self::Bzip2),
+      "xz" => Some(Self::Xz),
+      _ => None,
+    }
+  }
+}
+
+fn open_tar(archive: &Path, compression: TarCompression) -> io::Result<TarArchive<Box<dyn Read>>> {
+  let file = io::BufReader::new(std::fs::File::open(archive)?);
+  let reader: Box<dyn Read> = match compression {
+    TarCompression::Bzip2 => Box::new(BzDecoder::new(file)),
+    TarCompression::Xz => Box::new(XzReader::new(file, true)),
+  };
+  Ok(TarArchive::new(reader))
+}
+
+pub async fn extract_tar(
   tool: &str,
   canonical: PathBuf,
   archive: &Path,
   out_dir: &Path,
   entry: Option<&str>,
+  compression: TarCompression,
 ) -> Result<PathBuf, ExtractError> {
   let tool_name = tool.to_string();
   let archive = archive.to_owned();
@@ -201,11 +230,43 @@ pub async fn extract_tar_bz2(
   let entry = entry.map(str::to_owned);
 
   tokio::task::spawn_blocking(move || -> Result<PathBuf, ExtractError> {
-    let file = std::fs::File::open(&archive)?;
-    let mut tar = TarArchive::new(BzDecoder::new(file));
+    let unpack =
+      |e: &mut tar::Entry<'_, Box<dyn Read>>, path: &Path| -> Result<PathBuf, ExtractError> {
+        let base = path
+          .file_name()
+          .and_then(|n| n.to_str())
+          .unwrap_or(tool_name.as_str());
+        let tmp_out = out_dir.join(format!("{base}.tmp"));
+        ensure_parent(&tmp_out)?;
+        e.unpack(&tmp_out)?;
+        atomic_file_replace(&tmp_out, &canonical)?;
+        Ok(canonical.clone())
+      };
+
+    // With a known entry the archive is read once: decompressing a large
+    // archive twice (once to list it, once to extract) is slow.
+    if let Some(expect) = entry {
+      let mut seen = Vec::new();
+      let mut tar = open_tar(&archive, compression)?;
+      for e in tar.entries()? {
+        let mut e = e?;
+        if !e.header().entry_type().is_file() {
+          continue;
+        }
+        let path = e.path()?.into_owned();
+        if path.as_os_str() == std::ffi::OsStr::new(&expect) {
+          return unpack(&mut e, &path);
+        }
+        seen.push(path.to_string_lossy().into_owned());
+      }
+      return Err(ExtractError::EntryNotFound {
+        wanted: expect,
+        available: EntriesDisplay(seen),
+      });
+    }
 
     let mut files = Vec::<PathBuf>::new();
-    for e in tar.entries()? {
+    for e in open_tar(&archive, compression)?.entries()? {
       let e = e?;
       if e.header().entry_type().is_file() {
         files.push(e.path()?.into_owned());
@@ -218,17 +279,7 @@ pub async fn extract_tar_bz2(
         .collect(),
     );
 
-    let chosen_path = if let Some(expect) = entry {
-      let expect_os = std::ffi::OsString::from(expect.clone());
-      if let Some(p) = files.iter().find(|p| p.as_os_str() == expect_os) {
-        p.clone()
-      } else {
-        return Err(ExtractError::EntryNotFound {
-          wanted: expect,
-          available,
-        });
-      }
-    } else if let Some(p) = files.iter().find(|p| {
+    let chosen_path = if let Some(p) = files.iter().find(|p| {
       p.file_name()
         .and_then(|n| n.to_str())
         .is_some_and(|n| n == tool_name)
@@ -240,25 +291,11 @@ pub async fn extract_tar_bz2(
       return Err(ExtractError::AmbiguousArchive(available));
     };
 
-    let file = std::fs::File::open(&archive)?;
-    let mut tar = TarArchive::new(BzDecoder::new(file));
-
-    let base = chosen_path
-      .file_name()
-      .and_then(|n| n.to_str())
-      .unwrap_or(tool_name.as_str());
-    let tmp_out = out_dir.join(format!("{base}.tmp"));
-    ensure_parent(&tmp_out)?;
-
+    let mut tar = open_tar(&archive, compression)?;
     for e in tar.entries()? {
       let mut e = e?;
-      if !e.header().entry_type().is_file() {
-        continue;
-      }
-      if e.path()?.as_ref() == chosen_path {
-        e.unpack(&tmp_out)?;
-        atomic_file_replace(&tmp_out, &canonical)?;
-        return Ok(canonical);
+      if e.header().entry_type().is_file() && e.path()?.as_ref() == chosen_path {
+        return unpack(&mut e, &chosen_path);
       }
     }
 
@@ -348,12 +385,13 @@ pub async fn extract_zip_bundle(
   .await?
 }
 
-pub async fn extract_tar_bz2_bundle(
+pub async fn extract_tar_bundle(
   archive: &Path,
   out_parent: &Path,
   final_folder_name: Option<&str>,
   entry_relative: &Path,
   rename_entry_to: Option<&str>,
+  compression: TarCompression,
 ) -> Result<(PathBuf, PathBuf), ExtractError> {
   let archive = archive.to_owned();
   let out_parent = out_parent.to_owned();
@@ -362,8 +400,7 @@ pub async fn extract_tar_bz2_bundle(
   let rename_entry_to = rename_entry_to.map(str::to_string);
 
   tokio::task::spawn_blocking(move || -> Result<(PathBuf, PathBuf), ExtractError> {
-    let file = std::fs::File::open(&archive)?;
-    let mut tar = TarArchive::new(BzDecoder::new(file));
+    let mut tar = open_tar(&archive, compression)?;
 
     let temp_root = out_parent.join(format!(".extract-{}", uuid::Uuid::new_v4()));
     std::fs::create_dir_all(&temp_root)?;
@@ -466,4 +503,119 @@ fn list_tree(root: &Path, max: usize) -> EntriesDisplay {
   let mut v = Vec::new();
   walk(&mut v, root, root, max);
   EntriesDisplay(v)
+}
+
+#[cfg(test)]
+mod tests {
+  use super::{extract_tar, ExtractError, TarCompression};
+  use std::io::Write;
+  use std::path::{Path, PathBuf};
+
+  const FILES: [(&str, &[u8]); 3] = [
+    ("pkg/bin/ffmpeg", b"ffmpeg binary"),
+    ("pkg/bin/ffprobe", b"ffprobe binary"),
+    ("pkg/README.txt", b"readme"),
+  ];
+
+  fn temp_dir() -> PathBuf {
+    let dir = std::env::temp_dir().join(format!("ovd-extract-{}", uuid::Uuid::new_v4()));
+    std::fs::create_dir_all(&dir).unwrap();
+    dir
+  }
+
+  fn tar_bytes() -> Vec<u8> {
+    let mut builder = tar::Builder::new(Vec::new());
+    for (path, data) in FILES {
+      let mut header = tar::Header::new_gnu();
+      header.set_size(data.len() as u64);
+      header.set_mode(0o755);
+      header.set_cksum();
+      builder.append_data(&mut header, path, data).unwrap();
+    }
+    builder.into_inner().unwrap()
+  }
+
+  fn write_archive(dir: &Path, compression: TarCompression) -> PathBuf {
+    let tar = tar_bytes();
+    match compression {
+      TarCompression::Xz => {
+        let path = dir.join("tools.tar.xz");
+        let file = std::fs::File::create(&path).unwrap();
+        let mut writer =
+          lzma_rust2::XzWriter::new(file, lzma_rust2::XzOptions::with_preset(1)).unwrap();
+        writer.write_all(&tar).unwrap();
+        writer.finish().unwrap();
+        path
+      }
+      TarCompression::Bzip2 => {
+        let path = dir.join("tools.tar.bz2");
+        let file = std::fs::File::create(&path).unwrap();
+        let mut encoder = bzip2::write::BzEncoder::new(file, bzip2::Compression::fast());
+        encoder.write_all(&tar).unwrap();
+        encoder.finish().unwrap();
+        path
+      }
+    }
+  }
+
+  async fn extract(
+    compression: TarCompression,
+    tool: &str,
+    entry: Option<&str>,
+  ) -> Result<Vec<u8>, ExtractError> {
+    let dir = temp_dir();
+    let archive = write_archive(&dir, compression);
+    let canonical = dir.join(tool);
+    extract_tar(tool, canonical.clone(), &archive, &dir, entry, compression).await?;
+    Ok(std::fs::read(canonical).unwrap())
+  }
+
+  #[tokio::test]
+  async fn extracts_a_known_entry_from_a_tar_xz() {
+    let data = extract(TarCompression::Xz, "ffprobe", Some("pkg/bin/ffprobe"))
+      .await
+      .unwrap();
+    assert_eq!(data, b"ffprobe binary");
+  }
+
+  #[tokio::test]
+  async fn finds_the_tool_by_name_in_a_tar_xz() {
+    let data = extract(TarCompression::Xz, "ffmpeg", None).await.unwrap();
+    assert_eq!(data, b"ffmpeg binary");
+  }
+
+  #[tokio::test]
+  async fn a_missing_entry_lists_what_the_archive_has() {
+    let err = extract(TarCompression::Xz, "ffmpeg", Some("pkg/bin/nope"))
+      .await
+      .unwrap_err();
+    match err {
+      ExtractError::EntryNotFound { wanted, available } => {
+        assert_eq!(wanted, "pkg/bin/nope");
+        assert!(available.0.iter().any(|p| p == "pkg/bin/ffmpeg"));
+      }
+      other => panic!("unexpected error: {other}"),
+    }
+  }
+
+  #[tokio::test]
+  async fn tar_bz2_archives_still_work() {
+    let data = extract(TarCompression::Bzip2, "ffmpeg", Some("pkg/bin/ffmpeg"))
+      .await
+      .unwrap();
+    assert_eq!(data, b"ffmpeg binary");
+  }
+
+  #[test]
+  fn the_compression_comes_from_the_extension() {
+    assert!(matches!(
+      TarCompression::from_extension("xz"),
+      Some(TarCompression::Xz)
+    ));
+    assert!(matches!(
+      TarCompression::from_extension("bz2"),
+      Some(TarCompression::Bzip2)
+    ));
+    assert!(TarCompression::from_extension("zip").is_none());
+  }
 }

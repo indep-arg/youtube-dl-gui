@@ -1170,6 +1170,10 @@
         "shortMessage": "재생목록을 사용할 수 없음",
         "message": "이 재생목록은 비공개이거나 더 이상 존재하지 않습니다."
       },
+      "playlistEmpty": {
+        "shortMessage": "Empty playlist",
+        "message": "This playlist has no videos, or none of them can be downloaded."
+      },
       "videoNotFoundOrPrivate": {
         "shortMessage": "동영상을 사용할 수 없음",
         "message": "이 동영상은 삭제되었거나 비공개로 전환되었습니다."

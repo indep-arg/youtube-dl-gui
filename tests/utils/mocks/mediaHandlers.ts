@@ -21,6 +21,10 @@ export const mediaHandlers: Record<string, IPCHandler> = {
       void emitPlaylistLeader(id, url, groupId, 50);
       return groupId;
     }
+    if (url.includes('empty-playlist')) {
+      void emitEmptyPlaylist(groupId, id);
+      return groupId;
+    }
     if (url.includes('live')) {
       void emit<MediaAddPayload>('media_add', {
         groupId,
@@ -107,4 +111,15 @@ async function finishDownload(groupId: string, id: string): Promise<void> {
     destination: { path: '/downloads/Test Video.mp4', confidence: 1 },
   });
   await emit('media_complete', { groupId, id });
+}
+
+// What the backend sends for a playlist without entries.
+async function emitEmptyPlaylist(groupId: string, id: string): Promise<void> {
+  const message = 'This playlist has no videos, or none of them can be downloaded.';
+  await emit('media_diagnostic', {
+    groupId, id, level: 'error', code: 'playlistEmpty', component: null, message, raw: '', timestamp: Date.now(),
+  });
+  await emit('media_fatal', {
+    groupId, id, exitCode: 1, internal: false, message, details: null, timestamp: Date.now(),
+  });
 }

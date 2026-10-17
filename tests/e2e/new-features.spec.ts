@@ -156,3 +156,10 @@ test('a site preset sets the download type of its links', async ({ page }) => {
   });
   expect(trackTypes).toContain('audio');
 });
+
+test('an empty playlist is shown as an error', async ({ page }) => {
+  await page.goto('/');
+  await addLink(page, 'https://example.com/empty-playlist');
+  await expect(page.getByText('Error - Empty playlist')).toBeVisible();
+  await expect(page.getByText('This playlist has no videos, or none of them can be downloaded.')).toBeVisible();
+});

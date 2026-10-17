@@ -20,7 +20,7 @@ pub struct YtdlpInfo {
   pub formats: Option<Vec<YtdlpFormat>>,
   pub subtitles: Option<HashMap<String, Vec<YtdlpSubtitle>>>,
   pub automatic_captions: Option<HashMap<String, Vec<YtdlpSubtitle>>>,
-  #[serde(rename = "type_")]
+  #[serde(rename = "_type")]
   pub type_: Option<String>,
   pub is_live: Option<bool>,
   pub entries: Option<Vec<YtdlpEntry>>,

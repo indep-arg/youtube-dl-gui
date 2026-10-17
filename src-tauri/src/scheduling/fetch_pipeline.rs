@@ -1,6 +1,7 @@
 use crate::models::download::{DownloadOverrides, FormatOptions};
+use crate::models::error::DiagnosticLevel;
 use crate::models::payloads::MediaAddWithFormatPayload;
-use crate::models::{MediaAddPayload, PlaylistEntry};
+use crate::models::{MediaAddPayload, MediaDiagnosticPayload, MediaFatalPayload, PlaylistEntry};
 use crate::runners::ytdlp_info::run_ytdlp_info_fetch;
 use crate::{
   models::{ParsedMedia, ParsedPlaylist},
@@ -224,16 +225,11 @@ async fn handle_fetch_entry(
         let _ = app.emit("media_add", payload);
       }
 
-      let mut counters = GROUP_COUNTERS.lock().unwrap();
-      if let Some(cnt) = counters.get_mut(&group_id) {
-        *cnt -= 1;
-        if *cnt == 0 {
-          counters.remove(&group_id);
-          let _ = tx.send(DispatchRequest::Cleanup {
-            group_id: group_id.clone(),
-          });
-        }
-      }
+      finish_entry(&tx, &group_id);
+    }
+    Some(ParsedMedia::Playlist(pl)) if is_empty_playlist(&pl) => {
+      report_empty_playlist(&app, &group_id, &id);
+      finish_entry(&tx, &group_id);
     }
     Some(ParsedMedia::Playlist(pl)) => {
       if let Some(format) = format {
@@ -255,4 +251,44 @@ async fn handle_fetch_entry(
       // Do nothing if no parsed result is returned. The events have already been sent.
     }
   }
+}
+
+/// Marks one entry of the group as fetched; the last one cleans the group up.
+fn finish_entry(tx: &UnboundedSender<DispatchRequest<FetchRequest>>, group_id: &str) {
+  let mut counters = GROUP_COUNTERS.lock().unwrap();
+  if let Some(cnt) = counters.get_mut(group_id) {
+    *cnt -= 1;
+    if *cnt == 0 {
+      counters.remove(group_id);
+      let _ = tx.send(DispatchRequest::Cleanup {
+        group_id: group_id.to_string(),
+      });
+    }
+  }
+}
+
+fn is_empty_playlist(playlist: &ParsedPlaylist) -> bool {
+  playlist.entries.is_empty()
+}
+
+/// An empty playlist has nothing to choose from, so it is shown as an error
+/// (with a translated message for the `playlistEmpty` code).
+fn report_empty_playlist(app: &AppHandle, group_id: &str, id: &str) {
+  const MESSAGE: &str = "This playlist has no videos, or none of them can be downloaded.";
+  let diagnostic = MediaDiagnosticPayload {
+    group_id: group_id.to_string(),
+    id: id.to_string(),
+    level: DiagnosticLevel::Error,
+    code: "playlistEmpty".into(),
+    component: None,
+    message: MESSAGE.into(),
+    raw: String::new(),
+    timestamp: std::time::SystemTime::now()
+      .duration_since(std::time::UNIX_EPOCH)
+      .map(|d| d.as_millis())
+      .unwrap_or(0),
+  };
+  let _ = app.emit("media_diagnostic", diagnostic);
+  let fatal = MediaFatalPayload::with_exit(group_id.to_string(), id.to_string(), 1, MESSAGE.into());
+  let _ = app.emit("media_fatal", fatal);
 }

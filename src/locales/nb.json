@@ -1170,6 +1170,10 @@
         "shortMessage": "Spilleliste utilgjengelig",
         "message": "Denne spillelisten er privat eller finnes ikke lenger."
       },
+      "playlistEmpty": {
+        "shortMessage": "Empty playlist",
+        "message": "This playlist has no videos, or none of them can be downloaded."
+      },
       "videoNotFoundOrPrivate": {
         "shortMessage": "Video utilgjengelig",
         "message": "Denne videoen ble fjernet eller satt til privat."

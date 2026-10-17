@@ -123,6 +123,21 @@ mod tests {
   }
 
   #[test]
+  fn the_type_field_of_yt_dlp_is_read() {
+    let empty_playlist = r#"{"_type": "playlist", "entries": []}"#;
+    let video = r#"{"_type": "video", "formats": []}"#;
+
+    match parse_ytdlp_info(empty_playlist, "id".into()).unwrap() {
+      ParsedMedia::Playlist(playlist) => assert!(playlist.entries.is_empty()),
+      ParsedMedia::Single(_) => panic!("an empty playlist must still be a playlist"),
+    }
+    assert!(matches!(
+      parse_ytdlp_info(video, "id".into()).unwrap(),
+      ParsedMedia::Single(_)
+    ));
+  }
+
+  #[test]
   fn live_streams_are_parsed_as_live_single_videos() {
     let live = r#"{"title": "Live now", "is_live": true, "webpage_url": "https://example.com/live", "formats": []}"#;
     let video = r#"{"title": "A video", "is_live": false, "formats": []}"#;

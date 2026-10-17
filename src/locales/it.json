@@ -1170,6 +1170,10 @@
         "shortMessage": "Playlist non disponibile",
         "message": "Questa playlist è privata o non esiste più."
       },
+      "playlistEmpty": {
+        "shortMessage": "Empty playlist",
+        "message": "This playlist has no videos, or none of them can be downloaded."
+      },
       "videoNotFoundOrPrivate": {
         "shortMessage": "Video non disponibile",
         "message": "Questo video è stato rimosso o è impostato come privato."

@@ -1170,6 +1170,10 @@
         "shortMessage": "Oynatma listesi mevcut değil",
         "message": "Bu oynatma listesi gizli ya da silinmiş."
       },
+      "playlistEmpty": {
+        "shortMessage": "Empty playlist",
+        "message": "This playlist has no videos, or none of them can be downloaded."
+      },
       "videoNotFoundOrPrivate": {
         "shortMessage": "Video mevcut değil",
         "message": "Bu video kaldırılmış ya da gizliye alınmış."

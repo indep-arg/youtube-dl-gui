@@ -1170,6 +1170,10 @@
         "shortMessage": "Lista no disponible",
         "message": "Esta lista de reproducción es privada o ya no existe."
       },
+      "playlistEmpty": {
+        "shortMessage": "Lista vacía",
+        "message": "Esta lista de reproducción no tiene videos, o ninguno se puede descargar."
+      },
       "videoNotFoundOrPrivate": {
         "shortMessage": "Video no disponible",
         "message": "Este video fue eliminado o configurado como privado."

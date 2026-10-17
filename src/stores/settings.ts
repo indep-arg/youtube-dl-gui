@@ -10,7 +10,8 @@ type DeepPartial<T> = T extends object ? {
 } : T;
 
 export const useSettingsStore = defineStore('settings', () => {
-  const settings = ref<Settings>(defaultSettings);
+  // A copy: the store changes its settings in place, and the defaults must stay as they are.
+  const settings = ref<Settings>(structuredClone(defaultSettings));
 
   async function load(): Promise<Settings> {
     const cfg = await invoke<Settings>('config_get');

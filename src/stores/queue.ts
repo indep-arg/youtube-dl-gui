@@ -21,9 +21,14 @@ export const useQueueStore = defineStore('queue', () => {
   let isSaving = false;
   let timer: ReturnType<typeof setTimeout> | undefined;
 
-  /** The links that are not finished yet; failed ones are left out. */
+  /**
+   * The links that are not finished yet, oldest first; failed ones are left out.
+   * The queue shows the newest link on top and {@link restore} adds them one by
+   * one, so saving them oldest first keeps the same order after a restart.
+   */
   function pendingLinks(): QueuedLink[] {
-    return groupStore.orderedGroups
+    return [...groupStore.orderedGroups]
+      .reverse()
       .filter((group) => {
         const state = stateStore.getGroupState(group.id);
         return !!group.url && state !== MediaState.done && state !== MediaState.error;

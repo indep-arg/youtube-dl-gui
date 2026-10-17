@@ -9,7 +9,8 @@ type DeepPartial<T> = T extends object ? {
 } : T;
 
 export const usePreferencesStore = defineStore('preferences', () => {
-  const preferences = ref<Preferences>(defaultPreferences);
+  // A copy: the store changes its preferences in place, and the defaults must stay as they are.
+  const preferences = ref<Preferences>(structuredClone(defaultPreferences));
   const pathExamples = ref<Record<string, string>>({});
   const filenameExamples = ref<Record<string, string>>({});
 

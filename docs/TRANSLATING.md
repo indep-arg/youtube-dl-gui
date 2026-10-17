@@ -1,7 +1,10 @@
 # Translating
 
-The app has 13 languages. Texts live in JSON files, and a text without a translation is shown in
-English, so a partial translation is fine.
+The app has 13 languages. Texts live in JSON files.
+
+Every language file has exactly the same keys as `en.json`, in the same order and with the same
+structure. A text that is not translated yet keeps the English text, so the files can be compared
+line by line with `en.json`.
 
 There are two folders of translations:
 
@@ -13,8 +16,11 @@ There are two folders of translations:
 ## Improving a language that already exists
 
 1. Edit its file in both folders with any text editor.
-2. Change only the text on the right-hand side of each key. Do not rename keys or change the structure.
+2. Change only the text on the right-hand side of each key. Do not rename, add, remove or move keys.
 3. Open a pull request.
+
+When English gets a new key, add it to every language in the same place, with the English text until
+someone translates it.
 
 ## Adding a new language
 
@@ -49,5 +55,6 @@ npx vitest run tests/unit/translations.spec.ts
 npm run lint
 ```
 
-The test fails if a language has a key that English does not have, or if a `{placeholder}` was changed.
+The test fails if a language does not have the same keys as English in the same order, or if a
+`{placeholder}` was changed.
 The linter checks the keys used by the interface.

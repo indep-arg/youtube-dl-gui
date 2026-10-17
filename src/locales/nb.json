@@ -29,9 +29,6 @@
   "layout": {
     "header": {
       "placeholder": "Skriv inn en video-/spilleliste-URL for å legge til i køen",
-      "nav": {
-        "settings": "App-innstillinger"
-      },
       "watchClipboardPlaceholder": "Overvåker utklippstavlen: kopierte lenker legges til i køen",
       "actions": {
         "more": "Flere handlinger for å legge til",
@@ -39,6 +36,9 @@
         "watchClipboardStop": "Slutt å overvåke utklippstavlen",
         "importFile": "Importer lenker",
         "inputFilters": "Filtre"
+      },
+      "nav": {
+        "settings": "App-innstillinger"
       }
     },
     "footer": {
@@ -187,14 +187,14 @@
           "count": "Advarsler ({count})",
           "empty": "Ingen advarsler funnet."
         },
-        "all": {
-          "title": "Alle logger",
-          "empty": "Ingen logger funnet."
-        },
         "skipped": {
           "count": "Hoppede over elementer ({count})",
           "empty": "Ingen elementer ble hoppet over av filtrene.",
           "items": "{count} element | {count} elementer"
+        },
+        "all": {
+          "title": "Alle logger",
+          "empty": "Ingen logger funnet."
         }
       }
     },
@@ -206,18 +206,8 @@
         "quality": "Velg innstillinger for format, kodek og spor.",
         "network": "Konfigurer proxy, identitetsforfalskning og forespørselshoder. Overstyrer appens standardinnstillinger for denne nedlastingen.",
         "output": "Konfigurer beholderformat, konvertering og filnavnsmaler. Overstyrer appens standardinnstillinger for denne nedlastingen.",
-        "headersOverride": "En per linje: FELT:VERDI. Erstatter globale forespørselshoder for denne nedlastingen.",
-        "subtitles": "Velg undertekster for denne nedlastingen."
-      },
-      "hints": {
-        "format": "Velg video- eller lydkvalitet. Høyere kvalitet betyr vanligvis større filer og lengre nedlastinger.",
-        "encodings": "Velg foretrukne kodeker. Nyttig for avspillingskompatibilitet eller for å beholde original kvalitet.",
-        "tracks": "Velg språk- eller kanalvarianter når de er tilgjengelige, for eksempel dubbet lyd."
-      },
-      "tabs": {
-        "quality": "Kvalitet",
-        "network": "Nettverk",
-        "subtitles": "Undertekster"
+        "subtitles": "Velg undertekster for denne nedlastingen.",
+        "headersOverride": "En per linje: FELT:VERDI. Erstatter globale forespørselshoder for denne nedlastingen."
       },
       "subtitles": {
         "empty": "Fant ingen undertekster for denne nedlastingen.",
@@ -229,6 +219,16 @@
           "noneManual": "Fant ingen undertekster fra skaperen.",
           "noneAuto": "Fant ingen autogenererte undertekster."
         }
+      },
+      "hints": {
+        "format": "Velg video- eller lydkvalitet. Høyere kvalitet betyr vanligvis større filer og lengre nedlastinger.",
+        "encodings": "Velg foretrukne kodeker. Nyttig for avspillingskompatibilitet eller for å beholde original kvalitet.",
+        "tracks": "Velg språk- eller kanalvarianter når de er tilgjengelige, for eksempel dubbet lyd."
+      },
+      "tabs": {
+        "quality": "Kvalitet",
+        "subtitles": "Undertekster",
+        "network": "Nettverk"
       }
     },
     "steps": {
@@ -355,6 +355,10 @@
   },
   "subtitles": {
     "title": "Undertekster",
+    "defaults": {
+      "legend": "Standard for undertekster",
+      "hint": "Brukes når en video har undertekster."
+    },
     "options": {
       "enable": {
         "legend": "Nedlasting av undertekster",
@@ -383,8 +387,8 @@
         "searchPlaceholder": "Søk etter språknavn",
         "noResult": "Ingen språk samsvarer med \"{query}\".",
         "selected": "Valgt:",
-        "allSelected": "Alle tilgjengelige undertekster",
-        "none": "Ingen"
+        "none": "Ingen",
+        "allSelected": "Alle tilgjengelige undertekster"
       }
     },
     "toasts": {
@@ -397,10 +401,6 @@
       "ass": "Advanced SubStation Alpha (.ass)",
       "ttml": "Timed Text Markup (.ttml)",
       "json3": "JSON (.json)"
-    },
-    "defaults": {
-      "legend": "Standard for undertekster",
-      "hint": "Brukes når en video har undertekster."
     }
   },
   "location": {
@@ -447,6 +447,10 @@
     "filename": {
       "legend": "Filnavnformat",
       "legendLabel": "Velg filnavnet som nedlastinger vil ha.",
+      "reversePlaylistNumbering": {
+        "label": "Omvendt spillelistenummerering:",
+        "hint": "Nummerer spillelisteelementer fra slutten i stedet for begynnelsen."
+      },
       "formatPreset": {
         "label": "Filnavnmal:",
         "exampleLabel": "Eksempel på utdata:",
@@ -475,15 +479,111 @@
       },
       "outputFormat": {
         "label": "Filnavnformat:"
-      },
-      "reversePlaylistNumbering": {
-        "label": "Omvendt spillelistenummerering:",
-        "hint": "Nummerer spillelisteelementer fra slutten i stedet for begynnelsen."
       }
     },
     "toasts": {
       "saved": "Nedlastingssteder lagret!",
       "error": "Kunne ikke lagre nedlastingssteder."
+    }
+  },
+  "inputFilters": {
+    "title": "Inndatafiltre",
+    "filesize": {
+      "legend": "Filstørrelse",
+      "hint": "Behold bare elementer som er større eller mindre enn størrelsen du velger."
+    },
+    "dates": {
+      "legend": "Opplastingsdatoer",
+      "hint": "Behold bare elementer som ble lastet opp på, før eller etter en dato."
+    },
+    "advanced": {
+      "legend": "Avanserte filtre",
+      "hint": "Dette er rå yt-dlp-filtre for avansert bruk."
+    },
+    "fields": {
+      "minSize": {
+        "label": "Minste filstørrelse:"
+      },
+      "maxSize": {
+        "label": "Største filstørrelse:"
+      },
+      "size": {
+        "valuePlaceholder": "50",
+        "unitPlaceholder": "Enhet"
+      },
+      "date": {
+        "modeLabel": "Matchregel",
+        "clearMode": "Av",
+        "hint": "Velg datoregel først, og deretter datoen.",
+        "mode": {
+          "exact": "På datoen",
+          "before": "På eller før",
+          "after": "På eller etter"
+        },
+        "activeLabel": {
+          "exact": "Videoer lastet opp på denne datoen",
+          "before": "Videoer lastet opp på eller før denne datoen",
+          "after": "Videoer lastet opp på eller etter denne datoen"
+        },
+        "presetsLabel": "Hurtigvalg",
+        "presets": {
+          "today": "I dag",
+          "yesterday": "I går",
+          "last7Days": "Siste 7 dager",
+          "last30Days": "Siste 30 dager"
+        }
+      },
+      "matchFilters": {
+        "label": "Matchfiltre:",
+        "placeholder": "!is_live & view_count >=? 10000",
+        "hint": "Eksempler: !is_live, duration >? 600, like_count >=? 100"
+      },
+      "breakMatchFilters": {
+        "label": "Avbryt-matchfiltre:",
+        "placeholder": "duration >? 3600",
+        "hint": "Slutt å sjekke den gjeldende lenken når et element ikke består dette filteret."
+      }
+    },
+    "playlistSelection": {
+      "title": "Velg spillelisteelementer",
+      "description": "Velg hvilke elementer som skal lastes ned:",
+      "selectionSummary": "{count} av {total} element valgt | {count} av {total} elementer valgt",
+      "selectionSummaryAll": "Alle elementer valgt | Alle {count} elementer valgt",
+      "advancedButton": "Avansert",
+      "simpleButton": "Tilbakestill",
+      "advancedTitle": "Avansert spillelistevalg",
+      "advancedHint": "Velg flere elementer, negative tall og flere intervaller.",
+      "advancedDescription": "Gjeldende utvalg",
+      "advancedEmpty": "Ingen avansert utvalg er satt opp ennå.",
+      "addSingle": "Legg til element",
+      "addRange": "Legg til intervall",
+      "applyFull": "Last ned alle elementer",
+      "applySelection": "Last ned valgte elementer",
+      "useAdvanced": "Bruk avansert utvalg",
+      "noMatches": "Dette intervallet samsvarer ikke med noen elementer i spillelisten.",
+      "row": {
+        "single": "Enkelt",
+        "range": "Intervall"
+      },
+      "remove": "Fjern",
+      "fields": {
+        "advancedLabel": "Avansert:",
+        "index": "Element",
+        "indexPlaceholder": "1 eller -1",
+        "start": "Start",
+        "startPlaceholder": "1",
+        "end": "Slutt",
+        "endPlaceholder": "10",
+        "input": "Elementer"
+      },
+      "errors": {
+        "playlistIndex": "Bruk et heltall annet enn 0. Negative tall teller fra slutten.",
+        "playlistRangeBounds": "Angi både start og slutt. Negative tall teller fra slutten."
+      }
+    },
+    "toasts": {
+      "saved": "Inndatafiltre lagret!",
+      "error": "Kunne ikke lagre inndatafiltre. {error}"
     }
   },
   "settings": {
@@ -552,6 +652,10 @@
       "addMetadata": {
         "label": "Legg til tittel- og artistinformasjon:",
         "hint": "Lagre metadata som tittel, opplaster/artist og beskrivelse i filen."
+      },
+      "preciseCuts": {
+        "label": "Presist klipp:",
+        "hint": "Klipper på nøyaktige bilder i stedet for nærliggende nøkkelbilder. Veldig tregt.\nAktiver bare hvis vanlige klipp blir feil, forvrengt eller får svarte/manglende segmenter."
       },
       "partialDownload": {
         "legend": "Delvis nedlasting",
@@ -644,10 +748,6 @@
             }
           }
         }
-      },
-      "preciseCuts": {
-        "label": "Presist klipp:",
-        "hint": "Klipper på nøyaktige bilder i stedet for nærliggende nøkkelbilder. Veldig tregt.\nAktiver bare hvis vanlige klipp blir feil, forvrengt eller får svarte/manglende segmenter."
       }
     },
     "appearance": {
@@ -719,6 +819,10 @@
       "apiUrl": {
         "label": "API URL"
       },
+      "preciseCuts": {
+        "label": "Presist klipp:",
+        "hint": "Gjør at SponsorBlock-fjerning og delvise nedlastinger klipper på nøyaktige bilder. Veldig tregt.\nAktiver bare hvis vanlige klipp blir feil, forvrengt eller får svarte/manglende segmenter."
+      },
       "parts": {
         "sponsor": {
           "label": "Sponsor",
@@ -760,10 +864,6 @@
           "label": "Kapittel",
           "description": "Markerer et kapittel/avsnitt i videoen (brukes med kapittel-handlingstype)."
         }
-      },
-      "preciseCuts": {
-        "label": "Presist klipp:",
-        "hint": "Gjør at SponsorBlock-fjerning og delvise nedlastinger klipper på nøyaktige bilder. Veldig tregt.\nAktiver bare hvis vanlige klipp blir feil, forvrengt eller får svarte/manglende segmenter."
       }
     },
     "update": {
@@ -993,6 +1093,10 @@
         "shortMessage": "ffmpeg feilet",
         "message": "FFmpeg støtte på en feil under behandlingen."
       },
+      "rejectedByFilter": {
+        "shortMessage": "Filtrert bort",
+        "message": "Dette elementet ble filtrert bort av inndatafiltrene dine."
+      },
       "cannotAllocateMemory": {
         "shortMessage": "Minnefeil",
         "message": "FFmpeg gikk tom for minne under behandlingen av videoen."
@@ -1040,10 +1144,6 @@
       "unknown": {
         "shortMessage": "Ukjent feil",
         "message": "En ukjent feil oppstod under behandlingen av dette elementet."
-      },
-      "rejectedByFilter": {
-        "shortMessage": "Filtrert bort",
-        "message": "Dette elementet ble filtrert bort av inndatafiltrene dine."
       }
     }
   },
@@ -1058,106 +1158,6 @@
       "github": "GitHub",
       "wiki": "Wiki",
       "reportABug": "Rapporter en feil"
-    }
-  },
-  "inputFilters": {
-    "title": "Inndatafiltre",
-    "filesize": {
-      "legend": "Filstørrelse",
-      "hint": "Behold bare elementer som er større eller mindre enn størrelsen du velger."
-    },
-    "dates": {
-      "legend": "Opplastingsdatoer",
-      "hint": "Behold bare elementer som ble lastet opp på, før eller etter en dato."
-    },
-    "advanced": {
-      "legend": "Avanserte filtre",
-      "hint": "Dette er rå yt-dlp-filtre for avansert bruk."
-    },
-    "fields": {
-      "minSize": {
-        "label": "Minste filstørrelse:"
-      },
-      "maxSize": {
-        "label": "Største filstørrelse:"
-      },
-      "size": {
-        "valuePlaceholder": "50",
-        "unitPlaceholder": "Enhet"
-      },
-      "date": {
-        "modeLabel": "Matchregel",
-        "clearMode": "Av",
-        "hint": "Velg datoregel først, og deretter datoen.",
-        "mode": {
-          "exact": "På datoen",
-          "before": "På eller før",
-          "after": "På eller etter"
-        },
-        "activeLabel": {
-          "exact": "Videoer lastet opp på denne datoen",
-          "before": "Videoer lastet opp på eller før denne datoen",
-          "after": "Videoer lastet opp på eller etter denne datoen"
-        },
-        "presetsLabel": "Hurtigvalg",
-        "presets": {
-          "today": "I dag",
-          "yesterday": "I går",
-          "last7Days": "Siste 7 dager",
-          "last30Days": "Siste 30 dager"
-        }
-      },
-      "matchFilters": {
-        "label": "Matchfiltre:",
-        "placeholder": "!is_live & view_count >=? 10000",
-        "hint": "Eksempler: !is_live, duration >? 600, like_count >=? 100"
-      },
-      "breakMatchFilters": {
-        "label": "Avbryt-matchfiltre:",
-        "placeholder": "duration >? 3600",
-        "hint": "Slutt å sjekke den gjeldende lenken når et element ikke består dette filteret."
-      }
-    },
-    "playlistSelection": {
-      "title": "Velg spillelisteelementer",
-      "description": "Velg hvilke elementer som skal lastes ned:",
-      "selectionSummary": "{count} av {total} element valgt | {count} av {total} elementer valgt",
-      "selectionSummaryAll": "Alle elementer valgt | Alle {count} elementer valgt",
-      "advancedButton": "Avansert",
-      "simpleButton": "Tilbakestill",
-      "advancedTitle": "Avansert spillelistevalg",
-      "advancedHint": "Velg flere elementer, negative tall og flere intervaller.",
-      "advancedDescription": "Gjeldende utvalg",
-      "advancedEmpty": "Ingen avansert utvalg er satt opp ennå.",
-      "addSingle": "Legg til element",
-      "addRange": "Legg til intervall",
-      "applyFull": "Last ned alle elementer",
-      "applySelection": "Last ned valgte elementer",
-      "useAdvanced": "Bruk avansert utvalg",
-      "noMatches": "Dette intervallet samsvarer ikke med noen elementer i spillelisten.",
-      "row": {
-        "single": "Enkelt",
-        "range": "Intervall"
-      },
-      "remove": "Fjern",
-      "fields": {
-        "advancedLabel": "Avansert:",
-        "index": "Element",
-        "indexPlaceholder": "1 eller -1",
-        "start": "Start",
-        "startPlaceholder": "1",
-        "end": "Slutt",
-        "endPlaceholder": "10",
-        "input": "Elementer"
-      },
-      "errors": {
-        "playlistIndex": "Bruk et heltall annet enn 0. Negative tall teller fra slutten.",
-        "playlistRangeBounds": "Angi både start og slutt. Negative tall teller fra slutten."
-      }
-    },
-    "toasts": {
-      "saved": "Inndatafiltre lagret!",
-      "error": "Kunne ikke lagre inndatafiltre. {error}"
     }
   }
 }

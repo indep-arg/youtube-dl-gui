@@ -29,9 +29,6 @@
   "layout": {
     "header": {
       "placeholder": "輸入影片/播放清單 URL 以加入佇列",
-      "nav": {
-        "settings": "應用程式設定"
-      },
       "watchClipboardPlaceholder": "正在監看剪貼簿：複製的連結會加入佇列",
       "actions": {
         "more": "更多加入方式",
@@ -39,6 +36,9 @@
         "watchClipboardStop": "停止監看剪貼簿",
         "importFile": "匯入連結",
         "inputFilters": "篩選條件"
+      },
+      "nav": {
+        "settings": "應用程式設定"
       }
     },
     "footer": {
@@ -187,14 +187,14 @@
           "count": "警告 ({count})",
           "empty": "找不到警告。"
         },
-        "all": {
-          "title": "所有記錄",
-          "empty": "找不到記錄。"
-        },
         "skipped": {
           "count": "已略過項目 ({count})",
           "empty": "沒有任何項目被篩選條件略過。",
           "items": "{count} 個項目 | {count} 個項目"
+        },
+        "all": {
+          "title": "所有記錄",
+          "empty": "找不到記錄。"
         }
       }
     },
@@ -206,18 +206,8 @@
         "quality": "選擇格式、編碼與軌道偏好。",
         "network": "設定 Proxy、模擬身分與請求標頭。這會覆寫此下載的應用程式預設值。",
         "output": "設定容器格式、轉換方式與檔名範本。這會覆寫此下載的應用程式預設值。",
-        "headersOverride": "每行一項：欄位:值。這會取代此下載使用的全域標頭。",
-        "subtitles": "選擇此下載的字幕。"
-      },
-      "hints": {
-        "format": "選擇影片或音訊品質。品質越高，通常代表檔案越大、下載時間越長。",
-        "encodings": "選擇偏好的編碼。適合用來提升播放相容性，或保留原始品質。",
-        "tracks": "可用時可選擇語言或聲道版本，例如配音音軌。"
-      },
-      "tabs": {
-        "quality": "畫質",
-        "network": "網路",
-        "subtitles": "字幕"
+        "subtitles": "選擇此下載的字幕。",
+        "headersOverride": "每行一項：欄位:值。這會取代此下載使用的全域標頭。"
       },
       "subtitles": {
         "empty": "此下載沒有可用字幕。",
@@ -229,6 +219,16 @@
           "noneManual": "找不到創作者提供的字幕。",
           "noneAuto": "找不到自動字幕。"
         }
+      },
+      "hints": {
+        "format": "選擇影片或音訊品質。品質越高，通常代表檔案越大、下載時間越長。",
+        "encodings": "選擇偏好的編碼。適合用來提升播放相容性，或保留原始品質。",
+        "tracks": "可用時可選擇語言或聲道版本，例如配音音軌。"
+      },
+      "tabs": {
+        "quality": "畫質",
+        "subtitles": "字幕",
+        "network": "網路"
       }
     },
     "steps": {
@@ -355,6 +355,10 @@
   },
   "subtitles": {
     "title": "字幕",
+    "defaults": {
+      "legend": "預設字幕",
+      "hint": "當影片有字幕時使用。"
+    },
     "options": {
       "enable": {
         "legend": "字幕下載",
@@ -383,8 +387,8 @@
         "searchPlaceholder": "依語言名稱搜尋",
         "noResult": "沒有語言符合「{query}」。",
         "selected": "已選取:",
-        "allSelected": "所有可用字幕",
-        "none": "無"
+        "none": "無",
+        "allSelected": "所有可用字幕"
       }
     },
     "toasts": {
@@ -397,10 +401,6 @@
       "ass": "Advanced SubStation Alpha (.ass)",
       "ttml": "Timed Text Markup (.ttml)",
       "json3": "JSON (.json)"
-    },
-    "defaults": {
-      "legend": "預設字幕",
-      "hint": "當影片有字幕時使用。"
     }
   },
   "location": {
@@ -447,6 +447,10 @@
     "filename": {
       "legend": "檔名格式",
       "legendLabel": "選取下載檔案的檔名格式。",
+      "reversePlaylistNumbering": {
+        "label": "反向播放清單編號:",
+        "hint": "從結尾而不是開頭為播放清單項目編號。"
+      },
       "formatPreset": {
         "label": "檔名預設:",
         "exampleLabel": "範例輸出:",
@@ -475,15 +479,111 @@
       },
       "outputFormat": {
         "label": "檔名格式:"
-      },
-      "reversePlaylistNumbering": {
-        "label": "反向播放清單編號:",
-        "hint": "從結尾而不是開頭為播放清單項目編號。"
       }
     },
     "toasts": {
       "saved": "位置已儲存！",
       "error": "無法儲存位置。"
+    }
+  },
+  "inputFilters": {
+    "title": "輸入篩選條件",
+    "filesize": {
+      "legend": "檔案大小",
+      "hint": "只保留大於或小於你所選大小的項目。"
+    },
+    "dates": {
+      "legend": "上傳日期",
+      "hint": "只保留在某日期當天、之前或之後上傳的項目。"
+    },
+    "advanced": {
+      "legend": "進階篩選條件",
+      "hint": "這些是供進階使用者使用的原始 yt-dlp 篩選條件。"
+    },
+    "fields": {
+      "minSize": {
+        "label": "最小檔案大小:"
+      },
+      "maxSize": {
+        "label": "最大檔案大小:"
+      },
+      "size": {
+        "valuePlaceholder": "50",
+        "unitPlaceholder": "單位"
+      },
+      "date": {
+        "modeLabel": "比對規則",
+        "clearMode": "關閉",
+        "hint": "先選擇日期規則，再選擇日期。",
+        "mode": {
+          "exact": "在該日期",
+          "before": "在該日期或之前",
+          "after": "在該日期或之後"
+        },
+        "activeLabel": {
+          "exact": "在這一天上傳的影片",
+          "before": "在這一天或之前上傳的影片",
+          "after": "在這一天或之後上傳的影片"
+        },
+        "presetsLabel": "快速選項",
+        "presets": {
+          "today": "今天",
+          "yesterday": "昨天",
+          "last7Days": "最近 7 天",
+          "last30Days": "最近 30 天"
+        }
+      },
+      "matchFilters": {
+        "label": "比對篩選條件:",
+        "placeholder": "!is_live & view_count >=? 10000",
+        "hint": "範例：!is_live、duration >? 600、like_count >=? 100"
+      },
+      "breakMatchFilters": {
+        "label": "中斷比對篩選條件:",
+        "placeholder": "duration >? 3600",
+        "hint": "若某個項目未通過此篩選條件，就停止檢查目前的連結。"
+      }
+    },
+    "playlistSelection": {
+      "title": "選擇播放清單項目",
+      "description": "選擇要下載的項目:",
+      "selectionSummary": "已選取 {count} / {total} 個項目 | 已選取 {count} / {total} 個項目",
+      "selectionSummaryAll": "已選取全部項目 | 已選取全部 {count} 個項目",
+      "advancedButton": "進階",
+      "simpleButton": "重設",
+      "advancedTitle": "進階播放清單選取",
+      "advancedHint": "可選擇多個項目、負數與多個範圍。",
+      "advancedDescription": "目前選取",
+      "advancedEmpty": "尚未設定任何進階選取。",
+      "addSingle": "新增項目",
+      "addRange": "新增範圍",
+      "applyFull": "下載所有項目",
+      "applySelection": "下載已選項目",
+      "useAdvanced": "使用進階選取",
+      "noMatches": "這個範圍在播放清單中沒有符合的項目。",
+      "row": {
+        "single": "單一",
+        "range": "範圍"
+      },
+      "remove": "移除",
+      "fields": {
+        "advancedLabel": "進階:",
+        "index": "項目",
+        "indexPlaceholder": "1 或 -1",
+        "start": "開始",
+        "startPlaceholder": "1",
+        "end": "結束",
+        "endPlaceholder": "10",
+        "input": "項目"
+      },
+      "errors": {
+        "playlistIndex": "請輸入不為 0 的整數。負數會從結尾開始計算。",
+        "playlistRangeBounds": "請同時設定開始與結束。負數會從結尾開始計算。"
+      }
+    },
+    "toasts": {
+      "saved": "輸入篩選條件已儲存！",
+      "error": "無法儲存輸入篩選條件。{error}"
     }
   },
   "settings": {
@@ -552,6 +652,10 @@
       "addMetadata": {
         "label": "加入標題與演出者資訊:",
         "hint": "將標題、上傳者/演出者與描述等中繼資料儲存至檔案中。"
+      },
+      "preciseCuts": {
+        "label": "精準裁切:",
+        "hint": "在精確影格處裁切，而不是在鄰近關鍵影格處裁切。速度非常慢。\n只有在一般裁切結果錯誤、損壞或出現黑畫面/缺失片段時才啟用。"
       },
       "partialDownload": {
         "legend": "部分下載",
@@ -644,10 +748,6 @@
             }
           }
         }
-      },
-      "preciseCuts": {
-        "label": "精準裁切:",
-        "hint": "在精確影格處裁切，而不是在鄰近關鍵影格處裁切。速度非常慢。\n只有在一般裁切結果錯誤、損壞或出現黑畫面/缺失片段時才啟用。"
       }
     },
     "appearance": {
@@ -719,6 +819,10 @@
       "apiUrl": {
         "label": "API URL"
       },
+      "preciseCuts": {
+        "label": "精準裁切:",
+        "hint": "讓 SponsorBlock 移除與部分下載在精確影格處裁切。速度非常慢。\n只有在一般裁切結果錯誤、損壞或出現黑畫面/缺失片段時才啟用。"
+      },
       "parts": {
         "sponsor": {
           "label": "贊助",
@@ -760,10 +864,6 @@
           "label": "章節",
           "description": "標記影片的章節/區段 (搭配章節動作類型)。"
         }
-      },
-      "preciseCuts": {
-        "label": "精準裁切:",
-        "hint": "讓 SponsorBlock 移除與部分下載在精確影格處裁切。速度非常慢。\n只有在一般裁切結果錯誤、損壞或出現黑畫面/缺失片段時才啟用。"
       }
     },
     "update": {
@@ -993,6 +1093,10 @@
         "shortMessage": "ffmpeg 失敗",
         "message": "FFmpeg 處理時發生錯誤。"
       },
+      "rejectedByFilter": {
+        "shortMessage": "已被篩掉",
+        "message": "這個項目已被你的輸入篩選條件排除。"
+      },
       "cannotAllocateMemory": {
         "shortMessage": "記憶體錯誤",
         "message": "FFmpeg 處理影片時記憶體不足。"
@@ -1040,10 +1144,6 @@
       "unknown": {
         "shortMessage": "未知錯誤",
         "message": "處理此項目時發生未知錯誤。"
-      },
-      "rejectedByFilter": {
-        "shortMessage": "已被篩掉",
-        "message": "這個項目已被你的輸入篩選條件排除。"
       }
     }
   },
@@ -1058,106 +1158,6 @@
       "github": "GitHub",
       "wiki": "Wiki",
       "reportABug": "回報錯誤"
-    }
-  },
-  "inputFilters": {
-    "title": "輸入篩選條件",
-    "filesize": {
-      "legend": "檔案大小",
-      "hint": "只保留大於或小於你所選大小的項目。"
-    },
-    "dates": {
-      "legend": "上傳日期",
-      "hint": "只保留在某日期當天、之前或之後上傳的項目。"
-    },
-    "advanced": {
-      "legend": "進階篩選條件",
-      "hint": "這些是供進階使用者使用的原始 yt-dlp 篩選條件。"
-    },
-    "fields": {
-      "minSize": {
-        "label": "最小檔案大小:"
-      },
-      "maxSize": {
-        "label": "最大檔案大小:"
-      },
-      "size": {
-        "valuePlaceholder": "50",
-        "unitPlaceholder": "單位"
-      },
-      "date": {
-        "modeLabel": "比對規則",
-        "clearMode": "關閉",
-        "hint": "先選擇日期規則，再選擇日期。",
-        "mode": {
-          "exact": "在該日期",
-          "before": "在該日期或之前",
-          "after": "在該日期或之後"
-        },
-        "activeLabel": {
-          "exact": "在這一天上傳的影片",
-          "before": "在這一天或之前上傳的影片",
-          "after": "在這一天或之後上傳的影片"
-        },
-        "presetsLabel": "快速選項",
-        "presets": {
-          "today": "今天",
-          "yesterday": "昨天",
-          "last7Days": "最近 7 天",
-          "last30Days": "最近 30 天"
-        }
-      },
-      "matchFilters": {
-        "label": "比對篩選條件:",
-        "placeholder": "!is_live & view_count >=? 10000",
-        "hint": "範例：!is_live、duration >? 600、like_count >=? 100"
-      },
-      "breakMatchFilters": {
-        "label": "中斷比對篩選條件:",
-        "placeholder": "duration >? 3600",
-        "hint": "若某個項目未通過此篩選條件，就停止檢查目前的連結。"
-      }
-    },
-    "playlistSelection": {
-      "title": "選擇播放清單項目",
-      "description": "選擇要下載的項目:",
-      "selectionSummary": "已選取 {count} / {total} 個項目 | 已選取 {count} / {total} 個項目",
-      "selectionSummaryAll": "已選取全部項目 | 已選取全部 {count} 個項目",
-      "advancedButton": "進階",
-      "simpleButton": "重設",
-      "advancedTitle": "進階播放清單選取",
-      "advancedHint": "可選擇多個項目、負數與多個範圍。",
-      "advancedDescription": "目前選取",
-      "advancedEmpty": "尚未設定任何進階選取。",
-      "addSingle": "新增項目",
-      "addRange": "新增範圍",
-      "applyFull": "下載所有項目",
-      "applySelection": "下載已選項目",
-      "useAdvanced": "使用進階選取",
-      "noMatches": "這個範圍在播放清單中沒有符合的項目。",
-      "row": {
-        "single": "單一",
-        "range": "範圍"
-      },
-      "remove": "移除",
-      "fields": {
-        "advancedLabel": "進階:",
-        "index": "項目",
-        "indexPlaceholder": "1 或 -1",
-        "start": "開始",
-        "startPlaceholder": "1",
-        "end": "結束",
-        "endPlaceholder": "10",
-        "input": "項目"
-      },
-      "errors": {
-        "playlistIndex": "請輸入不為 0 的整數。負數會從結尾開始計算。",
-        "playlistRangeBounds": "請同時設定開始與結束。負數會從結尾開始計算。"
-      }
-    },
-    "toasts": {
-      "saved": "輸入篩選條件已儲存！",
-      "error": "無法儲存輸入篩選條件。{error}"
     }
   }
 }

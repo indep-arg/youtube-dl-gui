@@ -33,9 +33,9 @@ const placeholders = (text: string): string[] => {
   return [...new Set([...text.matchAll(/\{(\w+)\}/g)].map(m => m[1]))].sort();
 };
 
-// A missing key is fine (the app falls back to English), but a key that does
-// not exist in English is a leftover, and a changed {placeholder} breaks the
-// text at runtime.
+// Every language has the same keys as English, in the same order, so a file
+// can be compared with en.json line by line. A text that is not translated yet
+// keeps the English one. A changed {placeholder} breaks the text at runtime.
 describe.each(FOLDERS)('translations ($name)', ({ dir }) => {
   const english = flatten(readLocale(dir, 'en.json'));
   const others = readdirSync(dir).filter(file => file.endsWith('.json') && file !== 'en.json');
@@ -44,9 +44,8 @@ describe.each(FOLDERS)('translations ($name)', ({ dir }) => {
     expect(others.length).toBeGreaterThan(0);
   });
 
-  it.each(others)('%s only has keys that exist in English', (file) => {
-    const extra = Object.keys(flatten(readLocale(dir, file))).filter(key => !(key in english));
-    expect(extra).toEqual([]);
+  it.each(others)('%s has the same keys as English, in the same order', (file) => {
+    expect(Object.keys(flatten(readLocale(dir, file)))).toEqual(Object.keys(english));
   });
 
   it.each(others)('%s keeps the placeholders of English', (file) => {

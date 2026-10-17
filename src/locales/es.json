@@ -1093,9 +1093,9 @@
         "shortMessage": "Error de FFmpeg",
         "message": "FFmpeg encontró un error durante el procesamiento."
       },
-      "rejectedByFilter":{
+      "rejectedByFilter": {
         "shortMessage": "Excluido por filtro",
-        "message":"Este elemento fue rechazado por tus filtros de entrada."
+        "message": "Este elemento fue rechazado por tus filtros de entrada."
       },
       "cannotAllocateMemory": {
         "shortMessage": "Error de memoria",

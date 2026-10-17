@@ -12,6 +12,7 @@ It provides an easy-to-use interface around [yt-dlp](https://github.com/yt-dlp/y
 
 ## Features
 
+- **Private by design:** no telemetry, no accounts and no error reports. See [Privacy and trust](#privacy-and-trust).
 - **Cross-platform:** works on Windows and Linux.
 - **Audio or video downloads:** grab full videos or extract only the audio track.
 - **Subtitles and metadata:** automatically saves available captions and video information.
@@ -23,6 +24,18 @@ It provides an easy-to-use interface around [yt-dlp](https://github.com/yt-dlp/y
 - **Automatic updates:** both the app and yt-dlp are kept up to date automatically.
 - **Light and dark mode:** adapts to your system theme with clear progress and error handling.
 - **Shortcuts:** queue and download videos using shortcuts, stay up-to-date on progress with notifications.
+
+## Privacy and trust
+
+- **Nothing is collected.** No telemetry, no accounts, and no error reports: the original project sent
+  them to a third-party service, and this fork removed that.
+- **Everything is checked.** App updates are signed with this project's key, and the tools (yt-dlp, ffmpeg…)
+  are verified with a signed list and SHA-256 hashes before they are used.
+- **Your secrets stay with you.** Passwords go in an encrypted vault on your computer, and the webview is
+  isolated and limited to the commands the app needs.
+- **Open source** under the AGPL-3.0, built by public workflows.
+
+Details, what the app connects to, and how to verify a download yourself: [docs/PRIVACY.md](./docs/PRIVACY.md).
 
 ## Download
 
@@ -48,6 +61,7 @@ No command-line setup is required.
 ## Documentation
 
 - [User guide](./docs/GUIDE.md): installing, using the app and what to do when something goes wrong.
+- [Privacy and trust](./docs/PRIVACY.md).
 - [Changelog](./CHANGELOG.md) and [contributing](./CONTRIBUTING.md).
 - [Translating](./docs/TRANSLATING.md).
 

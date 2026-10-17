@@ -96,7 +96,8 @@ Other screens in the menu: **Location** (folders and file name templates), **Sub
 - **Passwords.** User names and passwords for signed-in downloads are stored in an encrypted vault in
   that folder. Its key is kept in the system's key store.
 - **Privacy.** The app has no telemetry and sends no error reports. It only connects to the sites you
-  ask it to download from, and to GitHub for updates of the app and the tools.
+  ask it to download from, and to GitHub for updates of the app and the tools. Details in
+  [PRIVACY.md](./PRIVACY.md).
 - **File names.** Templates use yt-dlp fields such as `%(title)s`; the file name is cleaned of
   characters the system does not allow.
 

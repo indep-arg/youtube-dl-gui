@@ -1,16 +1,22 @@
 <template>
   <article class="card card-side w-full max-w-175 h-48 bg-base-300 p-4 shadow-md" :class="[statusOutline]">
-    <figure class="relative shrink-0 w-64 aspect-video rounded-md overflow-hidden bg-base-100">
-      <span v-if="group.isLive" class="badge badge-error badge-sm absolute top-2 left-2 font-semibold">
+    <div class="relative shrink-0 w-64">
+      <figure class="w-64 aspect-video rounded-md overflow-hidden bg-base-100">
+        <img
+            :src="group.thumbnail ?? placeholderUrl"
+            :alt="t('media.view.thumbnailAlt', { title: group.title ?? '' })"
+            class="object-cover w-full h-full"
+            @error="setPlaceholderImage"
+        />
+      </figure>
+      <!-- Outside the figure: the card styles stretch whatever is inside it. -->
+      <span
+          v-if="group.isLive"
+          class="badge badge-error badge-sm absolute top-2 left-2 font-semibold shadow pointer-events-none"
+      >
         {{ t('media.card.live') }}
       </span>
-      <img
-          :src="group.thumbnail ?? placeholderUrl"
-          :alt="t('media.view.thumbnailAlt', { title: group.title ?? '' })"
-          class="object-cover w-full h-full"
-          @error="setPlaceholderImage"
-      />
-    </figure>
+    </div>
     <component
         :is="activeStep"
         v-if="activeStep"

@@ -80,7 +80,7 @@ jobs:
           git init -q "$TAURI_SRC"
           git -C "$TAURI_SRC" fetch -q --depth 1 https://github.com/tauri-apps/tauri b5573c1db2bb6118594b586a6aa51aeb37aa7d84
           git -C "$TAURI_SRC" checkout -q FETCH_HEAD
-          git -C "$TAURI_SRC" apply "$GITHUB_WORKSPACE/.github/patches/tauri-appimage-diricon.patch"
+          git -C "$TAURI_SRC" apply "$GITHUB_WORKSPACE/.github/patches/tauri-appimage.patch"
           cargo install tauri-cli --path "$TAURI_SRC/crates/tauri-cli" --locked --force
           echo "TAURI_BUNDLER_NEW_APPIMAGE_FORMAT=true" >> $GITHUB_ENV
           echo "TAURI_CMD=cargo tauri" >> $GITHUB_ENV

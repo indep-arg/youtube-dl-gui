@@ -3,7 +3,7 @@
   "productName": "Open Video Downloader",
   "mainBinaryName": "open-video-downloader",
   "version": "3.2.1",
-  "identifier": "com.jelleglebbeek.youtube-dl-gui",
+  "identifier": "io.github.indep-arg.youtube-dl-gui",
   "build": {
     "beforeDevCommand": "npm run build:isolation && npm run dev",
     "devUrl": "http://localhost:1420",

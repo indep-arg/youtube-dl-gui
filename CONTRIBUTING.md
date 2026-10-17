@@ -69,40 +69,8 @@ Opening an issue before starting work is appreciated, it helps track progress an
 
 ## Translating Open Video Downloader
 
-Thank you for helping translate OVD!
-
-### Testing your translation
-
-1. Clone the app from GitHub to your local machine.
-2. Run the app in development mode:
-    ```bash
-    npm install  
-    npm run tauri dev
-    ```
-2. Edit the English locales to preview:
-   `src-tauri/locales/en.json`
-   `src/locales/en.json`
-
-    Temporarily modify the text on the right-hand side of each key.  
-    Do not change any keys. The UI will update automatically when the file is saved.
-
-3. Create your own language files:
-   `src-tauri/locales/<language-code>.json`
-   `src/locales/<language-code>.json`
-
-For example: `it.json`, `de.json`, `fr.json`.  
-Please restore `en.json` back to English before opening a pull request.
-
-**Good to know:** Open Video Downloader has 2 locale folders. One for the front-end and one for back-end things like the tray menu and notifications.
-
-### Translation guidelines
-
-- Do not rename keys or change the JSON structure.
-- Keep placeholders exactly as written: {count}, {error}, {version}, {percent}, etc.
-- Do not translate brand or technical names (Open Video Downloader, yt-dlp, ffmpeg, SponsorBlock, .mp4, .mp3, etc.).
-- Preserve any markup such as `<strong>text</strong>` and translate only the visible text.
-- Prefer short, clear UI labels instead of long sentences.
-
+Thank you for helping translate OVD! The steps, the guidelines and the checks are in
+[docs/TRANSLATING.md](./docs/TRANSLATING.md).
 
 ## Need help?
 

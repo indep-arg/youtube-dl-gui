@@ -1,0 +1,6 @@
+# Keep these files on LF on every checkout. Windows checkouts default to
+# core.autocrlf=true and would otherwise rewrite them, which makes the
+# translation files differ byte for byte from the ones in the repository.
+src/locales/*.json text eol=lf
+src-tauri/locales/*.json text eol=lf
+src-tauri/src/diagnostic_rules.json text eol=lf

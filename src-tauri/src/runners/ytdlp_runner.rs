@@ -12,7 +12,7 @@ use crate::runners::ytdlp_process::{
   configure_command, kill_platform_process, platform_process_from_child, PlatformProcess,
 };
 use crate::state::config_models::{
-  AuthSettings, Config, NetworkSettings, SponsorBlockSettings, SubtitleSettings,
+  AuthSettings, Config, NetworkSettings, OutputSettings, SponsorBlockSettings, SubtitleSettings,
 };
 use crate::state::preferences_models::Preferences;
 use crate::stronghold::stronghold_state::{AuthSecrets, StrongholdState};
@@ -79,6 +79,14 @@ impl<'a> YtdlpRunner<'a> {
     }
   }
 
+  /// The output settings of a download: the global ones with its own changes.
+  fn output_settings(&self, overrides: Option<&DownloadOverrides>) -> OutputSettings {
+    resolve_with_patch(
+      &self.cfg.output,
+      overrides.and_then(|value| value.output.as_ref()),
+    )
+  }
+
   pub fn with_args<I, S>(mut self, args: I) -> Self
   where
     I: IntoIterator<Item = S>,
@@ -98,10 +106,7 @@ impl<'a> YtdlpRunner<'a> {
   }
 
   pub fn with_live_args(mut self, is_live: bool, overrides: Option<&DownloadOverrides>) -> Self {
-    let output_settings = resolve_with_patch(
-      &self.cfg.output,
-      overrides.and_then(|value| value.output.as_ref()),
-    );
+    let output_settings = self.output_settings(overrides);
     self.args.extend(build_live_args(is_live, &output_settings));
     self
   }
@@ -161,10 +166,7 @@ impl<'a> YtdlpRunner<'a> {
       &self.cfg.sponsor_block,
       overrides.and_then(|value| value.sponsor_block.as_ref()),
     );
-    let output_settings = resolve_with_patch(
-      &self.cfg.output,
-      overrides.and_then(|value| value.output.as_ref()),
-    );
+    let output_settings = self.output_settings(overrides);
     self.args.extend(build_sponsorblock_args(
       &sponsor_block,
       output_settings.precise_cuts,
@@ -191,10 +193,7 @@ impl<'a> YtdlpRunner<'a> {
     format_options: &FormatOptions,
     overrides: Option<&DownloadOverrides>,
   ) -> Self {
-    let output_settings = resolve_with_patch(
-      &self.cfg.output,
-      overrides.and_then(|value| value.output.as_ref()),
-    );
+    let output_settings = self.output_settings(overrides);
     self
       .args
       .extend(build_format_args(format_options, &output_settings));
@@ -247,9 +246,10 @@ impl<'a> YtdlpRunner<'a> {
     format_options: &FormatOptions,
     overrides: Option<&DownloadOverrides>,
   ) -> Result<Vec<String>, String> {
-    let output_overrides = overrides.and_then(|value| value.output.as_ref());
-    let output_settings = resolve_with_patch(&self.cfg.output, output_overrides);
-    let partial_download = output_overrides.and_then(|value| value.partial_download.as_ref());
+    let output_settings = self.output_settings(overrides);
+    let partial_download = overrides
+      .and_then(|value| value.output.as_ref())
+      .and_then(|value| value.partial_download.as_ref());
     build_output_args(format_options, &output_settings, partial_download)
   }
 
@@ -259,10 +259,7 @@ impl<'a> YtdlpRunner<'a> {
     template_context: &TemplateContext,
     overrides: Option<&DownloadOverrides>,
   ) -> Self {
-    let output_settings = resolve_with_patch(
-      &self.cfg.output,
-      overrides.and_then(|value| value.output.as_ref()),
-    );
+    let output_settings = self.output_settings(overrides);
     let fallback_dir = self
       .app
       .path()

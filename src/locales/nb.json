@@ -1024,6 +1024,7 @@
     },
     "toasts": {
       "saved": "Innstillinger lagret!",
+      "saveFailed": "Could not save the settings: {error}",
       "reset": "Tilbakestill innstillinger til standard.",
       "exported": "Settings exported.",
       "exportFailed": "Could not export the settings: {error}",

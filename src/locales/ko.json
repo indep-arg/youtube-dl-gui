@@ -1024,6 +1024,7 @@
     },
     "toasts": {
       "saved": "설정이 저장되었습니다!",
+      "saveFailed": "Could not save the settings: {error}",
       "reset": "설정을 기본값으로 초기화했습니다.",
       "exported": "Settings exported.",
       "exportFailed": "Could not export the settings: {error}",

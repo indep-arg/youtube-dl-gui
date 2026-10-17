@@ -164,7 +164,7 @@
       </p>
     </div>
 
-    <div v-for="option in extraFileOptions" :key="option" class="mb-4 flex flex-col gap-1">
+    <div v-for="option in toggleOptions" :key="option" class="mb-4 flex flex-col gap-1">
       <label class="font-semibold" :for="fieldId(option)">
         {{ t(`settings.output.${option}.label`) }}
       </label>
@@ -230,8 +230,8 @@ import { useOutputSettingsEditor } from '../../composables/useOutputSettingsEdit
 
 const outputState = defineModel<OutputSettings>({ required: true });
 
-// Extra files saved next to the download, each one a simple on/off option.
-const extraFileOptions = ['writeInfoJson', 'writeDescription', 'splitChapters', 'liveFromStart'] as const;
+// Simple on/off options: the extra files saved next to the download, and live streams.
+const toggleOptions = ['writeInfoJson', 'writeDescription', 'splitChapters', 'liveFromStart'] as const;
 
 const { idPrefix } = defineProps({
   idPrefix: {

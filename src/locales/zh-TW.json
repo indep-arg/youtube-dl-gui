@@ -1024,6 +1024,7 @@
     },
     "toasts": {
       "saved": "設定已儲存！",
+      "saveFailed": "Could not save the settings: {error}",
       "reset": "設定已重設為預設值。",
       "exported": "Settings exported.",
       "exportFailed": "Could not export the settings: {error}",

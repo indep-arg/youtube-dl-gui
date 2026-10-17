@@ -174,36 +174,7 @@ const outputOverride = computed<DownloadOverrides['output'] | undefined>(() => {
   const output: NonNullable<DownloadOverrides['output']> = {};
   const changedVideo = pickChangedFields(outputState.value.video, global.video);
   const changedAudio = pickChangedFields(outputState.value.audio, global.audio);
-  const changedScalars = pickChangedFields(
-    {
-      fileNameTemplate: outputState.value.fileNameTemplate,
-      audioFileNameTemplate: outputState.value.audioFileNameTemplate,
-      addThumbnail: outputState.value.addThumbnail,
-      saveThumbnail: outputState.value.saveThumbnail,
-      addMetadata: outputState.value.addMetadata,
-      preciseCuts: outputState.value.preciseCuts,
-      reversePlaylistNumbering: outputState.value.reversePlaylistNumbering,
-      restrictFilenames: outputState.value.restrictFilenames,
-      writeInfoJson: outputState.value.writeInfoJson,
-      writeDescription: outputState.value.writeDescription,
-      splitChapters: outputState.value.splitChapters,
-      liveFromStart: outputState.value.liveFromStart,
-    },
-    {
-      fileNameTemplate: global.fileNameTemplate,
-      audioFileNameTemplate: global.audioFileNameTemplate,
-      addThumbnail: global.addThumbnail,
-      saveThumbnail: global.saveThumbnail,
-      addMetadata: global.addMetadata,
-      preciseCuts: global.preciseCuts,
-      reversePlaylistNumbering: global.reversePlaylistNumbering,
-      restrictFilenames: global.restrictFilenames,
-      writeInfoJson: global.writeInfoJson,
-      writeDescription: global.writeDescription,
-      splitChapters: global.splitChapters,
-      liveFromStart: global.liveFromStart,
-    },
-  );
+  const changedScalars = pickChangedFields(pickScalars(outputState.value), pickScalars(global));
 
   if (Object.keys(changedVideo).length > 0) output.video = changedVideo;
   if (Object.keys(changedAudio).length > 0) output.audio = changedAudio;
@@ -219,6 +190,28 @@ const outputOverride = computed<DownloadOverrides['output'] | undefined>(() => {
 
 function createDefaultSelectionState(): PartialDownloadSelection {
   return createDefaultSelection(uuidv4(), chapters.value, durationSeconds.value);
+}
+
+// The output settings that a single download can change, apart from video and audio.
+const scalarOutputKeys = [
+  'fileNameTemplate',
+  'audioFileNameTemplate',
+  'addThumbnail',
+  'saveThumbnail',
+  'addMetadata',
+  'preciseCuts',
+  'reversePlaylistNumbering',
+  'restrictFilenames',
+  'writeInfoJson',
+  'writeDescription',
+  'splitChapters',
+  'liveFromStart',
+] as const satisfies readonly (keyof OutputSettings)[];
+
+type ScalarOutput = Pick<OutputSettings, typeof scalarOutputKeys[number]>;
+
+function pickScalars(output: OutputSettings): ScalarOutput {
+  return Object.fromEntries(scalarOutputKeys.map(key => [key, output[key]])) as ScalarOutput;
 }
 
 function pickChangedFields<T extends Record<string, unknown>>(current: T, base: T): Partial<T> {

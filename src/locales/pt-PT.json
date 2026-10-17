@@ -1024,6 +1024,7 @@
     },
     "toasts": {
       "saved": "Definições guardadas!",
+      "saveFailed": "Could not save the settings: {error}",
       "reset": "Definições repostas para os valores predefinidos.",
       "exported": "Settings exported.",
       "exportFailed": "Could not export the settings: {error}",

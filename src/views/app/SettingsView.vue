@@ -82,14 +82,29 @@ const isSaving = ref(false);
 const isResetting = ref(false);
 const hasChanges = computed(() => JSON.stringify(draft.value) !== JSON.stringify(settingsStore.settings));
 
+const applyThemeOf = (settings: Settings) => {
+  if (settings.appearance.theme) {
+    setTheme(settings.appearance.theme);
+  }
+};
+
+// Shows settings that come from the backend in the form.
+const showInForm = (settings: Settings) => {
+  draft.value = structuredClone<Settings>(toRaw(settings));
+  applyThemeOf(settings);
+};
+
 const saveSettings = async () => {
   isSaving.value = true;
-  await settingsStore.patch(draft.value);
-  if (draft.value.appearance.theme) {
-    setTheme(draft.value.appearance.theme);
+  try {
+    await settingsStore.patch(draft.value);
+    applyThemeOf(draft.value);
+    toastStore.showToast(t('settings.toasts.saved'), { style: 'success' });
+  } catch (e) {
+    toastStore.showToast(t('settings.toasts.saveFailed', { error: String(e) }), { style: 'error' });
+  } finally {
+    isSaving.value = false;
   }
-  isSaving.value = false;
-  toastStore.showToast(t('settings.toasts.saved'), { style: 'success' });
 };
 
 // Exports what is saved, not unsaved changes in the form.
@@ -107,10 +122,7 @@ const importSettings = async () => {
   try {
     const imported = await settingsStore.importSettings();
     if (!imported) return;
-    draft.value = structuredClone<Settings>(toRaw(imported));
-    if (imported.appearance.theme) {
-      setTheme(imported.appearance.theme);
-    }
+    showInForm(imported);
     toastStore.showToast(t('settings.toasts.imported'), { style: 'success' });
   } catch (e) {
     toastStore.showToast(t('settings.toasts.importFailed', { error: String(e) }), { style: 'error' });
@@ -120,11 +132,7 @@ const importSettings = async () => {
 const resetSettings = async () => {
   isResetting.value = true;
   try {
-    const newSettings = await settingsStore.reset();
-    draft.value = structuredClone<Settings>(toRaw(newSettings));
-    if (newSettings.appearance.theme) {
-      setTheme(newSettings.appearance.theme);
-    }
+    showInForm(await settingsStore.reset());
     toastStore.showToast(t('settings.toasts.reset'), { style: 'success' });
   } finally {
     isResetting.value = false;

@@ -1024,6 +1024,7 @@
     },
     "toasts": {
       "saved": "¡Ajustes guardados!",
+      "saveFailed": "No se pudieron guardar los ajustes: {error}",
       "reset": "Se restablecieron los ajustes predeterminados.",
       "exported": "Ajustes exportados.",
       "exportFailed": "No se pudieron exportar los ajustes: {error}",

@@ -1,0 +1,45 @@
+# Keeps dependencies current. The actions in .github/workflows are pinned by
+# commit SHA, and Dependabot updates the SHA and its version comment together.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    groups:
+      actions:
+        patterns: ["*"]
+
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: monthly
+    groups:
+      # Keep the JavaScript side of Tauri together; it must match the Rust crate
+      # (see the cargo entry below), so merge both updates at the same time.
+      tauri:
+        patterns: ["@tauri-apps/*"]
+      minor-and-patch:
+        update-types: ["minor", "patch"]
+        exclude-patterns: ["@tauri-apps/*"]
+    ignore:
+      # typescript-eslint does not support TypeScript 7 yet.
+      - dependency-name: typescript
+        update-types: ["version-update:semver-major"]
+      # Stays on the major of the Node version used by CI.
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
+      # Must match the Playwright image in .github/workflows/vue-ci.yml;
+      # update both together by hand.
+      - dependency-name: "@playwright/test"
+
+  - package-ecosystem: cargo
+    directory: /src-tauri
+    schedule:
+      interval: monthly
+    groups:
+      tauri:
+        patterns: ["tauri", "tauri-*"]
+      minor-and-patch:
+        update-types: ["minor", "patch"]
+        exclude-patterns: ["tauri", "tauri-*"]

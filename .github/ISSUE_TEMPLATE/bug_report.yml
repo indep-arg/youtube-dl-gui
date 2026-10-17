@@ -1,0 +1,58 @@
+name: Bug report
+description: Something doesn't work as it should.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time. Before reporting, make sure you are on the latest version of the app: an outdated yt-dlp is the most common reason a site stops working. If the same link fails with the latest yt-dlp on the command line, report it to [yt-dlp](https://github.com/yt-dlp/yt-dlp/issues) instead.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you did, what you expected, and what happened instead.
+    validations:
+      required: true
+  - type: input
+    id: link
+    attributes:
+      label: Link
+      description: The link that fails, if it can be shared.
+  - type: input
+    id: version
+    attributes:
+      label: App version
+      description: Shown in Settings > About, for example 2026.10.0.
+    validations:
+      required: true
+  - type: dropdown
+    id: os
+    attributes:
+      label: System
+      options:
+        - Windows
+        - Linux
+    validations:
+      required: true
+  - type: dropdown
+    id: install
+    attributes:
+      label: How it was installed
+      options:
+        - Windows installer (.exe)
+        - Windows portable (.zip)
+        - Linux AppImage
+        - Linux .deb
+        - Linux .rpm
+    validations:
+      required: true
+  - type: textarea
+    id: log
+    attributes:
+      label: Log of the failing download
+      description: Open the item and copy what its Logs tab shows.
+      render: text
+  - type: textarea
+    id: extra
+    attributes:
+      label: Screenshots or anything else

@@ -9,6 +9,16 @@
 Open Video Downloader is a simple, cross-platform desktop application that lets you download videos, audio, subtitles and metadata from hundreds of supported websites, not just YouTube.  
 It provides an easy-to-use interface around [yt-dlp](https://github.com/yt-dlp/yt-dlp) so you don’t have to touch the command line.
 
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="./docs/images/queue-dark.png">
+    <img src="./docs/images/queue-light.png" alt="Videos waiting in the queue, ready to download" width="560">
+  </picture>
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="./docs/images/downloading-dark.png">
+    <img src="./docs/images/downloading-light.png" alt="Three downloads in progress" width="560">
+  </picture>
+</p>
 
 ## Features
 
@@ -20,6 +30,12 @@ It provides an easy-to-use interface around [yt-dlp](https://github.com/yt-dlp/y
 - **Playlists:** download entire playlists in one go.
 - **Custom output:** set your download location and control filenames using presets or custom templates.
 - **Smart queueing:** OVD balances multiple downloads automatically so your computer doesn’t slow down.
+- **Live streams:** record a live stream, from the start if the site allows it.
+- **History and saved queue:** see what you downloaded, open its folder or download it again. Links that were still in the queue come back when you reopen the app.
+- **Settings per site:** pick a folder and video or audio for each website.
+- **Speed and retries:** limit the download speed, choose how many times to retry and how many parts download at once.
+- **Extra files:** also save the info file and description, or split a video into its chapters.
+- **Export and import settings:** move your settings to another computer with one file.
 - **Authentication:** supports browser cookie files, basic auth and video passwords.
 - **Automatic updates:** both the app and yt-dlp are kept up to date automatically.
 - **Light and dark mode:** adapts to your system theme with clear progress and error handling.
@@ -45,15 +61,40 @@ Download the installer or archive for your platform and follow the normal instal
 No command-line setup is required.
 
 #### What file do I download?
-| Your Computer                         | Download                                       |
-|---------------------------------------|------------------------------------------------|
-| **Windows**                           | `Open.Video.Downloader_x.x.x_x64-setup.exe`    |
-| **Linux generic (x64)**               | `Open.Video.Downloader_x.x.x_amd64.AppImage`   |
-| **Linux generic (aarch64)**           | `Open.Video.Downloader_x.x.x_aarch64.AppImage` |
-| **Linux Debian/Ubuntu (x64)**         | `Open.Video.Downloader_x.x.x_amd64.deb`        |
-| **Linux Debian/Ubuntu (aarch64)**     | `Open.Video.Downloader_x.x.x_arm64.deb`        |
-| **Linux Fedora/RHEL (x64)**           | `Open.Video.Downloader_x.x.x-x_amd64.rpm`      |
-| **Linux Fedora/RHEL (aarch64)**       | `Open.Video.Downloader_x.x.x-x_aarch64.rpm`    |
+| Your Computer                         | Download                                           |
+|---------------------------------------|----------------------------------------------------|
+| **Windows (x64)**                     | `Open.Video.Downloader_x.x.x_x64-setup.exe`        |
+| **Windows (ARM64)**                   | `Open.Video.Downloader_x.x.x_arm64-setup.exe`      |
+| **Windows, no install (x64)**         | `Open.Video.Downloader_x.x.x_x64-portable.zip`     |
+| **Windows, no install (ARM64)**       | `Open.Video.Downloader_x.x.x_arm64-portable.zip`   |
+| **Linux generic (x64)**               | `Open.Video.Downloader_x.x.x_amd64.AppImage`       |
+| **Linux generic (aarch64)**           | `Open.Video.Downloader_x.x.x_aarch64.AppImage`     |
+| **Linux Debian/Ubuntu (x64)**         | `Open.Video.Downloader_x.x.x_amd64.deb`            |
+| **Linux Debian/Ubuntu (aarch64)**     | `Open.Video.Downloader_x.x.x_arm64.deb`            |
+| **Linux Fedora/RHEL (x64)**           | `Open.Video.Downloader-x.x.x-1.x86_64.rpm`         |
+| **Linux Fedora/RHEL (aarch64)**       | `Open.Video.Downloader-x.x.x-1.aarch64.rpm`        |
+
+The first time you open the app it downloads the tools it needs (yt-dlp, ffmpeg and a few more),
+checks that they are the right files, and keeps them up to date by itself.
+
+#### A look around
+
+<table>
+  <tr>
+    <td width="50%">
+      <picture>
+        <source media="(prefers-color-scheme: dark)" srcset="./docs/images/history-dark.png">
+        <img src="./docs/images/history-light.png" alt="The download history">
+      </picture>
+    </td>
+    <td width="50%">
+      <picture>
+        <source media="(prefers-color-scheme: dark)" srcset="./docs/images/settings-dark.png">
+        <img src="./docs/images/settings-light.png" alt="The settings for speed, retries and parts">
+      </picture>
+    </td>
+  </tr>
+</table>
 
 ## Documentation
 
@@ -61,12 +102,6 @@ No command-line setup is required.
 - [Privacy](./docs/PRIVACY.md).
 - [Changelog](./CHANGELOG.md) and [contributing](./CONTRIBUTING.md).
 - [Translating](./docs/TRANSLATING.md).
-
-## How it works
-
-Open Video Downloader uses a front-end built with Vue 3 and a Rust backend powered by [Tauri](https://tauri.app/).  
-When you add a video or playlist, the app communicates with yt-dlp to fetch information, process options and start the download.  
-The download progress and any errors are displayed in the app.
 
 ## Contributing
 

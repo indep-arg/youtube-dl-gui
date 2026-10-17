@@ -1,3 +1,7 @@
+// On Windows, libsodium (a dependency of the password vault) ships without debug symbols and the
+// linker prints one warning per object file about it. They are harmless and bury real messages.
+#![cfg_attr(windows, allow(linker_messages))]
+
 mod binaries;
 mod commands;
 mod i18n;

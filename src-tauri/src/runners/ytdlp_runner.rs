@@ -6,6 +6,7 @@ use crate::runners::override_resolver::resolve_with_patch;
 use crate::runners::template_context::TemplateContext;
 use crate::runners::ytdlp_args::{
   build_format_args, build_input_filter_args, build_location_args, build_output_args,
+  build_performance_args,
 };
 use crate::runners::ytdlp_process::{
   configure_command, kill_platform_process, platform_process_from_child, PlatformProcess,
@@ -93,6 +94,13 @@ impl<'a> YtdlpRunner<'a> {
       overrides.and_then(|value| value.network.as_ref()),
     );
     self.args.extend(build_network_args(&network));
+    self
+  }
+
+  pub fn with_performance_args(mut self) -> Self {
+    self
+      .args
+      .extend(build_performance_args(&self.cfg.performance));
     self
   }
 

@@ -29,6 +29,18 @@ export const useSettingsStore = defineStore('settings', () => {
     return cfg;
   }
 
+  /** Returns false when the save dialog was cancelled. */
+  async function exportSettings(): Promise<boolean> {
+    return await invoke<boolean>('config_export');
+  }
+
+  /** Returns the new settings, or null when the file dialog was cancelled. */
+  async function importSettings(): Promise<Settings | null> {
+    const cfg = await invoke<Settings | null>('config_import');
+    if (cfg) applySettings(cfg);
+    return cfg;
+  }
+
   function hasAuthConfigured() {
     return settings.value.auth.cookieFile !== null || settings.value.auth.cookieBrowser !== 'none';
   }
@@ -51,6 +63,8 @@ export const useSettingsStore = defineStore('settings', () => {
     load,
     patch,
     reset,
+    exportSettings,
+    importSettings,
     hasAuthConfigured,
   };
 });

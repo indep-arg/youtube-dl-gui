@@ -130,6 +130,18 @@ fn push_common_output_flags(
     args.push("--restrict-filenames".into());
   }
 
+  if output_settings.write_info_json {
+    args.push("--write-info-json".into());
+  }
+
+  if output_settings.write_description {
+    args.push("--write-description".into());
+  }
+
+  if output_settings.split_chapters {
+    args.push("--split-chapters".into());
+  }
+
   if let Some(value) = build_download_sections_arg(partial_download) {
     args.push("--download-sections".into());
     args.push(value);

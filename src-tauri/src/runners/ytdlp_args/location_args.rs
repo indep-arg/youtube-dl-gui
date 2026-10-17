@@ -34,8 +34,23 @@ pub fn build_location_args(
     .map(PathBuf::from)
     .unwrap_or_else(|| global_dir.clone());
 
-  let output_path = base_dir.join(prefix_dir).join(filename);
+  let output_dir = base_dir.join(prefix_dir);
+  let output_path = output_dir.join(filename);
   let rendered_output = template_context.render_template(output_path.to_string_lossy().as_ref());
 
-  vec!["-o".into(), rendered_output]
+  let mut args = vec!["-o".into(), rendered_output];
+
+  // yt-dlp writes the chapter files relative to its working directory unless
+  // they get their own template, so put them next to the main file.
+  if output_settings.split_chapters {
+    let chapter_path = output_dir.join(CHAPTER_FILE_NAME);
+    let rendered_chapter =
+      template_context.render_template(chapter_path.to_string_lossy().as_ref());
+    args.push("-o".into());
+    args.push(format!("chapter:{rendered_chapter}"));
+  }
+
+  args
 }
+
+const CHAPTER_FILE_NAME: &str = "%(title).150s - %(section_number)03d %(section_title)s.%(ext)s";

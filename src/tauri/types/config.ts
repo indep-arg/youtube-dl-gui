@@ -104,12 +104,19 @@ export interface OutputSettings {
   fileNameTemplate: string;
   audioFileNameTemplate: string;
   restrictFilenames: boolean;
+  writeInfoJson: boolean;
+  writeDescription: boolean;
+  splitChapters: boolean;
 }
 
 export interface PerformanceSettings {
   maxConcurrency: number;
   splitPlaylistThreshold: number;
   autoLoadSize: boolean;
+  /** Download speed limit in KiB/s; null means no limit. */
+  rateLimitKib: number | null;
+  retries: number;
+  concurrentFragments: number;
 }
 
 export interface SubtitleSettings {
@@ -241,12 +248,18 @@ export const defaultOutputSettings: OutputSettings = {
   fileNameTemplate: '%(title).200s-(%(height)sp%(fps).0d).%(ext)s',
   audioFileNameTemplate: '%(title).200s-(%(abr)dk).%(ext)s',
   restrictFilenames: false,
+  writeInfoJson: false,
+  writeDescription: false,
+  splitChapters: false,
 };
 
 export const defaultPerformanceSettings: PerformanceSettings = {
   maxConcurrency: 1,
   splitPlaylistThreshold: 50,
   autoLoadSize: true,
+  rateLimitKib: null,
+  retries: 10,
+  concurrentFragments: 1,
 };
 
 export const defaultSubtitleSettings: SubtitleSettings = {

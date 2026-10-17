@@ -78,6 +78,9 @@ impl ApplyPatch<OutputSettings> for OutputOverrides {
     apply_clone_patch!(self, target, file_name_template);
     apply_clone_patch!(self, target, audio_file_name_template);
     apply_copy_patch!(self, target, restrict_filenames);
+    apply_copy_patch!(self, target, write_info_json);
+    apply_copy_patch!(self, target, write_description);
+    apply_copy_patch!(self, target, split_chapters);
   }
 }
 

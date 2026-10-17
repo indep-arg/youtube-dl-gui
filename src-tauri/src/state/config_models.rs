@@ -189,6 +189,9 @@ pub struct OutputSettings {
   pub file_name_template: String,
   pub audio_file_name_template: String,
   pub restrict_filenames: bool,
+  pub write_info_json: bool,
+  pub write_description: bool,
+  pub split_chapters: bool,
 }
 
 impl Default for OutputSettings {
@@ -205,6 +208,9 @@ impl Default for OutputSettings {
       file_name_template: "%(title).200s-(%(height)sp%(fps).0d).%(ext)s".into(),
       audio_file_name_template: "%(title).200s-(%(abr)dk).%(ext)s".into(),
       restrict_filenames: false,
+      write_info_json: false,
+      write_description: false,
+      split_chapters: false,
     }
   }
 }
@@ -215,6 +221,12 @@ pub struct PerformanceSettings {
   pub max_concurrency: usize,
   pub split_playlist_threshold: usize,
   pub auto_load_size: bool,
+  /// Download speed limit in KiB/s; `None` means no limit.
+  pub rate_limit_kib: Option<u64>,
+  /// How many times a download, and each of its fragments, is retried.
+  pub retries: u32,
+  /// How many fragments of a single download are fetched at the same time.
+  pub concurrent_fragments: u32,
 }
 
 impl Default for PerformanceSettings {
@@ -225,6 +237,9 @@ impl Default for PerformanceSettings {
         .unwrap_or(1),
       split_playlist_threshold: 50,
       auto_load_size: true,
+      rate_limit_kib: None,
+      retries: 10,
+      concurrent_fragments: 1,
     }
   }
 }

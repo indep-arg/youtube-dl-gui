@@ -95,6 +95,9 @@ export type OutputOverrides = {
   fileNameTemplate?: string;
   audioFileNameTemplate?: string;
   restrictFilenames?: boolean;
+  writeInfoJson?: boolean;
+  writeDescription?: boolean;
+  splitChapters?: boolean;
   partialDownload?: PartialDownload;
 };
 

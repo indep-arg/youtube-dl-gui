@@ -14,6 +14,8 @@ const allowedCommands: Set<string> = new Set([
     'config_set',
     'config_get',
     'config_reset',
+    'config_export',
+    'config_import',
     'preferences_set',
     'preferences_get',
     'preferences_reset',

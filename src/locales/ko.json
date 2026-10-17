@@ -592,6 +592,12 @@
       "label": "초기화",
       "confirm": "다시 클릭하면 초기화됩니다"
     },
+    "export": {
+      "label": "Export settings…"
+    },
+    "import": {
+      "label": "Import settings…"
+    },
     "tabs": {
       "downloads": "다운로드",
       "app": "앱",
@@ -614,6 +620,23 @@
       },
       "autoLoadSize": {
         "label": "동영상 크기 자동 불러오기:"
+      },
+      "rateLimit": {
+        "label": "Limit download speed:",
+        "hint": "Applies to each download. Leave it empty for no limit.",
+        "placeholder": "No limit",
+        "units": {
+          "kb": "KB/s",
+          "mb": "MB/s"
+        }
+      },
+      "retries": {
+        "label": "Retries:",
+        "hint": "How many times a download, or a part of it, is tried again after an error."
+      },
+      "concurrentFragments": {
+        "label": "Parts downloaded at once:",
+        "hint": "Some sites split videos into parts. Downloading several at a time can be faster."
       }
     },
     "input": {
@@ -648,6 +671,18 @@
       "saveThumbnail": {
         "label": "썸네일 파일 저장:",
         "hint": "미디어 파일 옆에 사용 가능한 최고 화질의 썸네일을 다운로드합니다."
+      },
+      "writeInfoJson": {
+        "label": "Save info file:",
+        "hint": "Save a .info.json file with all the information about the video next to it."
+      },
+      "writeDescription": {
+        "label": "Save description:",
+        "hint": "Save the description of the video in a .description file next to it."
+      },
+      "splitChapters": {
+        "label": "Split chapters into files:",
+        "hint": "Save each chapter as a separate file, next to the full video."
       },
       "addMetadata": {
         "label": "제목 및 아티스트 정보 추가:",
@@ -936,7 +971,11 @@
     },
     "toasts": {
       "saved": "설정이 저장되었습니다!",
-      "reset": "설정을 기본값으로 초기화했습니다."
+      "reset": "설정을 기본값으로 초기화했습니다.",
+      "exported": "Settings exported.",
+      "exportFailed": "Could not export the settings: {error}",
+      "imported": "Settings imported.",
+      "importFailed": "Could not import the settings: {error}"
     }
   },
   "updater": {

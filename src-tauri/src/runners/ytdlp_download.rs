@@ -43,6 +43,7 @@ pub async fn run_ytdlp_download(
 ) -> Result<(), YtdlpDownloadError> {
   let runner = YtdlpRunner::new(&app)
     .with_progress_args()
+    .with_performance_args()
     .with_network_args(entry.overrides.as_ref())
     .with_auth_args(entry.overrides.as_ref())
     .with_subtitle_args(entry.overrides.as_ref(), entry.subtitle_inventory.as_ref())

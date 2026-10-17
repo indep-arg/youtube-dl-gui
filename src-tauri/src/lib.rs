@@ -164,6 +164,8 @@ pub fn run() {
       config_get,
       config_reset,
       config_set,
+      config_export,
+      config_import,
       preferences_get,
       preferences_reset,
       preferences_set,

@@ -164,6 +164,21 @@
       </p>
     </div>
 
+    <div v-for="option in extraFileOptions" :key="option" class="mb-4 flex flex-col gap-1">
+      <label class="font-semibold" :for="fieldId(option)">
+        {{ t(`settings.output.${option}.label`) }}
+      </label>
+      <input
+          :id="fieldId(option)"
+          type="checkbox"
+          v-model="outputState[option]"
+          class="toggle toggle-primary my-1"
+      />
+      <p class="label">
+        {{ t(`settings.output.${option}.hint`) }}
+      </p>
+    </div>
+
     <div class="mb-4 flex flex-col gap-1">
       <label class="font-semibold" :for="fieldId('add-metadata')">
         {{ t('settings.output.addMetadata.label') }}
@@ -214,6 +229,9 @@ import {
 import { useOutputSettingsEditor } from '../../composables/useOutputSettingsEditor.ts';
 
 const outputState = defineModel<OutputSettings>({ required: true });
+
+// Extra files saved next to the download, each one a simple on/off option.
+const extraFileOptions = ['writeInfoJson', 'writeDescription', 'splitChapters'] as const;
 
 const { idPrefix } = defineProps({
   idPrefix: {

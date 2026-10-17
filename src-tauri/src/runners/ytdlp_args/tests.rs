@@ -1,4 +1,7 @@
-use super::{build_format_args, build_input_filter_args, build_location_args, build_output_args};
+use super::{
+  build_format_args, build_input_filter_args, build_location_args, build_output_args,
+  build_performance_args,
+};
 use crate::models::download::{
   AudioFormat, AudioPostprocessPreset, DownloadSection, FormatOptions, InputFilterOptions,
   PartialDownloadOverride, PlaylistMode, TranscodePolicy, VideoContainer, VideoPostprocessMode,
@@ -6,7 +9,7 @@ use crate::models::download::{
 };
 use crate::models::TrackType;
 use crate::runners::template_context::TemplateContext;
-use crate::state::config_models::OutputSettings;
+use crate::state::config_models::{OutputSettings, PerformanceSettings};
 use crate::state::preferences_models::PathPreferences;
 use std::collections::HashMap;
 use std::path::PathBuf;
@@ -902,4 +905,130 @@ fn location_args_use_track_specific_preferences() {
 
   assert_eq!(args[0], "-o");
   assert!(args[1].contains("/tmp/video"));
+}
+
+#[test]
+fn extra_files_add_their_flags_when_enabled() {
+  let format_options = make_video_format_options(Some(720), Some(60));
+  let settings = OutputSettings {
+    write_info_json: true,
+    write_description: true,
+    split_chapters: true,
+    ..OutputSettings::default()
+  };
+
+  let args = build_output_args(&format_options, &settings, None).unwrap();
+
+  assert!(args.contains(&"--write-info-json".to_string()));
+  assert!(args.contains(&"--write-description".to_string()));
+  assert!(args.contains(&"--split-chapters".to_string()));
+}
+
+#[test]
+fn extra_files_are_off_by_default() {
+  let format_options = make_video_format_options(Some(720), Some(60));
+  let args = build_output_args(&format_options, &OutputSettings::default(), None).unwrap();
+
+  for flag in [
+    "--write-info-json",
+    "--write-description",
+    "--split-chapters",
+  ] {
+    assert!(
+      !args.contains(&flag.to_string()),
+      "{flag} should not be set"
+    );
+  }
+}
+
+fn location_args_with(output: &OutputSettings) -> Vec<String> {
+  let template_context = TemplateContext {
+    values: HashMap::from([("title".to_string(), "My video".to_string())]),
+  };
+  let prefs = PathPreferences {
+    audio_download_dir: None,
+    video_download_dir: Some("/tmp/video".into()),
+    video_directory_template: "".into(),
+    audio_directory_template: "".into(),
+  };
+  build_location_args(
+    &TrackType::Video,
+    &template_context,
+    output,
+    &prefs,
+    PathBuf::from("/tmp/fallback"),
+  )
+}
+
+#[test]
+fn split_chapters_puts_the_chapter_files_next_to_the_main_file() {
+  let output = OutputSettings {
+    split_chapters: true,
+    ..OutputSettings::default()
+  };
+
+  let args = location_args_with(&output);
+
+  assert_eq!(args.len(), 4);
+  assert_eq!(args[2], "-o");
+  let chapter = &args[3];
+  assert!(chapter.starts_with("chapter:"));
+  assert!(chapter.contains("/tmp/video"));
+  // The fields yt-dlp fills for each chapter must be left for it.
+  assert!(chapter.contains("%(section_number)03d"));
+  assert!(chapter.contains("%(section_title)s"));
+}
+
+#[test]
+fn chapter_output_is_only_added_when_splitting_chapters() {
+  let args = location_args_with(&OutputSettings::default());
+
+  assert_eq!(args.len(), 2);
+  assert!(!args.iter().any(|arg| arg.starts_with("chapter:")));
+}
+
+#[test]
+fn performance_args_are_empty_with_the_defaults() {
+  let performance = PerformanceSettings {
+    max_concurrency: 4,
+    ..PerformanceSettings::default()
+  };
+
+  assert!(build_performance_args(&performance).is_empty());
+}
+
+#[test]
+fn performance_args_limit_rate_retries_and_fragments() {
+  let performance = PerformanceSettings {
+    rate_limit_kib: Some(2048),
+    retries: 3,
+    concurrent_fragments: 4,
+    ..PerformanceSettings::default()
+  };
+
+  let args = build_performance_args(&performance);
+
+  assert_eq!(
+    args,
+    vec![
+      "--limit-rate",
+      "2048K",
+      "--retries",
+      "3",
+      "--fragment-retries",
+      "3",
+      "--concurrent-fragments",
+      "4",
+    ]
+  );
+}
+
+#[test]
+fn a_zero_rate_limit_means_no_limit() {
+  let performance = PerformanceSettings {
+    rate_limit_kib: Some(0),
+    ..PerformanceSettings::default()
+  };
+
+  assert!(build_performance_args(&performance).is_empty());
 }

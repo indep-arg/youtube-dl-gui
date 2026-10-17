@@ -592,6 +592,12 @@
       "label": "Restablecer",
       "confirm": "Presiona de nuevo para restablecer"
     },
+    "export": {
+      "label": "Exportar ajustes…"
+    },
+    "import": {
+      "label": "Importar ajustes…"
+    },
     "tabs": {
       "downloads": "Descargas",
       "app": "App",
@@ -614,6 +620,23 @@
       },
       "autoLoadSize": {
         "label": "Cargar el tamaño de video automáticamente:"
+      },
+      "rateLimit": {
+        "label": "Limitar velocidad de descarga:",
+        "hint": "Se aplica a cada descarga. Déjalo vacío para no limitarla.",
+        "placeholder": "Sin límite",
+        "units": {
+          "kb": "KB/s",
+          "mb": "MB/s"
+        }
+      },
+      "retries": {
+        "label": "Reintentos:",
+        "hint": "Cuántas veces se vuelve a intentar una descarga, o una parte de ella, tras un error."
+      },
+      "concurrentFragments": {
+        "label": "Partes descargadas a la vez:",
+        "hint": "Algunos sitios dividen los videos en partes. Descargar varias a la vez puede ser más rápido."
       }
     },
     "input": {
@@ -648,6 +671,18 @@
       "saveThumbnail": {
         "label": "Guardar archivo de miniatura:",
         "hint": "Descarga la mejor miniatura disponible junto al archivo multimedia."
+      },
+      "writeInfoJson": {
+        "label": "Guardar archivo de información:",
+        "hint": "Guarda junto al video un archivo .info.json con toda su información."
+      },
+      "writeDescription": {
+        "label": "Guardar descripción:",
+        "hint": "Guarda la descripción del video en un archivo .description junto a él."
+      },
+      "splitChapters": {
+        "label": "Separar capítulos en archivos:",
+        "hint": "Guarda cada capítulo como un archivo aparte, junto al video completo."
       },
       "addMetadata": {
         "label": "Agregar información de título y artista:",
@@ -936,7 +971,11 @@
     },
     "toasts": {
       "saved": "¡Ajustes guardados!",
-      "reset": "Se restablecieron los ajustes predeterminados."
+      "reset": "Se restablecieron los ajustes predeterminados.",
+      "exported": "Ajustes exportados.",
+      "exportFailed": "No se pudieron exportar los ajustes: {error}",
+      "imported": "Ajustes importados.",
+      "importFailed": "No se pudieron importar los ajustes: {error}"
     }
   },
   "updater": {

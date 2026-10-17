@@ -184,6 +184,9 @@ const outputOverride = computed<DownloadOverrides['output'] | undefined>(() => {
       preciseCuts: outputState.value.preciseCuts,
       reversePlaylistNumbering: outputState.value.reversePlaylistNumbering,
       restrictFilenames: outputState.value.restrictFilenames,
+      writeInfoJson: outputState.value.writeInfoJson,
+      writeDescription: outputState.value.writeDescription,
+      splitChapters: outputState.value.splitChapters,
     },
     {
       fileNameTemplate: global.fileNameTemplate,
@@ -194,6 +197,9 @@ const outputOverride = computed<DownloadOverrides['output'] | undefined>(() => {
       preciseCuts: global.preciseCuts,
       reversePlaylistNumbering: global.reversePlaylistNumbering,
       restrictFilenames: global.restrictFilenames,
+      writeInfoJson: global.writeInfoJson,
+      writeDescription: global.writeDescription,
+      splitChapters: global.splitChapters,
     },
   );
 

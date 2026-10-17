@@ -21,6 +21,16 @@
               {{ t('settings.reset.label') }}
             </button>
           </li>
+          <li>
+            <button type="button" class="gap-2 text-nowrap" @click="exportSettings">
+              {{ t('settings.export.label') }}
+            </button>
+          </li>
+          <li>
+            <button type="button" class="gap-2 text-nowrap" @click="importSettings">
+              {{ t('settings.import.label') }}
+            </button>
+          </li>
         </base-button-dropdown>
       </template>
       <template v-slot:title>
@@ -80,6 +90,31 @@ const saveSettings = async () => {
   }
   isSaving.value = false;
   toastStore.showToast(t('settings.toasts.saved'), { style: 'success' });
+};
+
+// Exports what is saved, not unsaved changes in the form.
+const exportSettings = async () => {
+  try {
+    if (await settingsStore.exportSettings()) {
+      toastStore.showToast(t('settings.toasts.exported'), { style: 'success' });
+    }
+  } catch (e) {
+    toastStore.showToast(t('settings.toasts.exportFailed', { error: String(e) }), { style: 'error' });
+  }
+};
+
+const importSettings = async () => {
+  try {
+    const imported = await settingsStore.importSettings();
+    if (!imported) return;
+    draft.value = structuredClone<Settings>(toRaw(imported));
+    if (imported.appearance.theme) {
+      setTheme(imported.appearance.theme);
+    }
+    toastStore.showToast(t('settings.toasts.imported'), { style: 'success' });
+  } catch (e) {
+    toastStore.showToast(t('settings.toasts.importFailed', { error: String(e) }), { style: 'error' });
+  }
 };
 
 const resetSettings = async () => {

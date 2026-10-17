@@ -592,6 +592,12 @@
       "label": "Tilbakestill",
       "confirm": "Klikk igjen for å tilbakestille"
     },
+    "export": {
+      "label": "Export settings…"
+    },
+    "import": {
+      "label": "Import settings…"
+    },
     "tabs": {
       "downloads": "Nedlasting",
       "app": "App",
@@ -614,6 +620,23 @@
       },
       "autoLoadSize": {
         "label": "Last automatisk inn videostørrelse:"
+      },
+      "rateLimit": {
+        "label": "Limit download speed:",
+        "hint": "Applies to each download. Leave it empty for no limit.",
+        "placeholder": "No limit",
+        "units": {
+          "kb": "KB/s",
+          "mb": "MB/s"
+        }
+      },
+      "retries": {
+        "label": "Retries:",
+        "hint": "How many times a download, or a part of it, is tried again after an error."
+      },
+      "concurrentFragments": {
+        "label": "Parts downloaded at once:",
+        "hint": "Some sites split videos into parts. Downloading several at a time can be faster."
       }
     },
     "input": {
@@ -648,6 +671,18 @@
       "saveThumbnail": {
         "label": "Lagre miniatyrbildefil:",
         "hint": "Last ned beste tilgjengelige miniatyrbilde ved siden av mediefilen."
+      },
+      "writeInfoJson": {
+        "label": "Save info file:",
+        "hint": "Save a .info.json file with all the information about the video next to it."
+      },
+      "writeDescription": {
+        "label": "Save description:",
+        "hint": "Save the description of the video in a .description file next to it."
+      },
+      "splitChapters": {
+        "label": "Split chapters into files:",
+        "hint": "Save each chapter as a separate file, next to the full video."
       },
       "addMetadata": {
         "label": "Legg til tittel- og artistinformasjon:",
@@ -936,7 +971,11 @@
     },
     "toasts": {
       "saved": "Innstillinger lagret!",
-      "reset": "Tilbakestill innstillinger til standard."
+      "reset": "Tilbakestill innstillinger til standard.",
+      "exported": "Settings exported.",
+      "exportFailed": "Could not export the settings: {error}",
+      "imported": "Settings imported.",
+      "importFailed": "Could not import the settings: {error}"
     }
   },
   "updater": {

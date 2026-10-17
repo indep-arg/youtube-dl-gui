@@ -132,6 +132,9 @@ pub struct OutputOverrides {
   pub file_name_template: Option<String>,
   pub audio_file_name_template: Option<String>,
   pub restrict_filenames: Option<bool>,
+  pub write_info_json: Option<bool>,
+  pub write_description: Option<bool>,
+  pub split_chapters: Option<bool>,
   pub partial_download: Option<PartialDownloadOverride>,
 }
 

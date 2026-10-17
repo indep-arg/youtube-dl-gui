@@ -1,7 +1,12 @@
 @import "tailwindcss";
+/*
+ * The two themes below replace the ones daisyUI ships. Leaving those on made them win over these
+ * as soon as a theme was picked by hand (data-theme), which turned the neutral colour almost black.
+ */
 @plugin "daisyui" {
     logs: false;
     exclude: properties;
+    themes: false;
 }
 
 @plugin "daisyui/theme" {
@@ -108,6 +113,15 @@ html,
 body {
     height: 100%;
     overflow: hidden;
+}
+
+/* Tauri's isolation iframe is a 150px box at the end of the body: it made the page scrollable by code. */
+body > iframe {
+    position: fixed;
+    width: 0;
+    height: 0;
+    border: 0;
+    pointer-events: none;
 }
 
 ::-ms-reveal {

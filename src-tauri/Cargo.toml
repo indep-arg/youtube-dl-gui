@@ -3,7 +3,7 @@ name = "open-video-downloader"
 version = "3.2.1"
 description = "Download videos from all over the web."
 license = "AGPL-3.0-or-later"
-authors = ["Jelle Glebbeek"]
+authors = ["Jelle Glebbeek", "indep-arg"]
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html

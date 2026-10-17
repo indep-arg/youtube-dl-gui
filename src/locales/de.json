@@ -13,12 +13,10 @@
     "enable": "Aktivieren",
     "pleaseWait": "Bitte warten…",
     "loading": "Wird geladen",
-    "emptySearch": "Keine Ergebnisse gefunden.",
     "parenthesis": "({content})",
     "divide": "{left} / {right}",
     "video": "Video",
     "unknown": "Unbekannt",
-    "confirm": "Bestätigen",
     "best": "Beste",
     "resume": "Fortsetzen",
     "urlImport": {
@@ -32,8 +30,7 @@
     "header": {
       "placeholder": "Gib eine Video-/Playlist-URL ein, um sie zur Warteschlange hinzuzufügen",
       "nav": {
-        "settings": "App-Einstellungen",
-        "inputFilters": "Filter"
+        "settings": "App-Einstellungen"
       },
       "watchClipboardPlaceholder": "Zwischenablage wird überwacht: kopierte Links werden zur Warteschlange hinzugefügt",
       "actions": {
@@ -805,8 +802,7 @@
       },
       "autoStartMinimised": {
         "label": {
-          "windows": "Beim Anmelden minimiert im Systemtray starten",
-          "generic": "Beim Anmelden verborgen starten (nicht empfohlen)"
+          "windows": "Beim Anmelden minimiert im Systemtray starten"
         },
         "hint": {
           "windows": "Wenn die App beim Anmelden startet, wird sie im Systemtray gestartet, ohne ein Fenster zu öffnen.",
@@ -888,7 +884,6 @@
         }
       },
       "folderInput": {
-        "select": "Ordner auswählen",
         "placeholder": "Ordner auswählen…",
         "invalid": "Ungültiger Ordner.",
         "clear": "Ordner löschen",
@@ -900,7 +895,6 @@
       },
       "secretInput": {
         "hide": "Ausblenden",
-        "show": "Anzeigen",
         "clear": "{label} löschen"
       },
       "toolCard": {
@@ -1059,6 +1053,7 @@
   "about": {
     "title": "Über",
     "credit": "Mit ❤ erstellt von jely2002 & Mitwirkenden",
+    "fork": "Fork maintained by {maintainer}",
     "poweredBy": "Unterstützt durch Open Source:",
     "viewLicenses": "Lizenzen anzeigen",
     "version": "Version: {version}",

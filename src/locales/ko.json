@@ -13,12 +13,10 @@
     "enable": "활성화",
     "pleaseWait": "잠시만 기다려 주세요…",
     "loading": "불러오는 중",
-    "emptySearch": "결과를 찾을 수 없습니다.",
     "parenthesis": "({content})",
     "divide": "{left} / {right}",
     "video": "동영상",
     "unknown": "알 수 없음",
-    "confirm": "확인",
     "best": "최고 품질",
     "resume": "재개",
     "urlImport": {
@@ -40,7 +38,6 @@
         "inputFilters": "필터"
       },
       "nav": {
-        "inputFilters": "필터",
         "settings": "앱 설정"
       }
     },
@@ -902,8 +899,7 @@
       },
       "autoStartMinimised": {
         "label": {
-          "windows": "로그인 시 트레이로 최소화된 상태로 시작",
-          "generic": "로그인 시 숨김 상태로 시작(권장하지 않음)"
+          "windows": "로그인 시 트레이로 최소화된 상태로 시작"
         },
         "hint": {
           "windows": "앱이 로그인 시 시작될 때 창을 열지 않고 시스템 트레이에서 시작됩니다.",
@@ -985,7 +981,6 @@
         }
       },
       "folderInput": {
-        "select": "폴더 선택",
         "placeholder": "폴더 선택…",
         "invalid": "유효하지 않은 폴더입니다.",
         "clear": "폴더 지우기",
@@ -997,7 +992,6 @@
       },
       "secretInput": {
         "hide": "숨기기",
-        "show": "표시",
         "clear": "{label} 지우기"
       },
       "toolCard": {
@@ -1156,6 +1150,7 @@
   "about": {
     "title": "정보",
     "credit": "jely2002 및 기여자가 ❤로 만듦",
+    "fork": "Fork maintained by {maintainer}",
     "poweredBy": "오픈소스로 제작됨:",
     "viewLicenses": "라이선스 보기",
     "version": "버전: {version}",

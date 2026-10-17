@@ -1,7 +1,10 @@
-<img src="https://raw.githubusercontent.com/jely2002/youtube-dl-gui/v2.0.0/renderer/img/icon.png" alt="logo" align="left" height="100"/>
+<img src="./src-tauri/icons/128x128.png" alt="logo" align="left" height="100"/>
 
-# Open Video Downloader (youtube-dl-gui) <br> ![version badge](https://img.shields.io/github/v/release/jely2002/youtube-dl-gui?label=latest-release) ![GitHub](https://img.shields.io/github/license/jely2002/youtube-dl-gui) ![downloads](https://img.shields.io/github/downloads/jely2002/youtube-dl-gui/total) 
-[https://jely2002.github.io/youtube-dl-gui](https://jely2002.github.io/youtube-dl-gui)
+# Open Video Downloader (youtube-dl-gui) <br> ![version badge](https://img.shields.io/github/v/release/indep-arg/youtube-dl-gui?label=latest-release) ![GitHub](https://img.shields.io/github/license/indep-arg/youtube-dl-gui) ![downloads](https://img.shields.io/github/downloads/indep-arg/youtube-dl-gui/total)
+
+> **This is an independent fork.** It is maintained by [indep-arg](https://github.com/indep-arg) and is based on
+> [jely2002/youtube-dl-gui](https://github.com/jely2002/youtube-dl-gui) by Jelle Glebbeek and contributors.
+> It is not affiliated with or endorsed by the original author. See [Credits](#credits-and-fork-notice).
 
 Open Video Downloader is a simple, cross-platform desktop application that lets you download videos, audio, subtitles and metadata from hundreds of supported websites, not just YouTube.  
 It provides an easy-to-use interface around [yt-dlp](https://github.com/yt-dlp/yt-dlp) so you don’t have to touch the command line.
@@ -26,7 +29,7 @@ It provides an easy-to-use interface around [yt-dlp](https://github.com/yt-dlp/y
 The latest versions for **Windows** and **Linux** are available on the  
 [GitHub Releases page](https://github.com/indep-arg/youtube-dl-gui/releases).
 
-This is an independent fork of [jely2002/youtube-dl-gui](https://github.com/jely2002/youtube-dl-gui). macOS builds are not provided.
+macOS builds are not provided in this fork.
 
 Download the installer or archive for your platform and follow the normal installation steps.  
 No command-line setup is required.
@@ -63,6 +66,16 @@ For more details, see [CONTRIBUTING.md](./CONTRIBUTING.md).
 ## License and disclaimer
 
 Open Video Downloader is distributed under the [AGPL-3.0 license](./LICENSE).
+
+### Credits and fork notice
+
+This project is a fork of [youtube-dl-gui / Open Video Downloader](https://github.com/jely2002/youtube-dl-gui),
+created by **Jelle Glebbeek ([jely2002](https://github.com/jely2002))** and contributors, who hold the copyright on the original code.
+All original copyright and license notices are preserved, as required by the AGPL-3.0.
+
+Changes made in this fork are also released under the AGPL-3.0-or-later, and are
+recorded in the git history of this repository. The fork is maintained by [indep-arg](https://github.com/indep-arg).
+Documentation such as the [wiki](https://github.com/jely2002/youtube-dl-gui/wiki) is still provided by the original project.
 
 #### Use this application responsibly
 The maintainers of Open Video Downloader cannot be held liable for misuse of this application, as stated in the AGPL-3.0 license (section 16).  

@@ -13,12 +13,10 @@
     "enable": "Inschakelen",
     "pleaseWait": "Even geduld…",
     "loading": "Laden",
-    "emptySearch": "Geen resultaten gevonden.",
     "parenthesis": "({content})",
     "divide": "{left} / {right}",
     "video": "video",
     "unknown": "onbekend",
-    "confirm": "Bevestigen",
     "best": "Beste",
     "resume": "Hervatten",
     "urlImport": {
@@ -32,8 +30,7 @@
     "header": {
       "placeholder": "Voer een video- of afspeellijst-URL in om toe te voegen aan de wachtrij",
       "nav": {
-        "settings": "App-instellingen",
-        "inputFilters": "Filters"
+        "settings": "App-instellingen"
       },
       "watchClipboardPlaceholder": "Klembord wordt gevolgd: gekopieerde links worden aan de wachtrij toegevoegd",
       "actions": {
@@ -805,8 +802,7 @@
       },
       "autoStartMinimised": {
         "label": {
-          "windows": "Geminimaliseerd naar systeemvak starten bij aanmelden",
-          "generic": "Verborgen starten bij aanmelden (niet aanbevolen)"
+          "windows": "Geminimaliseerd naar systeemvak starten bij aanmelden"
         },
         "hint": {
           "windows": "Wanneer de app bij het aanmelden start, wordt deze in het systeemvak gestart zonder een venster te openen.",
@@ -888,7 +884,6 @@
         }
       },
       "folderInput": {
-        "select": "Map selecteren",
         "placeholder": "Selecteer een map…",
         "invalid": "Ongeldige map.",
         "clear": "Map wissen",
@@ -900,7 +895,6 @@
       },
       "secretInput": {
         "hide": "Verbergen",
-        "show": "Weergeven",
         "clear": "{label} wissen"
       },
       "toolCard": {
@@ -1059,6 +1053,7 @@
   "about": {
     "title": "Over deze app",
     "credit": "Gemaakt met ❤ door jely2002 & bijdragers",
+    "fork": "Fork maintained by {maintainer}",
     "poweredBy": "Mogelijk gemaakt door open source:",
     "viewLicenses": "Licenties bekijken",
     "version": "Versie: {version}",

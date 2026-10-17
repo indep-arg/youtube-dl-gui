@@ -13,12 +13,10 @@
     "enable": "Aktiver",
     "pleaseWait": "Vennligst vent…",
     "loading": "Laster",
-    "emptySearch": "Ingen resultater funnet.",
     "parenthesis": "({content})",
     "divide": "{left} / {right}",
     "video": "video",
     "unknown": "ukjent",
-    "confirm": "Bekreft",
     "best": "Beste",
     "resume": "Fortsett",
     "urlImport": {
@@ -32,8 +30,7 @@
     "header": {
       "placeholder": "Skriv inn en video-/spilleliste-URL for å legge til i køen",
       "nav": {
-        "settings": "App-innstillinger",
-        "inputFilters": "Filtre"
+        "settings": "App-innstillinger"
       },
       "watchClipboardPlaceholder": "Overvåker utklippstavlen: kopierte lenker legges til i køen",
       "actions": {
@@ -805,8 +802,7 @@
       },
       "autoStartMinimised": {
         "label": {
-          "windows": "Start minimert til systemstatusfeltet ved pålogging",
-          "generic": "Start skjult ved pålogging (ikke anbefalt)"
+          "windows": "Start minimert til systemstatusfeltet ved pålogging"
         },
         "hint": {
           "windows": "Når appen starter ved pålogging, starter den i systemstatusfeltet uten å åpne et vindu.",
@@ -888,7 +884,6 @@
         }
       },
       "folderInput": {
-        "select": "Velg mappe",
         "placeholder": "Velg en mappe…",
         "invalid": "Ugyldig mappe.",
         "clear": "Fjern mappe",
@@ -900,7 +895,6 @@
       },
       "secretInput": {
         "hide": "Skjul",
-        "show": "Vis",
         "clear": "Fjern {label}"
       },
       "toolCard": {
@@ -1059,6 +1053,7 @@
   "about": {
     "title": "Om",
     "credit": "Laget med ❤ av jely2002 & bidragsytere",
+    "fork": "Fork maintained by {maintainer}",
     "poweredBy": "Drevet av åpen kildekode:",
     "viewLicenses": "Vis lisenser",
     "version": "Versjon: {version}",

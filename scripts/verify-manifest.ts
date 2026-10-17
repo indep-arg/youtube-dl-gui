@@ -3,8 +3,8 @@ import { createPublicKey, verify } from 'crypto';
 
 async function main() {
   console.log('[verify-manifest] Verifying manifest signature');
-  const manifestBytes = await readFile('docs/manifest/manifest.json');
-  const sigB64 = await readFile('docs/manifest/manifest.sig', 'utf8');
+  const manifestBytes = await readFile('manifest/manifest.json');
+  const sigB64 = await readFile('manifest/manifest.sig', 'utf8');
   const pubHex = process.env.ED25519_PUB_KEY_HEX;
   if (!pubHex) throw new Error('ED25519_PUB_KEY_HEX missing');
   console.log('[verify-manifest] Loaded public key from environment');

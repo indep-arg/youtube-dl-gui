@@ -13,12 +13,10 @@
     "enable": "啟用",
     "pleaseWait": "請稍候…",
     "loading": "正在載入",
-    "emptySearch": "找不到結果。",
     "parenthesis": "({content})",
     "divide": "{left} / {right}",
     "video": "影片",
     "unknown": "未知",
-    "confirm": "確認",
     "best": "最佳",
     "resume": "繼續",
     "urlImport": {
@@ -32,8 +30,7 @@
     "header": {
       "placeholder": "輸入影片/播放清單 URL 以加入佇列",
       "nav": {
-        "settings": "應用程式設定",
-        "inputFilters": "篩選條件"
+        "settings": "應用程式設定"
       },
       "watchClipboardPlaceholder": "正在監看剪貼簿：複製的連結會加入佇列",
       "actions": {
@@ -805,8 +802,7 @@
       },
       "autoStartMinimised": {
         "label": {
-          "windows": "登入時最小化至系統匣啟動",
-          "generic": "登入時隱藏啟動 (不建議)"
+          "windows": "登入時最小化至系統匣啟動"
         },
         "hint": {
           "windows": "登入時啟動後會在系統匣中執行，不會開啟視窗。",
@@ -888,7 +884,6 @@
         }
       },
       "folderInput": {
-        "select": "選取資料夾",
         "placeholder": "選取資料夾…",
         "invalid": "資料夾無效。",
         "clear": "清除資料夾",
@@ -900,7 +895,6 @@
       },
       "secretInput": {
         "hide": "隱藏",
-        "show": "顯示",
         "clear": "清除 {label}"
       },
       "toolCard": {
@@ -1059,6 +1053,7 @@
   "about": {
     "title": "關於",
     "credit": "由 jely2002 與貢獻者用 ❤ 製作",
+    "fork": "Fork maintained by {maintainer}",
     "poweredBy": "採用開放原始碼:",
     "viewLicenses": "檢視授權",
     "version": "版本: {version}",

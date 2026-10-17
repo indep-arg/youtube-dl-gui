@@ -24,12 +24,6 @@ export interface BinaryDownloadErrorPayload {
   error: string;
 }
 
-export interface BinaryUpdateCompletePayload {
-  successes: string[];
-  failures: BinaryDownloadErrorPayload[];
-  error?: string;
-}
-
 export interface BinaryProgress {
   received: number;
   total: number;

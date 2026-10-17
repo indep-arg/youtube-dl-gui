@@ -13,12 +13,10 @@
     "enable": "Habilitar",
     "pleaseWait": "Por favor, espera…",
     "loading": "Cargando",
-    "emptySearch": "No se encontraron resultados.",
     "parenthesis": "({content})",
     "divide": "{left} / {right}",
     "video": "video",
     "unknown": "desconocido",
-    "confirm": "Confirmar",
     "best": "Mejor",
     "resume": "Reanudar",
     "urlImport": {
@@ -40,7 +38,6 @@
         "inputFilters": "Filtros"
       },
       "nav": {
-        "inputFilters": "Filtros",
         "settings": "Configuración de la app"
       }
     },
@@ -902,8 +899,7 @@
       },
       "autoStartMinimised": {
         "label": {
-          "windows": "Iniciar minimizado en la bandeja al iniciar sesión",
-          "generic": "Iniciar oculto al iniciar sesión (no recomendado)"
+          "windows": "Iniciar minimizado en la bandeja al iniciar sesión"
         },
         "hint": {
           "windows": "Al iniciar sesión, la app se ejecutará en la bandeja del sistema sin abrir una ventana.",
@@ -985,7 +981,6 @@
         }
       },
       "folderInput": {
-        "select": "Seleccionar carpeta",
         "placeholder": "Seleccionar carpeta…",
         "invalid": "Carpeta inválida.",
         "clear": "Quitar carpeta",
@@ -997,7 +992,6 @@
       },
       "secretInput": {
         "hide": "Ocultar",
-        "show": "Mostrar",
         "clear": "Limpiar {label}"
       },
       "toolCard": {
@@ -1156,6 +1150,7 @@
   "about": {
     "title": "Acerca de",
     "credit": "Hecho con ❤ por jely2002 y colaboradores",
+    "fork": "Fork mantenido por {maintainer}",
     "poweredBy": "Impulsado por código abierto:",
     "viewLicenses": "Ver licencias",
     "version": "Versión: {version}",

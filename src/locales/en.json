@@ -13,12 +13,10 @@
     "enable": "Enable",
     "pleaseWait": "Please wait…",
     "loading": "Loading",
-    "emptySearch": "No results found.",
     "parenthesis": "({content})",
     "divide": "{left} / {right}",
     "video": "video",
     "unknown": "unknown",
-    "confirm": "Confirm",
     "best": "Best",
     "resume": "Resume",
     "urlImport": {
@@ -40,7 +38,6 @@
         "inputFilters": "Filters"
       },
       "nav": {
-        "inputFilters": "Filters",
         "settings": "App Settings"
       }
     },
@@ -902,8 +899,7 @@
       },
       "autoStartMinimised": {
         "label": {
-          "windows": "Start minimized to tray at login",
-          "generic": "Start hidden at login (not recommended)"
+          "windows": "Start minimized to tray at login"
         },
         "hint": {
           "windows": "When the app starts at login, it will start in the system tray without opening a window.",
@@ -985,7 +981,6 @@
         }
       },
       "folderInput": {
-        "select": "Select folder",
         "placeholder": "Select a folder…",
         "invalid": "Invalid folder.",
         "clear": "Clear folder",
@@ -997,7 +992,6 @@
       },
       "secretInput": {
         "hide": "Hide",
-        "show": "Show",
         "clear": "Clear {label}"
       },
       "toolCard": {
@@ -1156,6 +1150,7 @@
   "about": {
     "title": "About",
     "credit": "Made with ❤ by jely2002 & contributors",
+    "fork": "Fork maintained by {maintainer}",
     "poweredBy": "Powered by open source:",
     "viewLicenses": "View licenses",
     "version": "Version: {version}",

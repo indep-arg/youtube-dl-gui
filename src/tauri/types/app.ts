@@ -1,7 +1,3 @@
-export interface NavigatePayload {
-  route: string;
-}
-
 export enum Platform {
   Windows = 'windows',
   Linux = 'linux',

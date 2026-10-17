@@ -3,7 +3,7 @@ import { createPrivateKey, sign } from 'crypto';
 
 async function main() {
   console.log('[sign-manifest] Signing manifest');
-  const manifestPath = 'docs/manifest/manifest.json';
+  const manifestPath = 'manifest/manifest.json';
   const privB64 = process.env.ED25519_PRIV_KEY_B64;
   if (!privB64) throw new Error('ED25519_PRIV_KEY_B64 missing');
   console.log('[sign-manifest] Loaded signing key from environment');
@@ -11,7 +11,7 @@ async function main() {
   const manifestBytes = await readFile(manifestPath);
   console.log(`[sign-manifest] Read manifest bytes from ${manifestPath}`);
   const signature = sign(null, manifestBytes, key).toString('base64');
-  const signaturePath = 'docs/manifest/manifest.sig';
+  const signaturePath = 'manifest/manifest.sig';
   await writeFile(signaturePath, signature);
   console.log(`[sign-manifest] Wrote signature to ${signaturePath}`);
 }

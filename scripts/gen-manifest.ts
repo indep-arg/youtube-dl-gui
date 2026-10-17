@@ -60,8 +60,8 @@ export async function main(): Promise<Manifest> {
     tools[src.name] = { version: src.version, files };
   }
   const manifest: Manifest = { generatedAt: new Date().toISOString(), tools };
-  await mkdir('docs/manifest', { recursive: true });
-  const manifestPath = 'docs/manifest/manifest.json';
+  await mkdir('manifest', { recursive: true });
+  const manifestPath = 'manifest/manifest.json';
   const newManifest = JSON.stringify(manifest, null, 2);
 
   let previousManifest: string | undefined;

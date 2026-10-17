@@ -13,12 +13,10 @@
     "enable": "Habilitar",
     "pleaseWait": "Aguarde, por favor…",
     "loading": "Carregando",
-    "emptySearch": "Nenhum resultado encontrado.",
     "parenthesis": "({content})",
     "divide": "{left} / {right}",
     "video": "vídeo",
     "unknown": "desconhecido",
-    "confirm": "Confirmar",
     "best": "Melhor",
     "resume": "Retomar",
     "urlImport": {
@@ -32,8 +30,7 @@
     "header": {
       "placeholder": "Insira o URL de um vídeo/playlist para adicionar à fila.",
       "nav": {
-        "settings": "Configurações do aplicativo",
-        "inputFilters": "Filtros"
+        "settings": "Configurações do aplicativo"
       },
       "watchClipboardPlaceholder": "Monitorando a área de transferência: links copiados são adicionados à fila",
       "actions": {
@@ -805,8 +802,7 @@
       },
       "autoStartMinimised": {
         "label": {
-          "windows": "Iniciar minimizado na bandeja ao entrar",
-          "generic": "Iniciar oculto ao entrar (não recomendado)"
+          "windows": "Iniciar minimizado na bandeja ao entrar"
         },
         "hint": {
           "windows": "Quando o aplicativo inicia ao entrar, ele é iniciado na bandeja do sistema sem abrir uma janela.",
@@ -888,7 +884,6 @@
         }
       },
       "folderInput": {
-        "select": "Selecionar pasta",
         "placeholder": "Selecione uma pasta…",
         "invalid": "Pasta inválida.",
         "clear": "Limpar pasta",
@@ -900,7 +895,6 @@
       },
       "secretInput": {
         "hide": "Ocultar",
-        "show": "Mostrar",
         "clear": "Limpar {label}"
       },
       "toolCard": {
@@ -1059,6 +1053,7 @@
   "about": {
     "title": "Sobre",
     "credit": "Feito com ❤ por jely2002 & colaboradores",
+    "fork": "Fork maintained by {maintainer}",
     "poweredBy": "Impulsionado por código aberto:",
     "viewLicenses": "Exibir licenças",
     "version": "Versão: {version}",

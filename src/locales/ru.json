@@ -13,12 +13,10 @@
     "enable": "Включить",
     "pleaseWait": "Пожалуйста, подождите…",
     "loading": "Загрузка",
-    "emptySearch": "Ничего не найдено.",
     "parenthesis": "({content})",
     "divide": "{left} / {right}",
     "video": "видео",
     "unknown": "неизвестно",
-    "confirm": "Подтвердить",
     "best": "Лучшее",
     "resume": "Возобновить",
     "urlImport": {
@@ -32,8 +30,7 @@
     "header": {
       "placeholder": "Введите URL видео или плейлиста, чтобы добавить в очередь",
       "nav": {
-        "settings": "Настройки приложения",
-        "inputFilters": "Фильтры"
+        "settings": "Настройки приложения"
       },
       "watchClipboardPlaceholder": "Буфер обмена отслеживается: скопированные ссылки добавляются в очередь",
       "actions": {
@@ -805,8 +802,7 @@
       },
       "autoStartMinimised": {
         "label": {
-          "windows": "Запускать свёрнутым в трей при входе",
-          "generic": "Запускать скрытым при входе (не рекомендуется)"
+          "windows": "Запускать свёрнутым в трей при входе"
         },
         "hint": {
           "windows": "При запуске при входе приложение стартует в трее без открытия окна.",
@@ -888,7 +884,6 @@
         }
       },
       "folderInput": {
-        "select": "Выбрать папку",
         "placeholder": "Выберите папку…",
         "invalid": "Недопустимая папка.",
         "clear": "Очистить папку",
@@ -900,7 +895,6 @@
       },
       "secretInput": {
         "hide": "Скрыть",
-        "show": "Показать",
         "clear": "Очистить: {label}"
       },
       "toolCard": {
@@ -1059,6 +1053,7 @@
   "about": {
     "title": "О программе",
     "credit": "Сделано с ❤ jely2002 и участниками сообщества",
+    "fork": "Fork maintained by {maintainer}",
     "poweredBy": "Основано на open-source:",
     "viewLicenses": "Просмотреть лицензии",
     "version": "Версия: {version}",

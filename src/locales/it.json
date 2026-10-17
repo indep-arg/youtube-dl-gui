@@ -13,12 +13,10 @@
     "enable": "Abilita",
     "pleaseWait": "Attendi…",
     "loading": "Caricamento",
-    "emptySearch": "Nessun risultato trovato.",
     "parenthesis": "({content})",
     "divide": "{left} / {right}",
     "video": "video",
     "unknown": "sconosciuto",
-    "confirm": "Conferma",
     "best": "Migliore",
     "resume": "Riprendi",
     "urlImport": {
@@ -32,8 +30,7 @@
     "header": {
       "placeholder": "Inserisci l'URL di un video/playlist da aggiungere alla coda",
       "nav": {
-        "settings": "Impostazioni app",
-        "inputFilters": "Filtri"
+        "settings": "Impostazioni app"
       },
       "watchClipboardPlaceholder": "Monitoraggio degli appunti: i link copiati vengono aggiunti alla coda",
       "actions": {
@@ -806,8 +803,7 @@
       },
       "autoStartMinimised": {
         "label": {
-          "windows": "Avvia ridotto nella barra di sistema",
-          "generic": "Avvia nascosto (non consigliato)"
+          "windows": "Avvia ridotto nella barra di sistema"
         },
         "hint": {
           "windows": "Quando l’app si avvia all’accesso, viene avviata nella barra di sistema senza aprire una finestra.",
@@ -889,7 +885,6 @@
         }
       },
       "folderInput": {
-        "select": "Seleziona cartella",
         "placeholder": "Seleziona una cartella…",
         "invalid": "Cartella non valida.",
         "clear": "Rimuovi cartella",
@@ -901,7 +896,6 @@
       },
       "secretInput": {
         "hide": "Nascondi",
-        "show": "Visualizza",
         "clear": "Azzera {label}"
       },
       "toolCard": {
@@ -1060,6 +1054,7 @@
   "about": {
     "title": "Info programma",
     "credit": "Creato con ❤ da jely2002 e contributori",
+    "fork": "Fork maintained by {maintainer}",
     "poweredBy": "Offerto come open source:",
     "viewLicenses": "Visualizza licenze",
     "version": "Versione: {version}",

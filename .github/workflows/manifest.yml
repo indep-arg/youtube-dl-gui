@@ -1,0 +1,50 @@
+name: Update binaries manifest
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+
+      - name: Setup Node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 24
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate manifest
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npm run manifest:gen
+
+      - name: Sign manifest
+        run: npm run manifest:sign
+        env:
+          ED25519_PRIV_KEY_B64: ${{ secrets.ED25519_PRIV_KEY_B64 }}
+
+      - name: Verify manifest
+        run: npm run manifest:verify
+        env:
+          ED25519_PUB_KEY_HEX: ${{ secrets.ED25519_PUB_KEY_HEX }}
+
+      # The app downloads the manifest from the assets of a fixed "manifest" release.
+      # It is a prerelease so it never becomes the "latest" release used by the updater.
+      - name: Publish manifest
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release view manifest >/dev/null 2>&1 || gh release create manifest \
+            --title "Binaries manifest" \
+            --notes "Signed manifest of the yt-dlp and ffmpeg builds used by the app. Updated automatically." \
+            --prerelease --latest=false
+          gh release upload manifest manifest/manifest.json manifest/manifest.sig --clobber

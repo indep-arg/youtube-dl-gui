@@ -94,12 +94,6 @@ impl MediaFatalPayload {
 
 #[derive(Clone, Debug, Serialize)]
 #[serde(rename_all = "camelCase")]
-pub struct NavigatePayload {
-  pub route: String,
-}
-
-#[derive(Clone, Debug, Serialize)]
-#[serde(rename_all = "camelCase")]
 pub struct AppendLogPayload {
   pub group_id: String,
   pub line: String,

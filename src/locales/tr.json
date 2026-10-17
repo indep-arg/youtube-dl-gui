@@ -13,12 +13,10 @@
     "enable": "Etkinleştir",
     "pleaseWait": "Lütfen bekleyin…",
     "loading": "Yükleniyor",
-    "emptySearch": "Bir sonuç bulunamadı.",
     "parenthesis": "({content})",
     "divide": "{left} / {right}",
     "video": "video",
     "unknown": "bilinmiyor",
-    "confirm": "Onayla",
     "best": "En iyi",
     "resume": "Devam et",
     "urlImport": {
@@ -32,8 +30,7 @@
     "header": {
       "placeholder": "Sıraya eklemek için bir video/oynatma listesi URL'si ekleyin",
       "nav": {
-        "settings": "Uygulama Ayarları",
-        "inputFilters": "Filtreler"
+        "settings": "Uygulama Ayarları"
       },
       "watchClipboardPlaceholder": "Pano izleniyor: kopyalanan bağlantılar sıraya ekleniyor",
       "actions": {
@@ -805,8 +802,7 @@
       },
       "autoStartMinimised": {
         "label": {
-          "windows": "Oturum açtığınızda tepsiye simge durumuna küçültülmüş olarak başlatır",
-          "generic": "Oturum açışında gizli olarak başlat (önerilmez)"
+          "windows": "Oturum açtığınızda tepsiye simge durumuna küçültülmüş olarak başlatır"
         },
         "hint": {
           "windows": "Uygulama oturum açıldığında pencere açmadan sistem tepsisinde başlayacaktır.",
@@ -888,7 +884,6 @@
         }
       },
       "folderInput": {
-        "select": "Klasör seç",
         "placeholder": "Klasör seç…",
         "invalid": "Geçersiz klasör.",
         "clear": "Klasörü temizle",
@@ -900,7 +895,6 @@
       },
       "secretInput": {
         "hide": "Gizle",
-        "show": "Göster",
         "clear": "Temizle {label}"
       },
       "toolCard": {
@@ -1059,6 +1053,7 @@
   "about": {
     "title": "Hakkında",
     "credit": "jely2002 & katkıda bulunanlar tarafından ❤ ile yapıldı",
+    "fork": "Fork maintained by {maintainer}",
     "poweredBy": "Açık kaynakla güç bulmuştur:",
     "viewLicenses": "Lisanlara göz at",
     "version": "Sürüm: {version}",

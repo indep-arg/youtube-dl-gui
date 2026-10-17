@@ -13,12 +13,10 @@
     "enable": "Activer",
     "pleaseWait": "Veuillez patienter…",
     "loading": "Chargement",
-    "emptySearch": "Aucun résultat trouvé.",
     "parenthesis": "({content})",
     "divide": "{left} / {right}",
     "video": "vidéo",
     "unknown": "inconnu",
-    "confirm": "Confirmer",
     "best": "Meilleure",
     "resume": "Reprendre",
     "urlImport": {
@@ -32,8 +30,7 @@
     "header": {
       "placeholder": "Entrez l'URL d'une vidéo/playlist pour l'ajouter à la file d'attente",
       "nav": {
-        "settings": "Paramètres de l'application",
-        "inputFilters": "Filtres"
+        "settings": "Paramètres de l'application"
       },
       "watchClipboardPlaceholder": "Surveillance du presse-papiers : les liens copiés sont ajoutés à la file d’attente",
       "actions": {
@@ -805,8 +802,7 @@
       },
       "autoStartMinimised": {
         "label": {
-          "windows": "Démarrer réduit dans la zone de notification à la connexion",
-          "generic": "Démarrer masqué à la connexion (non recommandé)"
+          "windows": "Démarrer réduit dans la zone de notification à la connexion"
         },
         "hint": {
           "windows": "Lorsque l’application démarre à la connexion, elle se lance dans la zone de notification sans ouvrir de fenêtre.",
@@ -888,7 +884,6 @@
         }
       },
       "folderInput": {
-        "select": "Sélectionner un dossier",
         "placeholder": "Sélectionnez un dossier…",
         "invalid": "Dossier non valide.",
         "clear": "Effacer le dossier",
@@ -900,7 +895,6 @@
       },
       "secretInput": {
         "hide": "Masquer",
-        "show": "Afficher",
         "clear": "Effacer {label}"
       },
       "toolCard": {
@@ -1059,6 +1053,7 @@
   "about": {
     "title": "À propos",
     "credit": "Fait avec ❤ par jely2002 & les contributeurs",
+    "fork": "Fork maintained by {maintainer}",
     "poweredBy": "Propulsé par open source :",
     "viewLicenses": "Voir les licences",
     "version": "Version : {version}",

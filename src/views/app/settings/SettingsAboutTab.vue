@@ -2,7 +2,7 @@
   <base-fieldset :legend="t('about.title')" label="">
     <div class="flex flex-col gap-2">
       <div class="flex gap-2 mb-2 w-full">
-        <a href="https://github.com/jely2002/youtube-dl-gui" class="link link-subtle" target="_blank" rel="noopener">
+        <a href="https://github.com/indep-arg/youtube-dl-gui" class="link link-subtle" target="_blank" rel="noopener">
           {{ t('about.links.github') }}
         </a>
         <hr class="divider divider-horizontal mx-0 border-none">
@@ -10,11 +10,12 @@
           {{ t('about.links.wiki') }}
         </a>
         <hr class="divider divider-horizontal mx-0 border-none">
-        <a href="https://github.com/jely2002/youtube-dl-gui/issues/new?template=bug_report.md" class="link" target="_blank" rel="noopener">
+        <a href="https://github.com/indep-arg/youtube-dl-gui/issues/new?template=bug_report.md" class="link" target="_blank" rel="noopener">
           {{ t('about.links.reportABug') }}
         </a>
       </div>
       <p>{{ t('about.credit') }}</p>
+      <p>{{ t('about.fork', { maintainer: 'indep-arg' }) }}</p>
       <div class="flex gap-2 items-center">
         <p>{{ t('about.poweredBy') }}</p>
         <button type="button" @click="openLicenses()" class="btn btn-soft btn-xs">

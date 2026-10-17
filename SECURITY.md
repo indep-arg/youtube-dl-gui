@@ -11,16 +11,14 @@ Versions `1.x` and `2.x` are no longer supported with security updates.
 | `main` branch snapshots / unreleased builds | :warning: Best effort only |
 | `2.x` and older | :x: |
 
-If you are unsure whether you are on a supported version, install the newest release from the [GitHub Releases page](https://github.com/jely2002/youtube-dl-gui/releases) before reporting the issue.
+If you are unsure whether you are on a supported version, install the newest release from the [GitHub Releases page](https://github.com/indep-arg/youtube-dl-gui/releases) before reporting the issue.
 
 ## Reporting a Vulnerability
 
 Please do **not** open a public GitHub issue for suspected security vulnerabilities.
 
-Use one of these private channels instead:
-
-1. Open a private report through GitHub's **Security** tab using **Report a vulnerability**.
-2. If private reporting is not available, email [ytdlgui@jelleglebbeek.com](mailto:ytdlgui@jelleglebbeek.com).
+Open a private report through the **Security** tab of this repository using **Report a vulnerability**.
+Issues in the original project should be reported to [its maintainer](https://github.com/jely2002/youtube-dl-gui/security).
 
 Please include:
 

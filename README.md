@@ -12,7 +12,7 @@ It provides an easy-to-use interface around [yt-dlp](https://github.com/yt-dlp/y
 
 ## Features
 
-- **Private by design:** no telemetry, no accounts and no error reports. See [Privacy and trust](#privacy-and-trust).
+- **Private:** no telemetry and no error reports, which the original had. See [Privacy](#privacy).
 - **Cross-platform:** works on Windows and Linux.
 - **Audio or video downloads:** grab full videos or extract only the audio track.
 - **Subtitles and metadata:** automatically saves available captions and video information.
@@ -25,17 +25,14 @@ It provides an easy-to-use interface around [yt-dlp](https://github.com/yt-dlp/y
 - **Light and dark mode:** adapts to your system theme with clear progress and error handling.
 - **Shortcuts:** queue and download videos using shortcuts, stay up-to-date on progress with notifications.
 
-## Privacy and trust
+## Privacy
 
-- **Nothing is collected.** No telemetry, no accounts, and no error reports: the original project sent
-  them to a third-party service, and this fork removed that.
-- **Everything is checked.** App updates are signed with this project's key, and the tools (yt-dlp, ffmpeg…)
-  are verified with a signed list and SHA-256 hashes before they are used.
-- **Your secrets stay with you.** Passwords go in an encrypted vault on your computer, and the webview is
-  isolated and limited to the commands the app needs.
-- **Open source** under the AGPL-3.0, built by public workflows.
+The original app sent error reports to an outside service. This fork took that out, so there is no
+telemetry, no account and nothing that tracks what you download. The only things that leave your
+computer are the downloads you ask for and the checks for updates on GitHub.
 
-Details, what the app connects to, and how to verify a download yourself: [docs/PRIVACY.md](./docs/PRIVACY.md).
+Updates are signed, and the tools it downloads (yt-dlp, ffmpeg) are checked before they are used.
+More in [docs/PRIVACY.md](./docs/PRIVACY.md).
 
 ## Download
 
@@ -61,7 +58,7 @@ No command-line setup is required.
 ## Documentation
 
 - [User guide](./docs/GUIDE.md): installing, using the app and what to do when something goes wrong.
-- [Privacy and trust](./docs/PRIVACY.md).
+- [Privacy](./docs/PRIVACY.md).
 - [Changelog](./CHANGELOG.md) and [contributing](./CONTRIBUTING.md).
 - [Translating](./docs/TRANSLATING.md).
 

@@ -45,6 +45,12 @@ No command-line setup is required.
 | **Linux Fedora/RHEL (x64)**           | `Open.Video.Downloader_x.x.x-x_amd64.rpm`      |
 | **Linux Fedora/RHEL (aarch64)**       | `Open.Video.Downloader_x.x.x-x_aarch64.rpm`    |
 
+## Documentation
+
+- [User guide](./docs/GUIDE.md): installing, using the app and what to do when something goes wrong.
+- [Changelog](./CHANGELOG.md) and [contributing](./CONTRIBUTING.md).
+- [Translating](./docs/TRANSLATING.md).
+
 ## How it works
 
 Open Video Downloader uses a front-end built with Vue 3 and a Rust backend powered by [Tauri](https://tauri.app/).  

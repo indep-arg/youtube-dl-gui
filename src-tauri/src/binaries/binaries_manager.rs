@@ -130,8 +130,11 @@ impl BinariesManager {
   }
 
   /// The file for this platform. A `-v2` key (e.g. `linux-x86_64-v2`) wins: it
-  /// holds a build that only this version of the app can install (a `.tar.xz`
-  /// archive), while older versions keep using the plain key.
+  /// holds a build that only newer versions of the app install, while older
+  /// versions keep using the plain key.
+  ///
+  /// Windows on ARM runs x64 programs, so a tool without an ARM build uses the x64
+  /// one there. Linux on ARM cannot, so such a tool is left out.
   fn select_file<'a>(
     files: &'a HashMap<String, FileInfo>,
     arch: &'a str,
@@ -142,11 +145,10 @@ impl BinariesManager {
     if let Some(f) = files.get(arch) {
       return Some((arch, f));
     }
-    let platform = arch.split('-').next().unwrap_or("");
-    files
-      .iter()
-      .find(|(k, _)| k.starts_with(platform))
-      .map(|(k, v)| (k.as_str(), v))
+    if arch == "windows-aarch64" {
+      return Self::select_file(files, "windows-x86_64");
+    }
+    None
   }
 
   /// The version recorded for an installed tool. A `-v2` file gets its own
@@ -693,5 +695,24 @@ mod tests {
     ]);
     let (key, _) = BinariesManager::select_file(&files, "linux-aarch64").unwrap();
     assert_eq!(key, "linux-aarch64");
+  }
+
+  #[test]
+  fn windows_on_arm_falls_back_to_the_x64_file() {
+    let files = HashMap::from([
+      ("windows-x86_64".to_string(), file("x64.zip")),
+      ("linux-x86_64".to_string(), file("linux.zip")),
+    ]);
+    let (key, _) = BinariesManager::select_file(&files, "windows-aarch64").unwrap();
+    assert_eq!(key, "windows-x86_64");
+  }
+
+  #[test]
+  fn linux_on_arm_does_not_use_an_x64_file() {
+    let files = HashMap::from([
+      ("linux-x86_64".to_string(), file("x64.zip")),
+      ("windows-x86_64".to_string(), file("win.zip")),
+    ]);
+    assert!(BinariesManager::select_file(&files, "linux-aarch64").is_none());
   }
 }

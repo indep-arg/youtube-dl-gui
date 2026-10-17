@@ -160,14 +160,16 @@ export async function fetchSources(): Promise<ToolSource[]> {
       name: 'ffmpeg',
       version: ffRel.tag_name,
       files: {
-        // Old versions of the app read these. On Linux this static build crashes
-        // as soon as it resolves a host name, so newer versions use the -v2 files.
+        // Old versions of the app read the plain keys. On Linux this static build
+        // crashes as soon as it resolves a host name, so newer versions use the -v2
+        // files from FFmpeg-Builds (on Windows too, to have the same build everywhere).
         'linux-x86_64': { url: assetUrl(ffRel, 'ffmpeg-linux-x64') },
         'linux-aarch64': { url: assetUrl(ffRel, 'ffmpeg-linux-arm64') },
-        // .tar.xz archives, which only versions from 2026.10.2 on can open.
+        // The Linux ones are .tar.xz archives, which only versions from 2026.10.2 on can open.
         'linux-x86_64-v2': ffmpegBuildsFile(ffBuildsRel, '-linux64-gpl.tar.xz', 'ffmpeg'),
         'linux-aarch64-v2': ffmpegBuildsFile(ffBuildsRel, '-linuxarm64-gpl.tar.xz', 'ffmpeg'),
         'windows-x86_64': { url: assetUrl(ffRel, 'ffmpeg-win32-x64') },
+        'windows-x86_64-v2': ffmpegBuildsFile(ffBuildsRel, '-win64-gpl.zip', 'ffmpeg.exe'),
         'windows-aarch64': ffmpegBuildsFile(ffBuildsRel, '-winarm64-gpl.zip', 'ffmpeg.exe'),
       },
     },
@@ -180,6 +182,7 @@ export async function fetchSources(): Promise<ToolSource[]> {
         'linux-x86_64-v2': ffmpegBuildsFile(ffBuildsRel, '-linux64-gpl.tar.xz', 'ffprobe'),
         'linux-aarch64-v2': ffmpegBuildsFile(ffBuildsRel, '-linuxarm64-gpl.tar.xz', 'ffprobe'),
         'windows-x86_64': { url: assetUrl(ffRel, 'ffprobe-win32-x64') },
+        'windows-x86_64-v2': ffmpegBuildsFile(ffBuildsRel, '-win64-gpl.zip', 'ffprobe.exe'),
         'windows-aarch64': ffmpegBuildsFile(ffBuildsRel, '-winarm64-gpl.zip', 'ffprobe.exe'),
       },
     },

@@ -277,7 +277,7 @@
           "duration": "Durata: {duration}",
           "size": "Dimensione: ",
           "sizeInfo": "La quantità di dati che verrà scaricata.\nNon è la dimensione finale del file.",
-          "items": "Elementi: {amount} {failedCount}",
+          "items": "Elementi: {amount} {details}",
           "failedCount": "({amount} falliti)",
           "skippedCount": "({amount} ignorati)",
           "failedAndSkippedCount": "({failed} non riusciti, {skipped} ignorati)"

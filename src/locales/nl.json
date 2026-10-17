@@ -277,7 +277,7 @@
           "duration": "Duur: {duration}",
           "size": "Grootte: ",
           "sizeInfo": "De hoeveelheid data die wordt gedownload.\nNiet de uiteindelijke bestandsgrootte.",
-          "items": "Items: {amount} {failedCount}",
+          "items": "Items: {amount} {details}",
           "failedCount": "({amount} mislukt)",
           "skippedCount": "({amount} overgeslagen)",
           "failedAndSkippedCount": "({failed} mislukt, {skipped} overgeslagen)"
@@ -381,12 +381,9 @@
         "downloadAll": "Alle beschikbare ondertitels downloaden.",
         "search": "Zoek talen",
         "searchPlaceholder": "Zoek op taalnaam",
-        "suggested": "Aanbevolen voor jou",
-        "all": "Alle talen",
         "noResult": "Geen talen gevonden voor \"{query}\".",
         "selected": "Geselecteerd:",
         "allSelected": "Alle beschikbare ondertitels",
-        "searchHint": "Tip: gebruik het zoekveld om de lijst te filteren. Geselecteerde talen blijven gemarkeerd.",
         "none": "Geen"
       }
     },

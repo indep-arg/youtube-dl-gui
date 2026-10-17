@@ -277,7 +277,7 @@
           "duration": "Dauer: {duration}",
           "size": "Größe: ",
           "sizeInfo": "Die Datenmenge, die heruntergeladen wird.\nNicht die endgültige Dateigröße.",
-          "items": "Elemente: {amount} {failedCount}",
+          "items": "Elemente: {amount} {details}",
           "failedCount": "({amount} fehlgeschlagen)",
           "skippedCount": "({amount} übersprungen)",
           "failedAndSkippedCount": "({failed} fehlgeschlagen, {skipped} übersprungen)"
@@ -381,12 +381,9 @@
         "downloadAll": "Alle verfügbaren Untertitel herunterladen.",
         "search": "Sprachen suchen",
         "searchPlaceholder": "Nach Sprachnamen suchen",
-        "suggested": "Für dich vorgeschlagen",
-        "all": "Alle Sprachen",
         "noResult": "Keine Sprachen passen zu „{query}“.",
         "selected": "Ausgewählt:",
         "allSelected": "Alle verfügbaren Untertitel",
-        "searchHint": "Tipp: Nutze das Suchfeld, um die Liste schnell zu filtern. Ausgewählte Sprachen bleiben hervorgehoben.",
         "none": "Keine"
       }
     },

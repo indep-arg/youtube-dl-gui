@@ -277,7 +277,7 @@
           "duration": "時長: {duration}",
           "size": "大小: ",
           "sizeInfo": "即將下載的資料大小。\n非檔案最終大小。",
-          "items": "項目: {amount} {failedCount}",
+          "items": "項目: {amount} {details}",
           "failedCount": "({amount} 失敗)",
           "skippedCount": "({amount} 個已略過)",
           "failedAndSkippedCount": "({failed} 個失敗，{skipped} 個已略過)"
@@ -381,12 +381,9 @@
         "downloadAll": "下載所有可用字幕。",
         "search": "搜尋語言",
         "searchPlaceholder": "依語言名稱搜尋",
-        "suggested": "為您推薦",
-        "all": "所有語言",
         "noResult": "沒有語言符合「{query}」。",
         "selected": "已選取:",
         "allSelected": "所有可用字幕",
-        "searchHint": "提示：使用搜尋方塊可快速篩選清單。已選取的語言會保持反白。",
         "none": "無"
       }
     },

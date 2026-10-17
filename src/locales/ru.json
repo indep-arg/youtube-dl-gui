@@ -277,7 +277,7 @@
           "duration": "Длительность: {duration}",
           "size": "Размер: ",
           "sizeInfo": "Объём данных, который будет скачан.\nЭто не финальный размер файла.",
-          "items": "Элементы: {amount} {failedCount}",
+          "items": "Элементы: {amount} {details}",
           "failedCount": "({amount} с ошибкой)",
           "skippedCount": "({amount} пропущено)",
           "failedAndSkippedCount": "({failed} с ошибкой, {skipped} пропущено)"
@@ -381,12 +381,9 @@
         "downloadAll": "Скачать все доступные субтитры.",
         "search": "Поиск языков",
         "searchPlaceholder": "Поиск по названию языка",
-        "suggested": "Рекомендуемые",
-        "all": "Все языки",
         "noResult": "Нет языков, совпадающих с «{query}».",
         "selected": "Выбрано:",
         "allSelected": "Все доступные субтитры",
-        "searchHint": "Совет: используйте поиск, чтобы быстро отфильтровать список. Выбранные языки остаются подсвеченными.",
         "none": "Нет"
       }
     },

@@ -277,7 +277,7 @@
           "duration": "Varighet: {duration}",
           "size": "Størrelse: ",
           "sizeInfo": "Mengden data som vil bli lastet ned.\nIkke den endelige filstørrelsen.",
-          "items": "Elementer: {amount} {failedCount}",
+          "items": "Elementer: {amount} {details}",
           "failedCount": "({amount} mislyktes)",
           "skippedCount": "({amount} hoppet over)",
           "failedAndSkippedCount": "({failed} mislyktes, {skipped} hoppet over)"
@@ -381,12 +381,9 @@
         "downloadAll": "Last ned alle tilgjengelige undertekster.",
         "search": "Søk etter språk",
         "searchPlaceholder": "Søk etter språknavn",
-        "suggested": "Anbefalt for deg",
-        "all": "Alle språk",
         "noResult": "Ingen språk samsvarer med \"{query}\".",
         "selected": "Valgt:",
         "allSelected": "Alle tilgjengelige undertekster",
-        "searchHint": "Tips: Bruk søkeboksen for å raskt filtrere listen. Valgte språk forblir uthevet.",
         "none": "Ingen"
       }
     },

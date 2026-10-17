@@ -277,7 +277,7 @@
           "duration": "Duração: {duration}",
           "size": "Tamanho: ",
           "sizeInfo": "A quantidade de dados que será baixada.\nNão é o tamanho final do arquivo.",
-          "items": "Itens: {amount} {failedCount}",
+          "items": "Itens: {amount} {details}",
           "failedCount": "({amount} falhas)",
           "skippedCount": "({amount} ignorados)",
           "failedAndSkippedCount": "({failed} com falha, {skipped} ignorados)"
@@ -381,12 +381,9 @@
         "downloadAll": "Baixe todas as legendas disponíveis.",
         "search": "Procurar idiomas",
         "searchPlaceholder": "Pesquisar por nome do idioma",
-        "suggested": "Sugestão para voce",
-        "all": "Todos os idiomas",
         "noResult": "Nenhum idioma corresponde a \"{query}\".",
         "selected": "Selecionado(s):",
         "allSelected": "Todas as legendas disponíveis",
-        "searchHint": "Dica: Use a caixa de pesquisa para filtrar a lista rapidamente. Os idiomas selecionados permanecem destacados.",
         "none": "Nenhum"
       }
     },

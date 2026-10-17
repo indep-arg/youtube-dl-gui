@@ -277,7 +277,7 @@
           "duration": "Durée : {duration}",
           "size": "Taille : ",
           "sizeInfo": "La quantité de données qui sera téléchargée.\nCe n’est pas la taille finale du fichier.",
-          "items": "Éléments : {amount} {failedCount}",
+          "items": "Éléments : {amount} {details}",
           "failedCount": "({amount} échoués)",
           "skippedCount": "({amount} ignorés)",
           "failedAndSkippedCount": "({failed} en échec, {skipped} ignorés)"
@@ -381,12 +381,9 @@
         "downloadAll": "Télécharger tous les sous-titres disponibles.",
         "search": "Rechercher des langues",
         "searchPlaceholder": "Rechercher par nom de langue",
-        "suggested": "Suggestions pour vous",
-        "all": "Toutes les langues",
         "noResult": "Aucune langue ne correspond à \"{query}\".",
         "selected": "Sélectionné :",
         "allSelected": "Tous les sous-titres disponibles",
-        "searchHint": "Astuce : utilisez la recherche pour filtrer rapidement. Les langues sélectionnées restent surlignées.",
         "none": "Aucune"
       }
     },

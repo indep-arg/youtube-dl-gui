@@ -277,7 +277,7 @@
           "duration": "Uzunluk: {duration}",
           "size": "Boyut: ",
           "sizeInfo": "İndirilecek olan verinin boyutu.\nDosyanın nihai boyutu değil.",
-          "items": "İçerik: {amount} {failedCount}",
+          "items": "İçerik: {amount} {details}",
           "failedCount": "({amount} başarısız oldu)",
           "skippedCount": "({amount} atlandı)",
           "failedAndSkippedCount": "({failed} başarısız, {skipped} atlandı)"
@@ -381,12 +381,9 @@
         "downloadAll": "Tüm mevcut altyazıları indir.",
         "search": "Dil ara",
         "searchPlaceholder": "Dil isimleriyle ara",
-        "suggested": "Sizin için önerilenler",
-        "all": "Tüm diller",
         "noResult": "Eşleşen dil yok\"{query}\".",
         "selected": "Seçilen(ler):",
         "allSelected": "Tüm mevcut altyazılar",
-        "searchHint": "İpucu: Listeyi hızlıca filtrelemek için arama kutusunu kullanın. Seçilen diller vurgulu olarak kalır.",
         "none": "Yok"
       }
     },

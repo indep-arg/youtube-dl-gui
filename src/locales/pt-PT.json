@@ -258,7 +258,7 @@
           "duration": "Duração: {duration}",
           "size": "Tamanho: ",
           "sizeInfo": "Quantidade de dados que será transferida.\nNão é o tamanho final do ficheiro.",
-          "items": "Itens: {amount} {failedCount}",
+          "items": "Itens: {amount} {details}",
           "failedCount": "({amount} com falha)"
         },
         "trackTypes": {

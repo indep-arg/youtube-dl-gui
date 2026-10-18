@@ -47,7 +47,7 @@
           {{ tool.version }}
         </span>
       </section>
-      <p v-if="!hasError" class="mt-2">
+      <p v-if="!hasError && tool.total > 0" class="mt-2">
         {{ t('common.divide', { left: formatBytes(tool.received), right: formatBytes(tool.total) }) }}
       </p>
       <details v-else class="collapse collapse-arrow bg-base-200 list-none">

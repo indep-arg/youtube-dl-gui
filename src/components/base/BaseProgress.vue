@@ -7,9 +7,10 @@
         :max="max"
         :value="value"
     />
+    <!-- One text that reads on both the empty and the filled part: a halo in the colour of the surface around it. -->
     <label
         :for="composedId"
-        class="absolute text-white flex justify-center items-center text-sm align-middle text-center h-7 w-full top-0"
+        class="absolute text-base-content flex justify-center items-center text-sm align-middle text-center h-7 w-full top-0 pointer-events-none [text-shadow:0_0_3px_var(--color-base-100),0_0_6px_var(--color-base-100)]"
     >
       <slot/>
     </label>

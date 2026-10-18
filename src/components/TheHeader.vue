@@ -69,7 +69,13 @@
         </li>
       </base-button-dropdown>
     </form>
-    <router-link class="btn btn-subtle" :title="t('layout.header.nav.settings')" :to="{ name: 'settings.downloads' }">
+    <router-link
+        class="btn btn-subtle"
+        :class="{ invisible: onSettings }"
+        :tabindex="onSettings ? -1 : undefined"
+        :title="t('layout.header.nav.settings')"
+        :to="{ name: 'settings.downloads' }"
+    >
       <span class="sr-only">{{ t('layout.header.nav.settings') }}</span>
       <cog8-tooth-icon class="w-6 h-6"/>
     </router-link>
@@ -89,7 +95,7 @@ import { FunnelIcon as FunnelIconSolid } from '@heroicons/vue/24/solid';
 import { useMediaStore } from '../stores/media/media';
 import { ref, computed, onMounted, watch } from 'vue';
 import { useClipboard } from '../composables/useClipboard';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { useSettingsStore } from '../stores/settings';
 import { isValidUrl } from '../helpers/url.ts';
@@ -107,6 +113,9 @@ import { isInputFiltersActive } from '../helpers/inputFilters.ts';
 
 const { t } = useI18n();
 const router = useRouter();
+const route = useRoute();
+// The settings button points to the page you are already on.
+const onSettings = computed(() => String(route.name ?? '').startsWith('settings'));
 const mediaStore = useMediaStore();
 const toastStore = useToastStore();
 

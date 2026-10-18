@@ -15,10 +15,11 @@
     >
       {{ t('media.steps.error.errorPrefix', { message: diagnosticDisplay.shortMessage }) }}
     </base-progress>
-    <p class="min-h-0 overflow-y-auto break-words leading-5">{{ diagnosticDisplay.message }}</p>
+    <!-- A fixed number of lines, so the text is never cut in the middle of a line; the full text is in the tooltip. -->
+    <p class="min-h-0 break-words leading-5 line-clamp-2" :title="diagnosticDisplay.message">{{ diagnosticDisplay.message }}</p>
     <div class="w-full flex shrink-0 gap-4">
-      <router-link :to="{ name: 'group.logs', params: { groupId: group.id } }" class="btn btn-subtle">{{ t('media.steps.error.showFull') }}</router-link>
-      <router-link v-if="errorAction" :to="errorAction.to" class="btn btn-subtle">{{ errorAction.label }}</router-link>
+      <router-link :to="{ name: 'group.logs', params: { groupId: group.id } }" class="btn btn-sm btn-subtle">{{ t('media.steps.error.showFull') }}</router-link>
+      <router-link v-if="errorAction" :to="errorAction.to" class="btn btn-sm btn-subtle">{{ errorAction.label }}</router-link>
     </div>
   </div>
 </template>

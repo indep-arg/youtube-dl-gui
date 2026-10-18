@@ -1,7 +1,7 @@
 <template>
   <article class="card card-side w-full max-w-175 h-48 bg-base-300 p-4 shadow-md" :class="[statusOutline]">
     <div class="relative shrink-0 w-64">
-      <figure class="w-64 aspect-video rounded-md overflow-hidden bg-base-100">
+      <figure class="w-64 aspect-video rounded-md overflow-hidden bg-base-content/55">
         <img
             :src="group.thumbnail ?? placeholderUrl"
             :alt="t('media.view.thumbnailAlt', { title: group.title ?? '' })"

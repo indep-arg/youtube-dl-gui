@@ -6,8 +6,8 @@
     <select
         v-model="selectedTrackType"
         :id="trackSelectId"
-        class="select select-primary"
-        :class="{ 'join-item': join }"
+        class="select pe-9"
+        :class="{ 'join-item w-auto': join }"
     >
       <option
           v-for="trackType in trackOptions"
@@ -24,8 +24,8 @@
     <select
         v-model="selectedFormatId"
         :id="formatSelectId"
-        class="select select-primary"
-        :class="{ 'join-item': join }"
+        class="select pe-9"
+        :class="{ 'join-item w-auto': join }"
         :disabled="formatOptions.length === 0"
         :key="selectedTrackType"
     >

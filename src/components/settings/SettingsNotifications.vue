@@ -23,7 +23,7 @@
 
     <details
         :tabindex="canShowNotifications ? undefined : -1"
-        class="collapse collapse-arrow bg-base-100 border-base-300 border max-w-2xl mt-4"
+        class="collapse collapse-arrow bg-base-100 border-base-300 border w-full mt-4"
         :class="{ 'opacity-50 cursor-not-allowed': !canShowNotifications }"
     >
       <summary class="collapse-title font-semibold" :class="{ 'cursor-not-allowed': !canShowNotifications }">

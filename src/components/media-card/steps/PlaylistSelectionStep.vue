@@ -8,7 +8,7 @@
         >
           {{ group.title ?? group.url }}
         </h2>
-        <span class="shrink-0 text-xs text-base-content/70 ml-2">{{ selectionSummary }}</span>
+        <span v-if="selectionSummary" class="shrink-0 text-xs text-base-content/70 ml-2">{{ selectionSummary }}</span>
       </div>
 
       <p class="text-xs font-semibold flex-initial">
@@ -178,9 +178,8 @@ const applyLabel = computed(() => hasSelection.value
 const selectionSummary = computed(() => {
   const total = group.entries?.length ?? 0;
   const count = hasSelection.value ? selectedEntries.value.length : total;
-  return total === count
-    ? t('inputFilters.playlistSelection.selectionSummaryAll', { count })
-    : t('inputFilters.playlistSelection.selectionSummary', { count, total });
+  // Nothing to say while everything is selected: the button already reads "download all".
+  return total === count ? '' : t('inputFilters.playlistSelection.selectionSummary', { count, total });
 });
 
 function openAdvanced() {

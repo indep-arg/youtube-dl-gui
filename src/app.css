@@ -124,6 +124,42 @@ body > iframe {
     pointer-events: none;
 }
 
+/*
+ * daisyUI keeps every .label on one line. Our descriptions are full sentences,
+ * which ran past the edge of the window (worse in languages with longer text).
+ */
+.label {
+    white-space: normal;
+}
+
+/* The one look of every row of tabs: settings, group, preferences, the video/audio switch and the date filter. */
+.tabs.tabs-box {
+    background-color: var(--tabs-bg, var(--color-base-200));
+    border-radius: var(--radius-box);
+}
+
+.tabs .tab {
+    color: var(--color-base-content);
+    border-radius: var(--radius-field);
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.tabs .tab:hover:not(.tab-active) {
+    background-color: var(--color-neutral);
+}
+
+.tabs .tab-active {
+    background-color: var(--color-neutral);
+    border: var(--border) solid var(--color-primary);
+}
+
+/* A disabled field has no border by default and looks like loose text. */
+.input:disabled,
+.textarea:disabled,
+.select:disabled {
+    border-color: color-mix(in oklab, var(--color-base-content) 18%, transparent);
+}
+
 ::-ms-reveal {
     display: none;
 }

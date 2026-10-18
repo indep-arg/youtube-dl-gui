@@ -55,25 +55,3 @@ const downloadItem = (): void => {
 };
 
 </script>
-
-<style scoped>
-.tabs.tabs-box {
-  background-color: var(--color-base-200);
-  border-radius: var(--radius-box);
-}
-
-.tab {
-  color: var(--color-base-content);
-  border-radius: var(--radius-field);
-  transition: background-color 0.15s ease, color 0.15s ease;
-}
-
-.tab:hover:not(.tab-active) {
-  background-color: var(--color-neutral);
-}
-
-.tab-active {
-  background-color: var(--color-neutral);
-  border: var(--border) solid var(--color-primary);
-}
-</style>

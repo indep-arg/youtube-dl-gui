@@ -6,8 +6,8 @@
     <select
       v-model="selectedAudio"
       :id="audioSelectId"
-      class="select select-primary"
-      :class="{ 'join-item': join }"
+      class="select pe-9"
+      :class="{ 'join-item w-auto': join }"
       :disabled="isAudioDisabled || audioOptions.length === 0"
     >
       <option v-if="audioOptions.length === 0" value="">
@@ -32,8 +32,8 @@
     <select
       v-model="selectedVideo"
       :id="videoSelectId"
-      class="select select-primary"
-      :class="{ 'join-item': join }"
+      class="select pe-9"
+      :class="{ 'join-item w-auto': join }"
       :disabled="isVideoDisabled || videoOptions.length === 0"
     >
       <option v-if="videoOptions.length === 0" value="">

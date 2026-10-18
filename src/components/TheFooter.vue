@@ -6,118 +6,123 @@
     <base-progress v-else-if="isCompleted" :max="progress.total" :value="progress.done" id="total">
       {{ t('layout.footer.progress.completed', progress.total) }}
     </base-progress>
-    <base-progress v-else :max="1" :value="0" id="total">
+    <base-progress v-else-if="progress.ready > 0" :max="1" :value="0" id="total">
       {{ t('layout.footer.progress.ready', progress.ready) }}
     </base-progress>
-    <div class="w-full flex max-w-4xl self-center justify-center">
-      <div class="join divide-x-2">
-        <base-button class="join-item" :to="{ name: 'history' }" :tooltip="t('layout.footer.nav.history')">
-          <span class="sr-only">{{ t('layout.footer.nav.history') }}</span>
-          <clock-icon class="w-5 h-5"/>
-        </base-button>
-        <base-button class="join-item" :to="{ name: 'location' }" :tooltip="t('layout.footer.nav.downloadLocation')">
-          <span class="sr-only">{{ t('layout.footer.nav.downloadLocation') }}</span>
-          <folder-icon class="w-5 h-5"/>
-        </base-button>
-        <base-toggle-button
-            :to="{ name: 'authentication' }"
-            :tooltip="hasAuthConfigured ? t('layout.footer.nav.login.tooltip.on') : t('layout.footer.nav.login.tooltip.off')"
-            :model-value="hasAuthConfigured"
-            class="join-item"
-        >
-          <template v-slot:on>
-            <span class="sr-only">{{ t('layout.footer.nav.login.screenReader.on') }}</span>
-            <key-icon-solid class="w-5 h-5"/>
-          </template>
-          <template v-slot:off>
-            <span class="sr-only">{{ t('layout.footer.nav.login.screenReader.off') }}</span>
-            <key-icon-outline class="w-5 h-5"/>
-          </template>
-        </base-toggle-button>
-        <base-toggle-button
-            :to="{ name: 'subtitles' }"
-            :tooltip="t('layout.footer.nav.subtitles.tooltip')"
-            :model-value="hasSubtitlesEnabled"
-            class="join-item"
-        >
-          <template v-slot:on>
-            <span class="sr-only">{{ t('layout.footer.nav.subtitles.screenReader.on') }}</span>
-            <chat-bubble-bottom-center-text-icon class="w-5 h-5"/>
-          </template>
-          <template v-slot:off>
-            <div class="relative">
-              <span class="sr-only">{{ t('layout.footer.nav.subtitles.screenReader.off') }}</span>
-              <chat-bubble-bottom-center-icon class="w-5 h-5 absolute"/>
-            </div>
-          </template>
-        </base-toggle-button>
-      </div>
-      <div class="divider divider-horizontal mx-2"></div>
-      <media-download-options
-          v-model="selectedOptions"
-          :formats="groupStore.getAllFormats()"
-          :auto-select="false"
-          locale-key="layout.footer.format"
-          class="w-fit grow"
-          join
-      />
-      <div class="divider divider-horizontal mx-2"></div>
-      <base-button-dropdown
-          placement="top"
-          align="end"
-          btnClass="btn-subtle"
-          :disabled="!hasGroups"
-          :caret-disabled="!hasQueueActions"
-          :mainTooltip="t('layout.footer.queue.empty')"
-          :caretAriaLabel="t('layout.footer.queue.more')"
-          caretClass="px-2"
-          @mainClick="clearGroups"
-      >
-        <template #main>
-          <span class="sr-only">{{ t('layout.footer.queue.empty') }}</span>
-          <trash-icon class="w-5 h-5" />
-        </template>
+    <!-- The controls move to a second row when they do not fit, instead of squeezing the selects. -->
+    <div class="@container w-full max-w-4xl self-center">
+      <div class="flex flex-wrap items-center justify-center gap-3 @4xl:gap-0">
+        <div class="join divide-x-2">
+          <base-button class="join-item" :to="{ name: 'history' }" :tooltip="t('layout.footer.nav.history')">
+            <span class="sr-only">{{ t('layout.footer.nav.history') }}</span>
+            <clock-icon class="w-5 h-5"/>
+          </base-button>
+          <base-button class="join-item" :to="{ name: 'location' }" :tooltip="t('layout.footer.nav.downloadLocation')">
+            <span class="sr-only">{{ t('layout.footer.nav.downloadLocation') }}</span>
+            <folder-icon class="w-5 h-5"/>
+          </base-button>
+          <base-toggle-button
+              :to="{ name: 'authentication' }"
+              :tooltip="hasAuthConfigured ? t('layout.footer.nav.login.tooltip.on') : t('layout.footer.nav.login.tooltip.off')"
+              :model-value="hasAuthConfigured"
+              class="join-item"
+          >
+            <template v-slot:on>
+              <span class="sr-only">{{ t('layout.footer.nav.login.screenReader.on') }}</span>
+              <key-icon-solid class="w-5 h-5"/>
+            </template>
+            <template v-slot:off>
+              <span class="sr-only">{{ t('layout.footer.nav.login.screenReader.off') }}</span>
+              <key-icon-outline class="w-5 h-5"/>
+            </template>
+          </base-toggle-button>
+          <base-toggle-button
+              :to="{ name: 'subtitles' }"
+              :tooltip="t('layout.footer.nav.subtitles.tooltip')"
+              :model-value="hasSubtitlesEnabled"
+              class="join-item"
+          >
+            <template v-slot:on>
+              <span class="sr-only">{{ t('layout.footer.nav.subtitles.screenReader.on') }}</span>
+              <chat-bubble-bottom-center-text-icon class="w-5 h-5"/>
+            </template>
+            <template v-slot:off>
+              <div class="relative">
+                <span class="sr-only">{{ t('layout.footer.nav.subtitles.screenReader.off') }}</span>
+                <chat-bubble-bottom-center-icon class="w-5 h-5 absolute"/>
+              </div>
+            </template>
+          </base-toggle-button>
+        </div>
+        <div class="divider divider-horizontal mx-2 hidden @4xl:flex"></div>
+        <media-download-options
+            v-model="selectedOptions"
+            :formats="groupStore.getAllFormats()"
+            :auto-select="false"
+            locale-key="layout.footer.format"
+            class="grow shrink-0"
+            join
+        />
+        <div class="divider divider-horizontal mx-2 hidden @4xl:flex"></div>
+        <div class="flex">
+          <base-button-dropdown
+              placement="top"
+              align="end"
+              btnClass="btn-subtle"
+              :disabled="!hasGroups"
+              :caret-disabled="!hasQueueActions"
+              :mainTooltip="t('layout.footer.queue.empty')"
+              :caretAriaLabel="t('layout.footer.queue.more')"
+              caretClass="px-2"
+              @mainClick="clearGroups"
+          >
+            <template #main>
+              <span class="sr-only">{{ t('layout.footer.queue.empty') }}</span>
+              <trash-icon class="w-5 h-5" />
+            </template>
 
-        <li>
-          <button class="gap-2 text-nowrap disabled:opacity-50 disabled:cursor-not-allowed" :disabled="!hasSuccessfulGroups" @click="clearSuccessfulGroups">
-            <broom-icon class="w-4 h-4" />
-            {{ t('layout.footer.queue.clearSuccessful') }}
-          </button>
-        </li>
-        <li>
-          <button class="gap-2 text-nowrap disabled:opacity-50 disabled:cursor-not-allowed" :disabled="!hasErroredGroups" @click="clearErroredGroups">
-            <broom-icon class="w-4 h-4" />
-            {{ t('layout.footer.queue.clearErrored') }}
-          </button>
-        </li>
-        <li>
-          <button class="gap-2 text-nowrap disabled:opacity-50 disabled:cursor-not-allowed" :disabled="!hasPendingGroups" @click="clearPendingGroups">
-            <broom-icon class="w-4 h-4" />
-            {{ t('layout.footer.queue.clearPending') }}
-          </button>
-        </li>
-        <li>
-          <button class="gap-2 text-nowrap disabled:opacity-50 disabled:cursor-not-allowed" :disabled="!hasDownloadingGroups" @click="cancelDownloadingGroups">
-            <x-mark-icon class="w-4 h-4" />
-            {{ t('layout.footer.queue.cancelDownloading') }}
-          </button>
-        </li>
-        <li>
-          <button class="gap-2 text-nowrap disabled:opacity-50 disabled:cursor-not-allowed" :disabled="!hasDownloadingGroups" @click="pauseAllGroups">
-            <pause-icon class="w-4 h-4" />
-            {{ t('layout.footer.queue.pause') }}
-          </button>
-        </li>
-        <li>
-          <button class="gap-2 text-nowrap disabled:opacity-50 disabled:cursor-not-allowed" :disabled="!hasPausedGroups" @click="resumeAllGroups">
-            <play-icon class="w-4 h-4" />
-            {{ t('layout.footer.queue.resume') }}
-          </button>
-        </li>
-      </base-button-dropdown>
-      <base-button class="btn-primary ml-2" :disabled="progress.ready <= 0" @click="downloadAll" :loading="isStartingDownload">
-        {{ t('common.download') }}
-      </base-button>
+            <li>
+              <button class="gap-2 text-nowrap disabled:opacity-50 disabled:cursor-not-allowed" :disabled="!hasSuccessfulGroups" @click="clearSuccessfulGroups">
+                <broom-icon class="w-4 h-4" />
+                {{ t('layout.footer.queue.clearSuccessful') }}
+              </button>
+            </li>
+            <li>
+              <button class="gap-2 text-nowrap disabled:opacity-50 disabled:cursor-not-allowed" :disabled="!hasErroredGroups" @click="clearErroredGroups">
+                <broom-icon class="w-4 h-4" />
+                {{ t('layout.footer.queue.clearErrored') }}
+              </button>
+            </li>
+            <li>
+              <button class="gap-2 text-nowrap disabled:opacity-50 disabled:cursor-not-allowed" :disabled="!hasPendingGroups" @click="clearPendingGroups">
+                <broom-icon class="w-4 h-4" />
+                {{ t('layout.footer.queue.clearPending') }}
+              </button>
+            </li>
+            <li>
+              <button class="gap-2 text-nowrap disabled:opacity-50 disabled:cursor-not-allowed" :disabled="!hasDownloadingGroups" @click="cancelDownloadingGroups">
+                <x-mark-icon class="w-4 h-4" />
+                {{ t('layout.footer.queue.cancelDownloading') }}
+              </button>
+            </li>
+            <li>
+              <button class="gap-2 text-nowrap disabled:opacity-50 disabled:cursor-not-allowed" :disabled="!hasDownloadingGroups" @click="pauseAllGroups">
+                <pause-icon class="w-4 h-4" />
+                {{ t('layout.footer.queue.pause') }}
+              </button>
+            </li>
+            <li>
+              <button class="gap-2 text-nowrap disabled:opacity-50 disabled:cursor-not-allowed" :disabled="!hasPausedGroups" @click="resumeAllGroups">
+                <play-icon class="w-4 h-4" />
+                {{ t('layout.footer.queue.resume') }}
+              </button>
+            </li>
+          </base-button-dropdown>
+          <base-button class="btn-primary ml-2" :disabled="progress.ready <= 0" @click="downloadAll" :loading="isStartingDownload">
+            {{ t('common.download') }}
+          </base-button>
+        </div>
+      </div>
     </div>
   </footer>
 </template>

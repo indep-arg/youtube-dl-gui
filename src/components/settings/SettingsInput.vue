@@ -56,17 +56,17 @@
         <p class="label">
           {{ t('settings.input.globalShortcuts.add_hint') }}
           <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
-          <kbd class="kbd">alt</kbd>+<kbd class="kbd">shift</kbd>+<kbd class="kbd">V</kbd>
+          <kbd class="kbd">Alt</kbd>+<kbd class="kbd">Shift</kbd>+<kbd class="kbd">V</kbd>
         </p>
         <p class="label">
           {{ t('settings.input.globalShortcuts.download_hint') }}
           <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
-          <kbd class="kbd">alt</kbd>+<kbd class="kbd">shift</kbd>+<kbd class="kbd">Enter</kbd>
+          <kbd class="kbd">Alt</kbd>+<kbd class="kbd">Shift</kbd>+<kbd class="kbd">Enter</kbd>
         </p>
         <p class="label">
           {{ t('settings.input.globalShortcuts.instant_hint') }}
           <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
-          <kbd class="kbd">alt</kbd>+<kbd class="kbd">shift</kbd>+<kbd class="kbd">D</kbd>
+          <kbd class="kbd">Alt</kbd>+<kbd class="kbd">Shift</kbd>+<kbd class="kbd">D</kbd>
         </p>
       </div>
     </section>

@@ -33,7 +33,7 @@
     </div>
     <div class="rounded-box p-4 bg-base-100" v-if="group?.description">
       <h2 class="font-semibold mb-3">{{ t('media.view.metadata.description') }}</h2>
-      <p class="max-h-44 whitespace-pre overflow-y-auto">
+      <p class="max-h-44 whitespace-pre-wrap break-words overflow-y-auto">
         {{ group.description }}
       </p>
     </div>

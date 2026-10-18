@@ -1,3 +1,4 @@
+use crate::logging::redact::hide_addresses;
 use crate::models::error::{AppliesTo, DiagnosticEvent, DiagnosticLevel, PatternKind, RulesFile};
 use regex::Regex;
 use std::borrow::Cow;
@@ -133,6 +134,7 @@ impl YtdlpErrorParser {
   }
 
   pub fn parse_line(&self, line: &str) -> Option<DiagnosticEvent> {
+    let line = hide_addresses(line);
     let trimmed = line.trim_end();
 
     if let Some(event) = self.parse_skip_line(trimmed) {

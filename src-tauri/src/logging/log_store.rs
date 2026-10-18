@@ -1,3 +1,4 @@
+use crate::logging::redact::hide_addresses;
 use crate::models::payloads::AppendLogPayload;
 use indexmap::IndexMap;
 use std::collections::{HashSet, VecDeque};
@@ -45,6 +46,8 @@ impl LogStore {
   }
 
   pub fn append_line(&mut self, app: &AppHandle, group_id: &str, line: &str) {
+    let line = hide_addresses(line);
+    let line = line.as_ref();
     let line_len = line.len();
 
     let entry = self.groups.entry(group_id.to_string()).or_default();

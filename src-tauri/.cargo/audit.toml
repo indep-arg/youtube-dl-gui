@@ -1,0 +1,13 @@
+# Settings for `cargo audit` (run it from src-tauri).
+#
+# Old copies of the zip crate are pulled in by crates we do not control:
+#   zip 4.6.1 comes from tauri-plugin-updater (already on its latest version)
+#   zip 8.6.0 comes from libsodium-sys-stable, a build dependency of the vault
+# The app's own zip is 9.x, where these are fixed, and it does not call ZipArchive::extract.
+# Remove these lines once the updater plugin moves to zip 9 or later.
+[advisories]
+ignore = [
+  "RUSTSEC-2026-0367",
+  "RUSTSEC-2026-0368",
+  "RUSTSEC-2026-0369",
+]

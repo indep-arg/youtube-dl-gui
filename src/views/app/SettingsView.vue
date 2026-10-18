@@ -70,8 +70,14 @@ import { useToastStore } from '../../stores/toast';
 import { useTheme } from '../../composables/useTheme.ts';
 import { Settings } from '../../tauri/types/config.ts';
 import BaseButtonDropdown from '../../components/base/BaseButtonDropdown.vue';
+import { useBinariesStore } from '../../stores/binaries';
+import { MediaState, useMediaStateStore } from '../../stores/media/state';
+import { useRouter } from 'vue-router';
 
 const settingsStore = useSettingsStore();
+const binariesStore = useBinariesStore();
+const stateStore = useMediaStateStore();
+const router = useRouter();
 const toastStore = useToastStore();
 const { setTheme } = useTheme();
 const { t } = useI18n();
@@ -94,12 +100,25 @@ const showInForm = (settings: Settings) => {
   applyThemeOf(settings);
 };
 
+// Installs the yt-dlp of the chosen channel. A running yt-dlp cannot be
+// replaced, so with downloads going on it waits for the next start.
+const applyYtDlpChannel = async () => {
+  if (stateStore.hasGroupWithState(MediaState.fetching, MediaState.fetchingList, MediaState.downloading, MediaState.downloadingList)) {
+    toastStore.showToast(t('settings.update.ytDlpChannel.later'), { style: 'info' });
+    return;
+  }
+  const tools = await binariesStore.check();
+  if (tools.length > 0) await router.push('/install');
+};
+
 const saveSettings = async () => {
   isSaving.value = true;
   try {
+    const previousChannel = settingsStore.settings.update.ytDlpChannel;
     await settingsStore.patch(draft.value);
     applyThemeOf(draft.value);
     toastStore.showToast(t('settings.toasts.saved'), { style: 'success' });
+    if (settingsStore.settings.update.ytDlpChannel !== previousChannel) await applyYtDlpChannel();
   } catch (e) {
     toastStore.showToast(t('settings.toasts.saveFailed', { error: String(e) }), { style: 'error' });
   } finally {

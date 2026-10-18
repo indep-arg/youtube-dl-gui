@@ -97,6 +97,44 @@ function ffmpegBuildsFile(rel: GitHubRelease, suffix: string, binary: string): T
   return { url: asset.browser_download_url, sha256, entry: `${folder}/bin/${binary}` };
 }
 
+/** yt-dlp is a folder with the program and its `_internal` libraries. */
+function ytDlpSource(rel: GitHubRelease): ToolSource {
+  const file = (name: string, folder: string, entry: string, renameTo: string): ToolSourceFile => {
+    const asset = rel.assets.find(a => a.name === name);
+    if (!asset) throw new Error(`missing asset ${name}`);
+    const sha256 = asset.digest?.startsWith('sha256:') ? asset.digest.slice('sha256:'.length) : undefined;
+    return {
+      url: asset.browser_download_url,
+      sha256,
+      bundle: { keep_folder: true, folder_name: folder, entry, rename_entry_to: renameTo },
+    };
+  };
+  return {
+    name: 'yt-dlp',
+    version: rel.tag_name,
+    files: {
+      'linux-x86_64': file('yt-dlp_linux.zip', 'yt-dlp_linux', 'yt-dlp_linux', 'yt-dlp'),
+      'linux-aarch64': file('yt-dlp_linux_aarch64.zip', 'yt-dlp_linux_aarch64', 'yt-dlp_linux_aarch64', 'yt-dlp'),
+      'windows-x86_64': file('yt-dlp_win.zip', 'yt-dlp', 'yt-dlp.exe', 'yt-dlp.exe'),
+      'windows-aarch64': file('yt-dlp_win_arm64.zip', 'yt-dlp', 'yt-dlp_arm64.exe', 'yt-dlp.exe'),
+    },
+  };
+}
+
+/**
+ * Other builds that users can choose instead of the stable ones. A channel that
+ * cannot be fetched is left out: the app then keeps what it has installed.
+ */
+export async function fetchChannelSources(): Promise<Record<string, ToolSource[]>> {
+  const channels: Record<string, ToolSource[]> = {};
+  try {
+    channels.nightly = [ytDlpSource(await latestRelease('yt-dlp', 'yt-dlp-nightly-builds'))];
+  } catch (e) {
+    console.warn(`[sources] Leaving out the nightly builds of yt-dlp: ${e}`);
+  }
+  return channels;
+}
+
 function assetUrl(rel: GitHubRelease, name: string): string {
   const asset = rel.assets.find(a => a.name === name);
   if (!asset) throw new Error(`missing asset ${name}`);
@@ -116,48 +154,7 @@ export async function fetchSources(): Promise<ToolSource[]> {
   console.log('[sources] Successfully resolved tool metadata');
 
   return [
-    {
-      name: 'yt-dlp',
-      version: ytRel.tag_name,
-      files: {
-        'linux-x86_64': {
-          url: assetUrl(ytRel, 'yt-dlp_linux.zip'),
-          bundle: {
-            keep_folder: true,
-            folder_name: 'yt-dlp_linux',
-            entry: 'yt-dlp_linux',
-            rename_entry_to: 'yt-dlp',
-          },
-        },
-        'linux-aarch64': {
-          url: assetUrl(ytRel, 'yt-dlp_linux_aarch64.zip'),
-          bundle: {
-            keep_folder: true,
-            folder_name: 'yt-dlp_linux_aarch64',
-            entry: 'yt-dlp_linux_aarch64',
-            rename_entry_to: 'yt-dlp',
-          },
-        },
-        'windows-x86_64': {
-          url: assetUrl(ytRel, 'yt-dlp_win.zip'),
-          bundle: {
-            keep_folder: true,
-            folder_name: 'yt-dlp',
-            entry: 'yt-dlp.exe',
-            rename_entry_to: 'yt-dlp.exe',
-          },
-        },
-        'windows-aarch64': {
-          url: assetUrl(ytRel, 'yt-dlp_win_arm64.zip'),
-          bundle: {
-            keep_folder: true,
-            folder_name: 'yt-dlp',
-            entry: 'yt-dlp_arm64.exe',
-            rename_entry_to: 'yt-dlp.exe',
-          },
-        },
-      },
-    },
+    ytDlpSource(ytRel),
     {
       name: 'ffmpeg',
       version: ffmpegVersion,

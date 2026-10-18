@@ -339,7 +339,8 @@
         "errorPrefix": "Error - {message}",
         "showFull": "Ver registros (logs)",
         "signIn": "Iniciar sesión",
-        "filters": "Editar filtros"
+        "filters": "Editar filtros",
+        "tryNightly": "Probar yt-dlp nightly"
       }
     },
     "card": {
@@ -956,6 +957,13 @@
       "updateBinaries": {
         "label": "Actualizar herramientas automáticamente:",
         "hint": "La aplicación usa herramientas como yt-dlp y FFmpeg para descargar videos; habilita esto para mantenerlas actualizadas."
+      },
+      "ytDlpChannel": {
+        "label": "Versión de yt-dlp:",
+        "hint": "Las versiones nightly reciben antes los arreglos para los sitios, pero se prueban menos. Si un sitio deja de funcionar, pruébalas. Se actualizan casi a diario.",
+        "stable": "Estable",
+        "nightly": "Nightly",
+        "later": "La nueva versión de yt-dlp se instalará la próxima vez que abras la app."
       },
       "updateApp": {
         "label": "Actualizar la app automáticamente:",

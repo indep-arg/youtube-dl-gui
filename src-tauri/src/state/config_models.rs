@@ -303,6 +303,7 @@ impl Default for SubtitleSettings {
 pub struct UpdateSettings {
   pub update_binaries: bool,
   pub update_app: bool,
+  pub yt_dlp_channel: YtDlpChannel,
 }
 
 impl Default for UpdateSettings {
@@ -310,6 +311,26 @@ impl Default for UpdateSettings {
     Self {
       update_binaries: true,
       update_app: true,
+      yt_dlp_channel: YtDlpChannel::Stable,
+    }
+  }
+}
+
+/// Which builds of yt-dlp to install. Nightly builds get fixes for sites days or
+/// weeks before a stable release.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub enum YtDlpChannel {
+  #[default]
+  Stable,
+  Nightly,
+}
+
+impl YtDlpChannel {
+  pub fn as_str(self) -> &'static str {
+    match self {
+      Self::Stable => "stable",
+      Self::Nightly => "nightly",
     }
   }
 }

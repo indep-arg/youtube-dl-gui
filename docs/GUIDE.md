@@ -50,7 +50,13 @@ The first time, the app downloads the tools it needs: yt-dlp, ffmpeg and ffprobe
 AtomicParsley. Each download is checked against a signed manifest and a hash before it is used. This
 needs an internet connection and takes a minute or two.
 
-The tools are kept up to date automatically unless you turn that off in **Settings > App**.
+The tools are kept up to date automatically unless you turn that off in **Settings > System**.
+
+**yt-dlp version** (in the same place) chooses between the stable releases of yt-dlp and the nightly
+builds. Nightly builds get fixes for sites days or weeks earlier, but are tested less; they are worth
+trying when a site stops working. When a download fails in a way that usually means the site changed,
+the card offers a shortcut to this setting. Changing it installs the other yt-dlp right away, or the next
+time the app starts if something is downloading.
 
 ## Downloading
 
@@ -98,10 +104,10 @@ The tabs of **Settings**:
   subtitles, SponsorBlock and performance (how many downloads run at once, when to split playlists,
   whether to load the size automatically, a speed limit, retries, and how many parts of a video are
   downloaded at once).
-- **App:** appearance (theme, language), input, notifications and updates.
+- **App:** appearance (theme, language), input and notifications.
 - **Network:** proxy, skipping certificate verification (only if you trust the proxy), browser
   impersonation and yt-dlp extractor arguments.
-- **System:** tray icon, start with the system and what happens when you close the window.
+- **System:** tray icon, start with the system, what happens when you close the window, and updates.
 - **About:** version, links and licenses.
 
 The menu next to **Save** can also reset the settings, or export them to a file and import them again,
@@ -133,7 +139,8 @@ Other screens in the menu: **Location** (folders and file name templates), **Sub
 ## When something goes wrong
 
 1. **Update first.** An old yt-dlp is the usual reason a site stops working. Check that **Automatically
-   update tools** is on in **Settings > App**, then restart the app.
+   update tools** is on in **Settings > System**, then restart the app. If the site still fails, try the
+   nightly builds (**yt-dlp version** in the same place).
 2. **Read the log.** Open the item and look at its **Logs** tab: it shows what yt-dlp said, and some
    errors come with an explanation and a shortcut to fix them.
 3. **Is it just that site?** If the same link also fails with the latest yt-dlp on the command line, the

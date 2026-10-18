@@ -88,6 +88,45 @@ test('a live recording shows what it recorded and can be stopped and saved', asy
   await expect(page.getByTestId('history-entry').first()).toContainText('Live Video');
 });
 
+test.describe('yt-dlp channel', () => {
+  test('choosing nightly installs yt-dlp again', async ({ page }) => {
+    await page.goto('/settings/system');
+    await expect(page.getByText('Nightly builds get fixes for sites sooner')).toBeVisible();
+    await page.selectOption('#ytDlpChannel', 'nightly');
+    await saveSettings(page);
+    await expect(page).toHaveURL(/\/install$/);
+    await expect(page.getByText('yt-dlp')).toBeVisible();
+  });
+
+  test('with a download going on, the change waits for the next start', async ({ page }) => {
+    await page.goto('/');
+    await addLink(page, 'https://example.com/video');
+    await expect(page.getByText('Test Video')).toBeVisible();
+    await page.getByRole('button', { name: 'Download', exact: true }).click();
+
+    // Inside the app: loading the page again would end the download.
+    await page.getByRole('link', { name: 'App Settings' }).click();
+    await page.getByRole('tab', { name: 'System', exact: true }).click();
+    await page.selectOption('#ytDlpChannel', 'nightly');
+    await saveSettings(page);
+    await expect(page.getByText('The new version of yt-dlp will be installed the next time you open the app.')).toBeVisible();
+    await expect(page).toHaveURL(/\/settings\/system$/);
+  });
+
+  test('a site that changed suggests the nightly builds', async ({ page }) => {
+    await page.goto('/');
+    await addLink(page, 'https://example.com/site-changed');
+    await page.getByRole('link', { name: 'Try yt-dlp nightly' }).click();
+    await expect(page.locator('#ytDlpChannel')).toBeVisible();
+  });
+
+  test('the channel cannot be chosen without tool updates', async ({ page }) => {
+    await page.goto('/settings/system');
+    await page.locator('#updateBinaries').uncheck();
+    await expect(page.locator('#ytDlpChannel')).toBeDisabled();
+  });
+});
+
 test.describe('history', () => {
   test('a finished download shows up in the history and can be removed', async ({ page }) => {
     await page.goto('/');

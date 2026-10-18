@@ -31,6 +31,7 @@ import { Group } from '../../../tauri/types/group';
 import { useI18n } from 'vue-i18n';
 import { useMediaDiagnosticsStore } from '../../../stores/media/diagnostics.ts';
 import { useDiagnostic } from '../../../composables/useDiagnostic.ts';
+import { useSettingsStore } from '../../../stores/settings';
 
 const i18n = useI18n();
 const t = i18n.t;
@@ -43,6 +44,9 @@ const { group } = defineProps({
 });
 
 const diagnosticsStore = useMediaDiagnosticsStore();
+const settingsStore = useSettingsStore();
+
+const SITE_CHANGED_CODES = ['unableToExtractInitialData', 'unableToExtractIdOrInfo', 'nsigExtractionFailed'];
 
 const lastFatal = computed(() => diagnosticsStore.findLastFatalByGroupId(group.id));
 const lastDiagnostic = computed(() => diagnosticsStore.findLastDiagnosticByGroupId(group.id));
@@ -99,6 +103,16 @@ const errorAction = computed(() => {
     return {
       label: t('media.steps.error.filters'),
       to: { name: 'input-filters' as const },
+    };
+  }
+
+  // A site that changed: the fix usually comes out first in the nightly builds.
+  const siteChanged = SITE_CHANGED_CODES.includes(error.value.code)
+    || (error.value.code === 'unknown' && error.value.component !== 'runner');
+  if (siteChanged && settingsStore.settings.update.ytDlpChannel === 'stable') {
+    return {
+      label: t('media.steps.error.tryNightly'),
+      to: { name: 'settings.system' as const },
     };
   }
 

@@ -26,6 +26,9 @@ function merge(base: Json, patch: Json): Json {
 
 let current: Settings = copy(defaultSettings);
 
+/** The saved settings, for other mocks that depend on them. */
+export const savedSettings = (): Settings => current;
+
 export const configHandlers: Record<string, IPCHandler> = {
   config_get: () => copy(current),
   config_set: (_cmd, args: InvokeArgs | undefined) => {

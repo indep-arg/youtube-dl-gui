@@ -13,6 +13,19 @@
         class="toggle toggle-primary"
     />
     <p class="label">{{ t('settings.update.updateBinaries.hint') }}</p>
+    <label class="font-semibold mt-2" for="ytDlpChannel">
+      {{ t('settings.update.ytDlpChannel.label') }}
+    </label>
+    <select
+        id="ytDlpChannel"
+        v-model="settings.update.ytDlpChannel"
+        :disabled="!settings.update.updateBinaries"
+        class="select select-bordered"
+    >
+      <option value="stable">{{ t('settings.update.ytDlpChannel.stable') }}</option>
+      <option value="nightly">{{ t('settings.update.ytDlpChannel.nightly') }}</option>
+    </select>
+    <p class="label">{{ t('settings.update.ytDlpChannel.hint') }}</p>
     <label class="font-semibold mt-2" for="updateApp">
       {{ t('settings.update.updateApp.label') }}
     </label>

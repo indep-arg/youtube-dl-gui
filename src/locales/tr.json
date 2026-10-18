@@ -339,7 +339,8 @@
         "errorPrefix": "Hata - {message}",
         "showFull": "Kayıtlara bak",
         "signIn": "Giriş yap",
-        "filters": "Filtreleri düzenle"
+        "filters": "Filtreleri düzenle",
+        "tryNightly": "Try yt-dlp nightly"
       }
     },
     "card": {
@@ -956,6 +957,13 @@
       "updateBinaries": {
         "label": "Araçları otomatik olarak güncelle:",
         "hint": "OVD, videoları indirmek için yt-dlp ve ffmpeg gibi araçları kullanır. Bunları güncel tutmak için bu ayarı etkinleştirin."
+      },
+      "ytDlpChannel": {
+        "label": "yt-dlp version:",
+        "hint": "Nightly builds get fixes for sites sooner, but are tested less. Try them when a site stops working. They update almost every day.",
+        "stable": "Stable",
+        "nightly": "Nightly",
+        "later": "The new version of yt-dlp will be installed the next time you open the app."
       },
       "updateApp": {
         "label": "Uygulamayı otomatik olarak güncelle:",

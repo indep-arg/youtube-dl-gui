@@ -46,6 +46,7 @@ pub async fn app_diagnostics(
     theme: config.appearance.theme.clone(),
     update_tools: config.update.update_binaries,
     update_app: config.update.update_app,
+    yt_dlp_channel: config.update.yt_dlp_channel.as_str().to_string(),
     tools: check_tools(&bin_dir, &installed).await,
   };
   Ok(render(&report))

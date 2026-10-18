@@ -46,6 +46,7 @@ pub struct Report {
   pub theme: String,
   pub update_tools: bool,
   pub update_app: bool,
+  pub yt_dlp_channel: String,
   pub tools: Vec<ToolReport>,
 }
 
@@ -61,9 +62,10 @@ pub fn render(report: &Report) -> String {
     report.language, report.theme
   ));
   out.push_str(&format!(
-    "Updates: tools {}, app {}\n",
+    "Updates: tools {}, app {}, yt-dlp {}\n",
     on_off(report.update_tools),
-    on_off(report.update_app)
+    on_off(report.update_app),
+    report.yt_dlp_channel
   ));
   out.push_str("\nTools:\n");
   for tool in &report.tools {
@@ -180,6 +182,7 @@ mod tests {
       theme: "system".into(),
       update_tools: true,
       update_app: false,
+      yt_dlp_channel: "nightly".into(),
       tools: vec![
         ToolReport {
           name: "yt-dlp".into(),
@@ -206,7 +209,7 @@ mod tests {
     assert!(text.starts_with("Open Video Downloader 2026.10.4\n"));
     assert!(text.contains("System: linux x86_64 (Fedora Linux 45)"));
     assert!(text.contains("Install: AppImage"));
-    assert!(text.contains("Updates: tools on, app off"));
+    assert!(text.contains("Updates: tools on, app off, yt-dlp nightly"));
     assert!(text.contains("- yt-dlp 2026.08.19: runs (2026.08.19)"));
     assert!(text.contains("- ffmpeg 2026-10: the file is not a program"));
     assert!(text.contains("- AtomicParsley not installed: missing"));

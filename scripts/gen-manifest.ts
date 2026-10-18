@@ -1,7 +1,7 @@
 import { writeFile, mkdir, readFile } from 'fs/promises';
 import { createHash } from 'crypto';
 import { canonicalize } from './canonicalize.ts';
-import { fetchSources } from './sources.ts';
+import { fetchChannelSources, fetchSources, type ToolSource } from './sources.ts';
 
 export interface FileEntry {
   url: string;
@@ -23,6 +23,8 @@ export interface ToolEntry {
 export interface Manifest {
   generatedAt: string;
   tools: Record<string, ToolEntry>;
+  /** Other builds of some tools, e.g. `nightly` for yt-dlp. */
+  channels?: Record<string, { tools: Record<string, ToolEntry> }>;
 }
 
 async function sha256(url: string): Promise<string> {
@@ -42,9 +44,7 @@ async function sha256(url: string): Promise<string> {
   return hash.digest('hex');
 }
 
-export async function main(): Promise<Manifest> {
-  console.log('[gen-manifest] Starting manifest generation');
-  const sources = await fetchSources();
+async function toolEntries(sources: ToolSource[]): Promise<Record<string, ToolEntry>> {
   const tools: Record<string, ToolEntry> = {};
   for (const src of sources) {
     console.log(`[gen-manifest] Processing ${src.name}@${src.version}`);
@@ -59,7 +59,22 @@ export async function main(): Promise<Manifest> {
     }
     tools[src.name] = { version: src.version, files };
   }
-  const manifest: Manifest = { generatedAt: new Date().toISOString(), tools };
+  return tools;
+}
+
+export async function main(): Promise<Manifest> {
+  console.log('[gen-manifest] Starting manifest generation');
+  const tools = await toolEntries(await fetchSources());
+  const channels: NonNullable<Manifest['channels']> = {};
+  for (const [channel, sources] of Object.entries(await fetchChannelSources())) {
+    console.log(`[gen-manifest] Channel ${channel}`);
+    try {
+      channels[channel] = { tools: await toolEntries(sources) };
+    } catch (e) {
+      console.warn(`[gen-manifest] Leaving out the ${channel} channel: ${e}`);
+    }
+  }
+  const manifest: Manifest = { generatedAt: new Date().toISOString(), tools, channels };
   await mkdir('manifest', { recursive: true });
   const manifestPath = 'manifest/manifest.json';
   const newManifest = JSON.stringify(manifest, null, 2);
@@ -125,6 +140,15 @@ export async function main(): Promise<Manifest> {
         for (const name of Object.keys(prevTools)) {
           if (!newTools[name]) {
             changes.push(`Removed tool ${name}@${prevTools[name].version}`);
+          }
+        }
+
+        for (const [channel, { tools: channelTools }] of Object.entries(manifest.channels ?? {})) {
+          for (const [name, tool] of Object.entries(channelTools)) {
+            const prev = previousManifestData.channels?.[channel]?.tools[name];
+            if (prev?.version !== tool.version) {
+              changes.push(`${channel}: ${name} ${prev?.version ?? 'none'} -> ${tool.version}`);
+            }
           }
         }
 

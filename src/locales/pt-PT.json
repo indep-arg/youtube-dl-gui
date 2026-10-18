@@ -339,7 +339,8 @@
         "errorPrefix": "Erro - {message}",
         "showFull": "Ver registos",
         "signIn": "Iniciar sessão",
-        "filters": "Edit filters"
+        "filters": "Edit filters",
+        "tryNightly": "Try yt-dlp nightly"
       }
     },
     "card": {
@@ -956,6 +957,13 @@
       "updateBinaries": {
         "label": "Atualizar automaticamente ferramentas:",
         "hint": "O OVD utiliza ferramentas como yt-dlp e ffmpeg para transferir vídeos. Ativa isto para as manter atualizadas."
+      },
+      "ytDlpChannel": {
+        "label": "yt-dlp version:",
+        "hint": "Nightly builds get fixes for sites sooner, but are tested less. Try them when a site stops working. They update almost every day.",
+        "stable": "Stable",
+        "nightly": "Nightly",
+        "later": "The new version of yt-dlp will be installed the next time you open the app."
       },
       "updateApp": {
         "label": "Atualizar automaticamente a aplicação:",

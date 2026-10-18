@@ -339,7 +339,8 @@
         "errorPrefix": "오류 - {message}",
         "showFull": "로그 보기",
         "signIn": "로그인",
-        "filters": "필터 편집"
+        "filters": "필터 편집",
+        "tryNightly": "Try yt-dlp nightly"
       }
     },
     "card": {
@@ -956,6 +957,13 @@
       "updateBinaries": {
         "label": "도구 자동 업데이트:",
         "hint": "OVD는 yt-dlp, ffmpeg 같은 도구를 사용해 동영상을 다운로드합니다. 이 옵션을 사용하면 최신 상태로 유지됩니다."
+      },
+      "ytDlpChannel": {
+        "label": "yt-dlp version:",
+        "hint": "Nightly builds get fixes for sites sooner, but are tested less. Try them when a site stops working. They update almost every day.",
+        "stable": "Stable",
+        "nightly": "Nightly",
+        "later": "The new version of yt-dlp will be installed the next time you open the app."
       },
       "updateApp": {
         "label": "앱 자동 업데이트:",

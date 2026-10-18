@@ -339,7 +339,8 @@
         "errorPrefix": "錯誤 - {message}",
         "showFull": "查看記錄",
         "signIn": "登入",
-        "filters": "編輯篩選條件"
+        "filters": "編輯篩選條件",
+        "tryNightly": "Try yt-dlp nightly"
       }
     },
     "card": {
@@ -956,6 +957,13 @@
       "updateBinaries": {
         "label": "自動更新工具:",
         "hint": "OVD 會使用 yt-dlp 與 ffmpeg 等工具下載影片。啟用此選項可維持於最新狀態。"
+      },
+      "ytDlpChannel": {
+        "label": "yt-dlp version:",
+        "hint": "Nightly builds get fixes for sites sooner, but are tested less. Try them when a site stops working. They update almost every day.",
+        "stable": "Stable",
+        "nightly": "Nightly",
+        "later": "The new version of yt-dlp will be installed the next time you open the app."
       },
       "updateApp": {
         "label": "自動更新應用程式:",

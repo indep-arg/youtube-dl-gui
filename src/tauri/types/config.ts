@@ -149,7 +149,11 @@ export interface SponsorBlockSettings {
 export interface UpdateSettings {
   updateBinaries: boolean;
   updateApp: boolean;
+  ytDlpChannel: YtDlpChannel;
 }
+
+/** Nightly builds of yt-dlp get fixes for sites before a stable release. */
+type YtDlpChannel = 'stable' | 'nightly';
 
 export enum CloseBehavior {
   Exit = 'exit',
@@ -295,6 +299,7 @@ const defaultSponsorBlockSettings: SponsorBlockSettings = {
 const defaultUpdateSettings: UpdateSettings = {
   updateBinaries: true,
   updateApp: true,
+  ytDlpChannel: 'stable',
 };
 
 const defaultSystemSettings: SystemSettings = {

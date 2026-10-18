@@ -25,6 +25,10 @@ export const mediaHandlers: Record<string, IPCHandler> = {
       void emitEmptyPlaylist(groupId, id);
       return groupId;
     }
+    if (url.includes('site-changed')) {
+      void emitSiteChanged(groupId, id);
+      return groupId;
+    }
     if (url.includes('live')) {
       void emit<MediaAddPayload>('media_add', {
         groupId,
@@ -144,6 +148,18 @@ async function finishDownload(groupId: string, id: string): Promise<void> {
     destination: { path: '/downloads/Test Video.mp4', confidence: 1 },
   });
   await emit('media_complete', { groupId, id });
+}
+
+// What the backend sends when yt-dlp no longer understands a site.
+async function emitSiteChanged(groupId: string, id: string): Promise<void> {
+  const raw = 'ERROR: [youtube] abc: Unable to extract initial data';
+  await emit('media_diagnostic', {
+    groupId, id, level: 'error', code: 'unableToExtractInitialData', component: 'youtube',
+    message: 'Unable to extract initial data', raw, timestamp: Date.now(),
+  });
+  await emit('media_fatal', {
+    groupId, id, exitCode: 1, internal: false, message: raw, details: null, timestamp: Date.now(),
+  });
 }
 
 // What the backend sends for a playlist without entries.

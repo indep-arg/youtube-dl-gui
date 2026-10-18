@@ -1,15 +1,16 @@
 use std::collections::{HashMap, HashSet};
 use std::path::{Path, PathBuf};
 
+use crate::SharedConfig;
 use crate::binaries::binaries_extractor::{
   TarCompression, extract_tar, extract_tar_bundle, extract_tar_entries, extract_zip,
   extract_zip_bundle,
 };
 use crate::binaries::binaries_state::CheckResult;
 use crate::paths::PathsManager;
+use crate::state::config_models::YtDlpChannel;
 use base64::Engine;
 use ed25519_dalek::{Signature, Verifier, VerifyingKey};
-use fs_extra::dir::{CopyOptions, move_dir};
 use indexmap::IndexMap;
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
@@ -30,6 +31,51 @@ struct Manifest {
   #[serde(rename = "generatedAt")]
   generated_at: String,
   tools: IndexMap<String, ToolInfo>,
+  /// Other builds of some tools, e.g. `nightly` for yt-dlp. Older versions of the
+  /// app ignore this field.
+  #[serde(default)]
+  channels: HashMap<String, ChannelInfo>,
+}
+
+#[derive(Deserialize, Serialize, Default)]
+struct ChannelInfo {
+  tools: IndexMap<String, ToolInfo>,
+}
+
+/// The tools that have other channels.
+const CHANNEL_TOOLS: [&str; 1] = ["yt-dlp"];
+
+struct ChannelTool<'a> {
+  name: &'a str,
+  info: &'a ToolInfo,
+  /// The manifest has no build of the chosen channel (it could not be fetched
+  /// that day): keep the installed copy instead of going back to stable.
+  keep_installed: bool,
+}
+
+/// The tools of the manifest, with the builds of `channel` in place of the stable ones.
+fn tools_for_channel(manifest: &Manifest, channel: YtDlpChannel) -> Vec<ChannelTool<'_>> {
+  let builds = match channel {
+    YtDlpChannel::Stable => None,
+    other => Some(manifest.channels.get(other.as_str())),
+  };
+  manifest
+    .tools
+    .iter()
+    .map(|(name, stable)| {
+      let has_channel = CHANNEL_TOOLS.contains(&name.as_str());
+      let (info, keep_installed) = match builds {
+        Some(Some(channel)) if has_channel => (channel.tools.get(name).unwrap_or(stable), false),
+        Some(None) if has_channel => (stable, true),
+        _ => (stable, false),
+      };
+      ChannelTool {
+        name: name.as_str(),
+        info,
+        keep_installed,
+      }
+    })
+    .collect()
 }
 
 #[derive(Deserialize, Serialize)]
@@ -167,8 +213,19 @@ impl BinariesManager {
     arch: &str,
     allow: Option<&[String]>,
   ) -> Result<Vec<(&'a str, &'a ToolInfo)>, AnyError> {
+    let channel = self
+      .app
+      .state::<SharedConfig>()
+      .load()
+      .update
+      .yt_dlp_channel;
     let mut plan = Vec::new();
-    for (name, info) in &manifest.tools {
+    for ChannelTool {
+      name,
+      info,
+      keep_installed,
+    } in tools_for_channel(manifest, channel)
+    {
       if let Some(allow) = allow
         && !allow.iter().any(|n| n == name)
       {
@@ -184,9 +241,10 @@ impl BinariesManager {
       // A file that is there but is not a program (e.g. an archive that an older
       // version could not unpack) is installed again.
       let usable = is_program(&canonical).await;
+      let kept = keep_installed && usable && meta.versions.contains_key(name);
 
-      if !version_ok || !usable {
-        plan.push((name.as_str(), info));
+      if (!version_ok || !usable) && !kept {
+        plan.push((name, info));
       }
     }
     Ok(plan)
@@ -657,21 +715,75 @@ impl BinariesManager {
     tokio::fs::create_dir_all(&bin_dir).await?;
 
     let src = bundle_root.to_path_buf();
-    let dest = bin_dir.clone();
-
-    tokio::task::spawn_blocking(move || {
-      let mut opts = CopyOptions::new();
-      opts.overwrite = true;
-      opts.copy_inside = false;
-      opts.content_only = true;
-      move_dir(&src, &dest, &opts)?;
-      Ok::<(), fs_extra::error::Error>(())
-    })
-    .await??;
+    tokio::task::spawn_blocking(move || replace_entries(&src, &bin_dir)).await??;
 
     let _ = fs::remove_dir_all(bundle_root).await;
 
     Ok(())
+  }
+}
+
+/// Moves everything in `from` into `into`, replacing what is there (yt-dlp and
+/// its `_internal` folder). The old entries are moved aside first and put back
+/// if anything fails: on Windows the files of a running yt-dlp cannot be moved,
+/// and copying over them would leave a mix of two versions.
+fn replace_entries(from: &Path, into: &Path) -> std::io::Result<()> {
+  remove_old_entries(into);
+  let suffix = uuid::Uuid::new_v4();
+  let mut moved_aside: Vec<(PathBuf, PathBuf)> = Vec::new();
+  let mut placed: Vec<PathBuf> = Vec::new();
+
+  let result = (|| -> std::io::Result<()> {
+    for entry in std::fs::read_dir(from)? {
+      let entry = entry?;
+      let target = into.join(entry.file_name());
+      if target.symlink_metadata().is_ok() {
+        let backup = into.join(format!(
+          "{OLD_PREFIX}{}-{suffix}",
+          entry.file_name().to_string_lossy()
+        ));
+        std::fs::rename(&target, &backup)?;
+        moved_aside.push((target.clone(), backup));
+      }
+      std::fs::rename(entry.path(), &target)?;
+      placed.push(target);
+    }
+    Ok(())
+  })();
+
+  if let Err(err) = result {
+    for target in placed.iter().rev() {
+      remove_entry(target);
+    }
+    for (original, backup) in moved_aside.iter().rev() {
+      let _ = std::fs::rename(backup, original);
+    }
+    return Err(err);
+  }
+  remove_old_entries(into);
+  Ok(())
+}
+
+const OLD_PREFIX: &str = ".old-";
+
+/// Removes what earlier updates moved aside. On Windows a file can stay in use
+/// for a while, so this is retried on every update.
+fn remove_old_entries(dir: &Path) {
+  let Ok(entries) = std::fs::read_dir(dir) else {
+    return;
+  };
+  for entry in entries.flatten() {
+    if entry.file_name().to_string_lossy().starts_with(OLD_PREFIX) {
+      remove_entry(&entry.path());
+    }
+  }
+}
+
+fn remove_entry(path: &Path) {
+  if path.is_dir() && !path.is_symlink() {
+    let _ = std::fs::remove_dir_all(path);
+  } else {
+    let _ = std::fs::remove_file(path);
   }
 }
 
@@ -726,8 +838,130 @@ async fn file_sha256(path: &Path) -> Option<String> {
 
 #[cfg(test)]
 mod tests {
-  use super::{BinariesManager, FileInfo, is_program, looks_like_program};
+  use super::{
+    BinariesManager, FileInfo, Manifest, OLD_PREFIX, is_program, looks_like_program,
+    replace_entries, tools_for_channel,
+  };
+  use crate::state::config_models::YtDlpChannel;
   use std::collections::HashMap;
+
+  fn manifest(with_nightly: bool) -> Manifest {
+    let channels = if with_nightly {
+      r#","channels":{"nightly":{"tools":{"yt-dlp":{"version":"2026.10.10.233141","files":{}}}}}"#
+    } else {
+      ""
+    };
+    serde_json::from_str(&format!(
+      r#"{{"generatedAt":"x","tools":{{
+        "yt-dlp":{{"version":"2026.08.19","files":{{}}}},
+        "ffmpeg":{{"version":"2026-10","files":{{}}}}
+      }}{channels}}}"#
+    ))
+    .unwrap()
+  }
+
+  fn versions(manifest: &Manifest, channel: YtDlpChannel) -> Vec<(String, String, bool)> {
+    tools_for_channel(manifest, channel)
+      .into_iter()
+      .map(|t| (t.name.to_string(), t.info.version.clone(), t.keep_installed))
+      .collect()
+  }
+
+  #[test]
+  fn the_nightly_channel_replaces_only_yt_dlp() {
+    let m = manifest(true);
+    assert_eq!(
+      versions(&m, YtDlpChannel::Nightly),
+      [
+        ("yt-dlp".into(), "2026.10.10.233141".into(), false),
+        ("ffmpeg".into(), "2026-10".into(), false),
+      ]
+    );
+    assert_eq!(
+      versions(&m, YtDlpChannel::Stable)[0],
+      ("yt-dlp".into(), "2026.08.19".into(), false)
+    );
+  }
+
+  #[test]
+  fn without_nightly_builds_the_installed_yt_dlp_is_kept() {
+    // The manifest of a day when the nightly builds could not be fetched, or
+    // one written before channels existed.
+    let m = manifest(false);
+    assert_eq!(
+      versions(&m, YtDlpChannel::Nightly),
+      [
+        ("yt-dlp".into(), "2026.08.19".into(), true),
+        ("ffmpeg".into(), "2026-10".into(), false),
+      ]
+    );
+    assert!(!versions(&m, YtDlpChannel::Stable)[0].2);
+  }
+
+  fn temp_dir() -> std::path::PathBuf {
+    let dir = std::env::temp_dir().join(format!("ovd-replace-{}", uuid::Uuid::new_v4()));
+    std::fs::create_dir_all(&dir).unwrap();
+    dir
+  }
+
+  #[test]
+  fn a_bundle_replaces_the_old_one_completely() {
+    let dir = temp_dir();
+    let bin = dir.join("bin");
+    let bundle = dir.join("bundle");
+    std::fs::create_dir_all(bin.join("_internal")).unwrap();
+    std::fs::write(bin.join("yt-dlp"), "old").unwrap();
+    std::fs::write(bin.join("_internal/old-only.so"), "old").unwrap();
+    std::fs::write(bin.join("ffmpeg"), "keep").unwrap();
+    std::fs::write(bin.join(format!("{OLD_PREFIX}yt-dlp-stale")), "stale").unwrap();
+    std::fs::create_dir_all(bundle.join("_internal")).unwrap();
+    std::fs::write(bundle.join("yt-dlp"), "new").unwrap();
+    std::fs::write(bundle.join("_internal/new.so"), "new").unwrap();
+
+    replace_entries(&bundle, &bin).unwrap();
+
+    assert_eq!(std::fs::read_to_string(bin.join("yt-dlp")).unwrap(), "new");
+    assert!(bin.join("_internal/new.so").exists());
+    // Files of the old version do not stay behind.
+    assert!(!bin.join("_internal/old-only.so").exists());
+    assert_eq!(std::fs::read_to_string(bin.join("ffmpeg")).unwrap(), "keep");
+    let mut names: Vec<_> = std::fs::read_dir(&bin)
+      .unwrap()
+      .map(|e| e.unwrap().file_name().to_string_lossy().into_owned())
+      .collect();
+    names.sort();
+    assert_eq!(names, ["_internal", "ffmpeg", "yt-dlp"]);
+    std::fs::remove_dir_all(dir).unwrap();
+  }
+
+  #[cfg(unix)]
+  #[test]
+  fn a_failed_replacement_puts_the_old_bundle_back() {
+    use std::os::unix::fs::PermissionsExt;
+    let dir = temp_dir();
+    let bin = dir.join("bin");
+    let bundle = dir.join("bundle");
+    std::fs::create_dir_all(bin.join("_internal")).unwrap();
+    std::fs::write(bin.join("yt-dlp"), "old").unwrap();
+    std::fs::write(bin.join("_internal/lib.so"), "old").unwrap();
+    std::fs::create_dir_all(bundle.join("_internal")).unwrap();
+    std::fs::write(bundle.join("yt-dlp"), "new").unwrap();
+    std::fs::write(bundle.join("_internal/lib.so"), "new").unwrap();
+    // A folder that cannot be moved, like a folder in use on Windows: its
+    // parent is read-only, so the new entry cannot be moved out of the bundle.
+    std::fs::set_permissions(&bundle, std::fs::Permissions::from_mode(0o555)).unwrap();
+
+    let result = replace_entries(&bundle, &bin);
+    std::fs::set_permissions(&bundle, std::fs::Permissions::from_mode(0o755)).unwrap();
+
+    assert!(result.is_err());
+    assert_eq!(std::fs::read_to_string(bin.join("yt-dlp")).unwrap(), "old");
+    assert_eq!(
+      std::fs::read_to_string(bin.join("_internal/lib.so")).unwrap(),
+      "old"
+    );
+    std::fs::remove_dir_all(dir).unwrap();
+  }
 
   fn file(url: &str) -> FileInfo {
     FileInfo {

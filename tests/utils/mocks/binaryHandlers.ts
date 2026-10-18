@@ -6,17 +6,24 @@ import {
   BinaryDownloadProgressPayload,
   BinaryDownloadStartPayload,
 } from '../../../src/tauri/types/binaries';
+import { savedSettings } from './configHandlers';
 
 export type BinariesMockData = {
   check?: string[];
   ensure?: boolean;
 };
 
+// The yt-dlp channel that is installed: choosing the other one installs yt-dlp again.
+let installedChannel = 'stable';
+
 export const binaryHandlers: Record<string, IPCHandler> = {
   binaries_check: (): BinaryCheckPayload => {
-    return { tools: window.E2E.binaries?.check || [] };
+    const tools = [...(window.E2E.binaries?.check || [])];
+    if (savedSettings().update.ytDlpChannel !== installedChannel && !tools.includes('yt-dlp')) tools.push('yt-dlp');
+    return { tools };
   },
   binaries_ensure: async (): Promise<void> => {
+    installedChannel = savedSettings().update.ytDlpChannel;
     if (window.E2E.binaries?.ensure) {
       return new Promise((resolve): void => {
         void emit<BinaryDownloadStartPayload>('binary_download_start', {

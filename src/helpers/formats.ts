@@ -5,7 +5,7 @@ export function sortFormats(formats: MediaFormat[]): MediaFormat[] {
   return clone.sort(sortFormat);
 }
 
-export function sortFormat(a: MediaFormat, b: MediaFormat): number {
+function sortFormat(a: MediaFormat, b: MediaFormat): number {
   if (a.height && b.height) {
     const heightDiff = b.height - a.height;
     return heightDiff !== 0 ? heightDiff : (b.fps ?? 0) - (a.fps ?? 0);

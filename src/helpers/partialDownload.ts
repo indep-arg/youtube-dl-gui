@@ -1,8 +1,8 @@
 import { Chapter, OutputOverrides, PartialDownload, Section } from '../tauri/types/media';
 
-export type SelectionErrorKey = 'invalid' | 'beforeStart' | 'exceedsDuration';
+type SelectionErrorKey = 'invalid' | 'beforeStart' | 'exceedsDuration';
 
-export type SelectionValidation = {
+type SelectionValidation = {
   start: SelectionErrorKey | null;
   end: SelectionErrorKey | null;
 };
@@ -47,7 +47,7 @@ export function normalizeTimestampInput(value: string): string | null {
   return formatSecondsAsClock((hours * 3600) + (minutes * 60) + seconds);
 }
 
-export function toSeconds(value: string): number | null {
+function toSeconds(value: string): number | null {
   const normalized = normalizeTimestampInput(value);
   if (!normalized) return null;
 
@@ -75,7 +75,7 @@ export function createDefaultSelection(
   };
 }
 
-export function getChapterKeyForSection(
+function getChapterKeyForSection(
   section: Pick<Section, 'start' | 'end'>,
   chapters: Chapter[],
 ): string | undefined {
@@ -143,7 +143,7 @@ export function validateSelection(
   return { start: null, end: null };
 }
 
-export function normalizeValidSection(section: Section): Section | null {
+function normalizeValidSection(section: Section): Section | null {
   const normalizedStart = normalizeTimestampInput(section.start);
   const normalizedEnd = normalizeTimestampInput(section.end);
   if (!normalizedStart || !normalizedEnd) return null;
@@ -160,7 +160,7 @@ export function buildDownloadSectionsValues(section?: Section): string[] {
   return [`*${section.start}-${section.end}`];
 }
 
-export function isDefaultTimeRange(
+function isDefaultTimeRange(
   selection: Pick<Section, 'start' | 'end'>,
   durationSeconds?: number,
 ): boolean {

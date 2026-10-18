@@ -15,7 +15,7 @@ import {
 } from '../tauri/types/media.ts';
 
 export const INPUT_FILTER_SIZE_UNITS: InputFilterSizeUnit[] = ['B', 'KB', 'MB', 'GB', 'TB'];
-export const INPUT_FILTER_DATE_MODES: InputFilterDateMode[] = ['exact', 'before', 'after'];
+const INPUT_FILTER_DATE_MODES: InputFilterDateMode[] = ['exact', 'before', 'after'];
 export const INPUT_FILTER_DATE_PRESETS = ['today', 'yesterday', 'last7Days', 'last30Days'] as const;
 const DEFAULT_INPUT_FILTER_SIZE_UNIT: InputFilterSizeUnit = 'MB';
 

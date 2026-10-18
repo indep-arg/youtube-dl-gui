@@ -1,6 +1,6 @@
 export const INPUT_FILTER_SKIPPED_CODE = 'input_filter_skipped';
 
-export type GroupedSkippedDiagnostic = {
+type GroupedSkippedDiagnostic = {
   message: string;
   count: number;
   diagnostics: MediaDiagnostic[];

@@ -8,7 +8,7 @@ pub struct TemplateContext {
 }
 
 impl TemplateContext {
-  #[allow(dead_code)]
+  #[cfg(test)]
   pub fn insert<K: Into<String>, V: Into<String>>(&mut self, key: K, value: V) {
     self.values.insert(key.into(), value.into());
   }

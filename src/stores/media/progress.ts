@@ -16,8 +16,8 @@ import { NotificationKind } from '../../tauri/types/app';
 import { useHistoryStore } from '../history.ts';
 import type { Group } from '../../tauri/types/group.ts';
 
-export type MediaProgress = MediaProgressPayload & MediaProgressStagePayload;
-export type MediaGroupProgress = MediaGroupProgressPayload & MediaProgressStagePayload;
+type MediaProgress = MediaProgressPayload & MediaProgressStagePayload;
+type MediaGroupProgress = MediaGroupProgressPayload & MediaProgressStagePayload;
 
 export const useMediaProgressStore = defineStore('media-progress', () => {
   const progress = ref<Record<string, MediaProgress>>({});

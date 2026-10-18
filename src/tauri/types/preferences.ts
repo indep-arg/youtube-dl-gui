@@ -7,7 +7,7 @@ export interface PathPreferences {
   audioDirectoryTemplate: string | null;
 }
 
-export const defaultPathPreferences: PathPreferences = {
+const defaultPathPreferences: PathPreferences = {
   audioDownloadDir: null,
   videoDownloadDir: null,
   videoDirectoryTemplate: null,
@@ -18,7 +18,7 @@ export interface RecentPreferences {
   recent: Record<string, string[]>;
 }
 
-export const defaultRecentPreferences: RecentPreferences = {
+const defaultRecentPreferences: RecentPreferences = {
   recent: {},
 };
 
@@ -26,7 +26,7 @@ export interface FormatPreferences {
   trackType: TrackType;
 }
 
-export const defaultFormatPreferences: FormatPreferences = {
+const defaultFormatPreferences: FormatPreferences = {
   trackType: TrackType.both,
 };
 

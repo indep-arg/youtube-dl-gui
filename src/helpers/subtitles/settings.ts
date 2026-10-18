@@ -6,7 +6,7 @@ import {
   sanitizeSubtitleLanguages,
 } from './sanitize.ts';
 
-export interface SubtitleFormatOption {
+interface SubtitleFormatOption {
   value: string;
   label: string;
 }

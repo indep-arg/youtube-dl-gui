@@ -145,7 +145,7 @@ const MAX_HEIGHT_CLASS: Record<MultiSelectMaxHeight, string> = {
   xl: 'max-h-96',
 };
 
-export interface MultiSelectOption {
+interface MultiSelectOption {
   value: string;
   label: string;
   description?: string;

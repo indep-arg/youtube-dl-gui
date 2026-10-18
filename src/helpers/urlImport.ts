@@ -2,12 +2,12 @@ import { isValidUrl } from './url.ts';
 import { i18n } from '../i18n';
 import { ToastStyle } from '../stores/toast.ts';
 
-export type ParsedUrlImport = {
+type ParsedUrlImport = {
   urls: string[];
   skipped: number;
 };
 
-export type UrlImportToast = {
+type UrlImportToast = {
   message: string;
   style: ToastStyle;
 };

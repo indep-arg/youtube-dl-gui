@@ -1,33 +1,17 @@
 use tauri::menu::MenuBuilder;
 use tauri::AppHandle;
 
+/// Windows and Linux get an empty menu bar: everything is reachable from the window itself.
 pub fn setup_menu(handle: &AppHandle) {
-  #[cfg(target_os = "windows")]
+  #[cfg(any(target_os = "windows", target_os = "linux"))]
   {
-    setup_windows(handle);
+    let menu = MenuBuilder::new(handle)
+      .items(&[])
+      .build()
+      .expect("Could not attach submenus to menu.");
+
+    handle.set_menu(menu).expect("Could not attach menu.");
   }
-  #[cfg(target_os = "linux")]
-  {
-    setup_linux(handle);
-  }
-}
-
-#[allow(dead_code)]
-fn setup_windows(handle: &AppHandle) {
-  let menu = MenuBuilder::new(handle)
-    .items(&[])
-    .build()
-    .expect("Could not attach submenus to menu.");
-
-  handle.set_menu(menu).expect("Could not attach menu.");
-}
-
-#[allow(dead_code)]
-fn setup_linux(handle: &AppHandle) {
-  let menu = MenuBuilder::new(handle)
-    .items(&[])
-    .build()
-    .expect("Could not attach submenus to menu.");
-
-  handle.set_menu(menu).expect("Could not attach menu.");
+  #[cfg(not(any(target_os = "windows", target_os = "linux")))]
+  let _ = handle;
 }

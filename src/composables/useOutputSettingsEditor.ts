@@ -9,7 +9,7 @@ import {
   VideoPostprocessPreset,
 } from '../tauri/types/media.ts';
 
-export interface OutputEditorTab {
+interface OutputEditorTab {
   id: 'video' | 'audio';
   label: string;
 }

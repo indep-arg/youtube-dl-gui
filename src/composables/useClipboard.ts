@@ -1,12 +1,12 @@
 import { ref, onMounted, onUnmounted, Ref, watch } from 'vue';
 import { readText } from '@tauri-apps/plugin-clipboard-manager';
 
-export interface UseClipboardOptions {
+interface UseClipboardOptions {
   interval?: number;
   doPolling: Ref<boolean>;
 }
 
-export interface UseClipboardResponse {
+interface UseClipboardResponse {
   content: Ref<string | null>;
   poll: () => void;
 }

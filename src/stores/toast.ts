@@ -5,7 +5,7 @@ let idCounter = 0;
 
 export type ToastStyle = 'success' | 'info' | 'error' | 'warning' | 'subtle';
 
-export type Toast = {
+type Toast = {
   id: number;
   message: string;
   style: ToastStyle;

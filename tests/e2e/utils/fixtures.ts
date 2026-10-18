@@ -29,8 +29,8 @@ export const coverageOptions: CoverageReportOptions = {
   },
 };
 
-export type Options = { mockData: MockData };
-export type Fixtures = {
+type Options = { mockData: MockData };
+type Fixtures = {
   autoTestFixture: string;
   applyMockData: MockData;
 };

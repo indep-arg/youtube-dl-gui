@@ -117,7 +117,6 @@ pub fn init(app: &AppHandle, state: &State<StrongholdState>) -> Result<(), Strin
   create_and_store_new(app, state)
 }
 
-#[allow(dead_code)]
 pub fn init_on_startup(app: &AppHandle, state: &State<StrongholdState>) {
   if !state.snapshot_path.exists() {
     return;

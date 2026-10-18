@@ -12,8 +12,8 @@ import { DEFAULT_SUBTITLE_FORMAT_ORDER } from '../../helpers/subtitles/sanitize.
 import { NotificationKind } from './app';
 
 export type Theme = 'light' | 'dark' | 'system';
-export type LocaleOption = Locale | 'system';
-export type ExpandedOptions = 'none' | 'encodings' | 'tracks';
+type LocaleOption = Locale | 'system';
+type ExpandedOptions = 'none' | 'encodings' | 'tracks';
 
 export interface AppearanceSettings {
   theme: Theme;
@@ -189,13 +189,13 @@ export interface Settings {
   notifications: NotificationSettings;
 }
 
-export const defaultAppearanceSettings: AppearanceSettings = {
+const defaultAppearanceSettings: AppearanceSettings = {
   theme: 'system',
   language: 'system',
   expandedOptions: 'none',
 };
 
-export const defaultAuthSettings: AuthSettings = {
+const defaultAuthSettings: AuthSettings = {
   cookieFile: null,
   cookieBrowser: 'none',
 };
@@ -208,7 +208,7 @@ export const defaultNetworkSettings: NetworkSettings = {
   extractorArgs: '',
 };
 
-export const defaultInputSettings: InputSettings = {
+const defaultInputSettings: InputSettings = {
   autoFillClipboard: true,
   preferVideoInMixedLinks: false,
   globalShortcuts: true,
@@ -240,7 +240,7 @@ export const defaultInputFilterSettings: InputFilterSettings = {
   breakMatchFilters: null,
 };
 
-export const defaultOutputSettings: OutputSettings = {
+const defaultOutputSettings: OutputSettings = {
   video: {
     policy: TranscodePolicy.allowReencode,
     container: VideoContainer.mp4,
@@ -269,7 +269,7 @@ export const defaultOutputSettings: OutputSettings = {
   liveFromStart: false,
 };
 
-export const defaultPerformanceSettings: PerformanceSettings = {
+const defaultPerformanceSettings: PerformanceSettings = {
   maxConcurrency: 1,
   splitPlaylistThreshold: 50,
   autoLoadSize: true,
@@ -286,25 +286,25 @@ export const defaultSubtitleSettings: SubtitleSettings = {
   embedSubtitles: true,
 };
 
-export const defaultSponsorBlockSettings: SponsorBlockSettings = {
+const defaultSponsorBlockSettings: SponsorBlockSettings = {
   apiUrl: null,
   removeParts: [],
   markParts: [],
 };
 
-export const defaultUpdateSettings: UpdateSettings = {
+const defaultUpdateSettings: UpdateSettings = {
   updateBinaries: true,
   updateApp: true,
 };
 
-export const defaultSystemSettings: SystemSettings = {
+const defaultSystemSettings: SystemSettings = {
   trayEnabled: false,
   autoStartEnabled: false,
   autoStartMinimised: false,
   closeBehavior: CloseBehavior.Exit,
 };
 
-export const defaultNotificationSettings: NotificationSettings = {
+const defaultNotificationSettings: NotificationSettings = {
   notificationBehavior: NotificationBehavior.Never,
   disabledNotifications: [],
 };

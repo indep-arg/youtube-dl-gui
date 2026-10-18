@@ -1,4 +1,4 @@
-export interface BundleInfo {
+interface BundleInfo {
   /** Keep the extracted directory rather than collapsing to a single file */
   keep_folder: boolean;
   /** Optional: rename the top-level extracted dir to this */
@@ -27,7 +27,7 @@ export interface ToolSource {
   files: Record<string, ToolSourceFile>;
 }
 
-export interface ToolLicense {
+interface ToolLicense {
   license: string;
   url: string;
 }

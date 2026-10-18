@@ -13,7 +13,7 @@ const defaultStrongholdStatus: StrongholdStatus = {
   unlocked: false,
 };
 
-export const STRONGHOLD_KEYS = {
+const STRONGHOLD_KEYS = {
   username: 'auth.username',
   password: 'auth.password',
   videoPassword: 'video.password',

@@ -12,7 +12,7 @@ import {
 import { homedir } from 'node:os';
 import { delimiter, join, resolve } from 'node:path';
 import { Session, TauriDriver } from './webdriver.ts';
-import { makeClips, probe, serveMedia, type MediaServer } from './media.ts';
+import { makeClips, probe, serveMedia, startLiveStream, type MediaServer } from './media.ts';
 
 const ROOT = resolve(import.meta.dirname, '../..');
 const CACHE = process.env.OVD_TEST_CACHE ?? join(homedir(), '.cache', 'ovd-app-tests');
@@ -79,6 +79,23 @@ function appIsRunning(): boolean {
   } catch {
     return false;
   }
+}
+
+/** The app processes started with this data folder. */
+function appPidsUsing(dataDir: string): number[] {
+  let pids: string[];
+  try {
+    pids = execFileSync('pgrep', ['-x', 'open-video-down']).toString().trim().split('\n');
+  } catch {
+    return [];
+  }
+  return pids.map(Number).filter((pid) => {
+    try {
+      return readFileSync(`/proc/${pid}/environ`, 'latin1').split('\0').includes(`XDG_DATA_HOME=${dataDir}`);
+    } catch {
+      return false;
+    }
+  });
 }
 
 const isProgram = (file: string) => existsSync(file) && readFileSync(file).subarray(0, 4).equals(Buffer.from([0x7f, 0x45, 0x4c, 0x46]));
@@ -154,6 +171,14 @@ class Context {
     // The app writes to its data folder while it closes: wait until it is gone.
     const end = Date.now() + 10_000;
     while (Date.now() < end && appIsRunning()) await new Promise(r => setTimeout(r, 200));
+    // An app that did not close would block the next test: end it.
+    for (const pid of appPidsUsing(this.data)) {
+      try {
+        process.kill(pid, 'SIGKILL');
+      } catch {
+        // already gone
+      }
+    }
   }
 
   async restart(): Promise<Session> {
@@ -322,7 +347,8 @@ const tests: TestCase[] = [
         select.dispatchEvent(new Event('change', { bubbles: true }));
         return true;`);
       await s.click('nav button', 'Save');
-      const spanish = async () => (await s.exec<string>('return document.querySelector(\'header input[type="text"]\').placeholder')).startsWith('Ingresa');
+      // Not the placeholder of the link field: it shows the clipboard when that holds a link.
+      const spanish = () => s.exec<boolean>('return [...document.querySelectorAll("header button")].some(b => b.innerText.trim() === "Agregar")');
       await s.waitFor('the Spanish text', spanish, 10_000);
       s = await ctx.restart();
       await homeReady(s);
@@ -337,10 +363,26 @@ const tests: TestCase[] = [
       const s = await ctx.start();
       await homeReady(s);
       const canPaste = !!process.env.WAYLAND_DISPLAY && !!which('wl-paste') && !!which('wl-copy');
-      const previous = canPaste ? execFileSync('wl-paste', ['--no-newline'], { timeout: 3_000 }).toString() : '';
-      await s.go('/settings/about');
-      await s.click('#copy-diagnostics');
-      await s.waitForText('Tools:', 60_000);
+      // Kept as bytes: the clipboard can hold anything, even null bytes.
+      let previous: Buffer | null = null;
+      if (canPaste) {
+        try {
+          previous = execFileSync('wl-paste', ['--no-newline'], { timeout: 3_000 });
+        } catch {
+          previous = null; // empty clipboard
+        }
+      }
+      let copied = '';
+      try {
+        await s.go('/settings/about');
+        await s.click('#copy-diagnostics');
+        await s.waitForText('Tools:', 60_000);
+        if (canPaste) copied = execFileSync('wl-paste', ['--no-newline'], { timeout: 3_000 }).toString();
+      } finally {
+        // wl-copy keeps running to serve the clipboard: do not wait for its output.
+        if (previous) execFileSync('wl-copy', [], { input: previous, stdio: ['pipe', 'ignore', 'ignore'], timeout: 3_000 });
+        else if (canPaste) execFileSync('wl-copy', ['--clear'], { stdio: 'ignore', timeout: 3_000 });
+      }
       const text = await s.exec<string>('return document.querySelector("#diagnostics-text").innerText');
       check(text.startsWith(`Open Video Downloader ${APP_VERSION}`), `first line: ${text.split('\n')[0]}`);
       for (const tool of ['yt-dlp', 'ffmpeg', 'ffprobe', 'deno', 'AtomicParsley']) {
@@ -348,10 +390,7 @@ const tests: TestCase[] = [
       }
       check(!text.includes(homedir()), 'the report contains a path');
       if (canPaste) {
-        const copied = execFileSync('wl-paste', ['--no-newline'], { timeout: 3_000 }).toString();
-        // wl-copy keeps running to serve the clipboard: do not wait for its output.
-        execFileSync('wl-copy', [previous], { stdio: 'ignore', timeout: 3_000 });
-        check(copied === text.trimEnd() || copied.trimEnd() === text.trimEnd(), 'the clipboard does not hold the report');
+        check(copied.trimEnd() === text.trimEnd(), 'the clipboard does not hold the report');
       }
     },
   },
@@ -371,6 +410,48 @@ const tests: TestCase[] = [
       }, 60_000);
       await homeReady(s);
       check(isProgram(ffmpeg), 'ffmpeg was not installed again');
+    },
+  },
+  {
+    name: 'live-recording',
+    async run(ctx) {
+      ctx.seedTools();
+      const live = await startLiveStream(join(ctx.bin, 'ffmpeg'), join(ctx.dir, 'live'));
+      try {
+        const s = await ctx.start();
+        await homeReady(s);
+        await s.addLink(live.url);
+        await s.waitFor('a ready live card', () => s.exec<boolean>(`
+          const card = document.querySelector('article');
+          return !!card && card.innerText.includes('LIVE') && !!card.querySelector('[title="Download individually"]');`), 60_000);
+        await s.click('article [title="Download individually"]');
+
+        await s.waitFor('the recorded size and time', async () =>
+          /Recording live stream… [\d.]+ (bytes|KB|MB), \d+:\d\d/.test(await s.text()), 60_000);
+        const canPause = await s.exec<boolean>('return !!document.querySelector(\'article [title="Pause download"]\')');
+        check(!canPause, 'a live recording offers to pause instead of to stop');
+        await new Promise(r => setTimeout(r, 6_000));
+
+        await s.click('article [title="Stop and save recording"]');
+        await s.waitForText('Download complete – 1 item downloaded.', 60_000);
+        const leftovers = readdirSync(ctx.downloads).filter(f => /\.(part|ytdl)$|\.part-Frag/.test(f));
+        check(leftovers.length === 0, `files left behind: ${leftovers.join(', ')}`);
+        const files = ctx.downloaded('mp4');
+        check(files.length === 1, `expected one mp4, found ${readdirSync(ctx.downloads).join(', ')}`);
+        const info = probe(join(ctx.bin, 'ffprobe'), files[0]);
+        check(info.duration >= 4, `only ${info.duration} s were saved`);
+        check(info.streams.includes('video') && info.streams.includes('audio'), `streams ${info.streams.join(',')}`);
+
+        await s.click('article [title="Show metadata"]');
+        await s.waitFor('the metadata page', async () => (await s.route()).startsWith('/group/'), 10_000);
+        await s.go(`${(await s.route()).replace(/\/$/, '')}/logs`);
+        await s.waitForText('[download] Destination:', 10_000);
+        check(!(await s.text()).includes('frame='), 'the ffmpeg progress lines are in the logs');
+        await s.go('/history');
+        await s.waitForText('Live stream', 10_000);
+      } finally {
+        await live.stop();
+      }
     },
   },
   {
@@ -408,7 +489,7 @@ async function main(): Promise<void> {
       makeClips(join(TOOLS, 'ffmpeg'), join(CACHE, 'media'));
       media = await serveMedia(join(CACHE, 'media'));
     }
-    const ctx = new Context(test.name, media ?? { url: () => '', missingUrl: '', close: async () => {} });
+    const ctx = new Context(test.name, media ?? { url: () => '', file: () => '', missingUrl: '', close: async () => {} });
     const started = Date.now();
     process.stdout.write(`${test.name} … `);
     try {

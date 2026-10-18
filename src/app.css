@@ -21,7 +21,8 @@
     --color-base-content: oklch(28% 0.02 265); /* text */
 
     /* Brand */
-    --color-primary: oklch(58% 0.19 265);
+    /* Dark enough for links on the light surfaces (4.5:1). */
+    --color-primary: oklch(52% 0.19 265);
     --color-primary-content: oklch(100% 0 0);
 
     /* Secondary */
@@ -130,6 +131,8 @@ body > iframe {
  */
 .label {
     white-space: normal;
+    /* daisyUI uses 60% of the text colour, below the 4.5:1 contrast that small text needs. */
+    color: color-mix(in oklab, currentColor 75%, transparent);
 }
 
 /* The one look of every row of tabs: settings, group, preferences, the video/audio switch and the date filter. */

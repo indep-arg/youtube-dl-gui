@@ -18,7 +18,7 @@
           <div class="timeline-middle">
             <span class="block size-3 rounded-full bg-primary" aria-hidden="true" />
           </div>
-          <div class="timeline-start mb-3 text-xs text-base-content/60 sm:text-sm">
+          <div class="timeline-start mb-3 text-xs text-base-content/75 sm:text-sm">
             {{ chapter.rangeLabel }}
           </div>
           <article class="timeline-end timeline-box mt-3">

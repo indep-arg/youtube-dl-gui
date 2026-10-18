@@ -10,7 +10,7 @@
     </ul>
     <div v-else class="alert alert-success alert-soft">
       <check-circle-icon class="h-5 w-5"/>
-      <span>{{ t('media.view.logs.errors.empty') }}</span>
+      <span class="text-base-content">{{ t('media.view.logs.errors.empty') }}</span>
     </div>
   </section>
   <section v-if="skippedGroups.length > 0" class="py-4 px-8">
@@ -52,7 +52,7 @@
       />
       <div v-else class="alert alert-info alert-soft">
         <information-circle-icon class="h-5 w-5"/>
-        <span>{{ t('media.view.logs.all.empty') }}</span>
+        <span class="text-base-content">{{ t('media.view.logs.all.empty') }}</span>
       </div>
     </div>
   </section>

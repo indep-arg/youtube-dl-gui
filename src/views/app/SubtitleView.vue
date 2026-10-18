@@ -68,14 +68,14 @@
                   <span class="font-medium">{{ option.displayName }}</span>
                   <span
                     v-if="option.nativeName && option.nativeName !== option.displayName"
-                    class="text-xs text-base-content/60"
+                    class="text-xs text-base-content/75"
                   >
                     {{ option.nativeName }}
                   </span>
                 </span>
               </label>
             </li>
-            <li v-if="!filteredLanguageOptions.length" class="px-4 py-6 text-center text-sm text-base-content/60">
+            <li v-if="!filteredLanguageOptions.length" class="px-4 py-6 text-center text-sm text-base-content/75">
               {{ t('subtitles.options.languages.noResult', { query: languageQuery }) }}
             </li>
           </ul>
@@ -83,7 +83,7 @@
           <div class="flex flex-wrap items-center gap-2 text-sm">
             <span class="font-semibold">{{ t('subtitles.options.languages.selected') }}</span>
             <template v-if="isAllSelected">
-              <span class="badge badge-soft badge-info">
+              <span class="badge badge-info">
                 {{ t('subtitles.options.languages.allSelected') }}
               </span>
             </template>

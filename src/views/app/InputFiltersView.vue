@@ -30,7 +30,7 @@
       >
         <div class="flex flex-col gap-4">
           <div class="flex flex-col gap-2">
-            <span class="font-semibold">{{ t('inputFilters.fields.date.presetsLabel') }}</span>
+            <label class="font-semibold" for="input-filters-date-preset">{{ t('inputFilters.fields.date.presetsLabel') }}</label>
             <div class="max-w-sm">
               <select
                 id="input-filters-date-preset"
@@ -113,6 +113,7 @@
               </div>
               <select
                 v-model="minSize.unit"
+                :aria-label="`${t('inputFilters.fields.minSize.label')} ${t('inputFilters.fields.size.unitPlaceholder')}`"
                 class="select join-item w-28"
               >
                 <option v-for="unit in sizeUnits" :key="unit" :value="unit">{{ unit }}</option>
@@ -138,6 +139,7 @@
               </div>
               <select
                 v-model="maxSize.unit"
+                :aria-label="`${t('inputFilters.fields.maxSize.label')} ${t('inputFilters.fields.size.unitPlaceholder')}`"
                 class="select join-item w-28"
               >
                 <option v-for="unit in sizeUnits" :key="unit" :value="unit">{{ unit }}</option>

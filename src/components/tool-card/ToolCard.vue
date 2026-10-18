@@ -4,6 +4,7 @@
         :key="tool.percent === 100 && !hasError ? 'done' : 'progress'"
         class="relative m-5 h-20 w-20 shrink-0"
         role="progressbar"
+        :aria-label="name"
         :aria-valuemin="0"
         :aria-valuemax="100"
         :aria-valuenow="clampedPercent"
@@ -42,7 +43,7 @@
             v-if="tool.version"
             :title="tool.version"
             class="badge badge-soft overflow-hidden text-ellipsis break-all"
-            :class="{ 'badge-error': hasError, 'badge-primary': !hasError }"
+            :class="{ 'badge-error': hasError }"
         >
           {{ tool.version }}
         </span>

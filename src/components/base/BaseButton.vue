@@ -6,6 +6,7 @@
         class="btn btn-subtle"
         v-bind="$attrs"
         :disabled="disabled ? true : undefined"
+        :aria-disabled="disabled ? true : undefined"
         activeClass="border-primary"
     >
       <slot v-if="loading" name="loader">

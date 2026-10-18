@@ -47,7 +47,7 @@
                     </label>
                   </li>
                 </ul>
-                <p v-else class="px-4 py-3 text-sm text-base-content/60">
+                <p v-else class="px-4 py-3 text-sm text-base-content/75">
                   {{ t('media.preferences.subtitles.languages.noneManual') }}
                 </p>
               </section>
@@ -71,7 +71,7 @@
                     </label>
                   </li>
                 </ul>
-                <p v-else class="px-4 py-3 text-sm text-base-content/60">
+                <p v-else class="px-4 py-3 text-sm text-base-content/75">
                   {{ t('media.preferences.subtitles.languages.noneAuto') }}
                 </p>
               </section>
@@ -82,7 +82,7 @@
                 {{ t('subtitles.options.languages.selected') }}
               </span>
               <template v-if="isAllSelected">
-                <span class="badge badge-soft badge-info">
+                <span class="badge badge-info">
                   {{ t('subtitles.options.languages.allSelected') }}
                 </span>
               </template>

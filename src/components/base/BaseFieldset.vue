@@ -4,7 +4,7 @@
       class="fieldset-legend absolute top-0 left-0 text-lg"
     >
       {{ legend }}
-      <div v-if="badge" class="badge badge-soft badge-info">{{ badge }}</div>
+      <div v-if="badge" class="badge badge-info">{{ badge }}</div>
     </legend>
     <p class="label mt-8 mb-2">{{ label }}</p>
     <slot/>

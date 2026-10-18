@@ -211,7 +211,8 @@ function check(condition: unknown, message: string): asserts condition {
 interface TestCase {
   name: string;
   network?: boolean;
-  run: (ctx: Context) => Promise<void>;
+  /** Returns a reason when the test could not run (e.g. nothing to test against today). */
+  run: (ctx: Context) => Promise<void | { skipped: string }>;
 }
 
 const tests: TestCase[] = [
@@ -529,6 +530,46 @@ const tests: TestCase[] = [
     },
   },
   {
+    name: 'scheduled-stream',
+    network: true,
+    async run(ctx) {
+      ctx.seedTools();
+      // A stream that NASA has announced but not started; there is usually one.
+      let upcoming = '';
+      try {
+        upcoming = execFileSync(join(ctx.bin, 'yt-dlp'), [
+          '--flat-playlist', '--playlist-end', '15', '--print', '%(live_status)s %(id)s',
+          'https://www.youtube.com/@NASA/streams',
+        ], { timeout: 90_000, env: { ...process.env, PATH: `${ctx.bin}${delimiter}${process.env.PATH}` } })
+          .toString().split('\n').find(l => l.startsWith('is_upcoming '))?.split(' ')[1] ?? '';
+      } catch {
+        upcoming = '';
+      }
+      if (!upcoming) return { skipped: 'no scheduled stream found' };
+
+      const s = await ctx.start();
+      await homeReady(s);
+      await s.addLink(`https://www.youtube.com/watch?v=${upcoming}`);
+      await s.waitFor('a scheduled card', () => s.exec<boolean>(`
+        const card = document.querySelector('article');
+        return !!card && card.innerText.includes('SCHEDULED') && !!card.querySelector('[title="Download individually"]');`), 90_000);
+      const text = await s.text();
+      check(/Scheduled live stream: it starts .*\d{4}/.test(text), 'the start time is not shown');
+      await s.click('article [title="Download individually"]');
+      await s.waitForText('Waiting for the stream to start (', 90_000);
+      // yt-dlp counts down every second while it waits: that does not go to the logs.
+      await new Promise(r => setTimeout(r, 3_000));
+      await s.click('article [title="Show metadata"]');
+      await s.waitFor('the metadata page', async () => (await s.route()).startsWith('/group/'), 10_000);
+      await s.go(`${(await s.route()).replace(/\/$/, '')}/logs`);
+      await s.waitForText('[wait] Waiting for', 10_000);
+      check(!(await s.text()).includes('Remaining time until next attempt'), 'the countdown is in the logs');
+      await s.go('/');
+      await s.click('article [title="Stop and save recording"]');
+      await s.waitForSelector('article [title="Resume download"]', 15_000);
+    },
+  },
+  {
     name: 'small-window',
     async run(ctx) {
       ctx.seedTools();
@@ -557,7 +598,7 @@ async function main(): Promise<void> {
   selected.sort((a, b) => Number(b.name === 'install-from-scratch') - Number(a.name === 'install-from-scratch'));
 
   let media: MediaServer | null = null;
-  const results: { name: string; ok: boolean; seconds: number; error?: string }[] = [];
+  const results: { name: string; ok: boolean; skipped?: string; seconds: number; error?: string }[] = [];
   for (const test of selected) {
     if (!media && existsSync(join(TOOLS, 'ffmpeg'))) {
       makeClips(join(TOOLS, 'ffmpeg'), join(CACHE, 'media'));
@@ -567,9 +608,10 @@ async function main(): Promise<void> {
     const started = Date.now();
     process.stdout.write(`${test.name} … `);
     try {
-      await test.run(ctx);
-      results.push({ name: test.name, ok: true, seconds: (Date.now() - started) / 1000 });
-      console.log('ok');
+      const outcome = await test.run(ctx);
+      const skipped = outcome ? outcome.skipped : undefined;
+      results.push({ name: test.name, ok: true, skipped, seconds: (Date.now() - started) / 1000 });
+      console.log(skipped ? `skipped: ${skipped}` : 'ok');
     } catch (e) {
       const error = e instanceof Error ? e.message : String(e);
       results.push({ name: test.name, ok: false, seconds: (Date.now() - started) / 1000, error });
@@ -589,8 +631,9 @@ async function main(): Promise<void> {
   await media?.close();
 
   const failed = results.filter(r => !r.ok);
-  console.log(`\n${results.length - failed.length} passed, ${failed.length} failed`);
-  for (const r of results) console.log(`  ${r.ok ? 'ok    ' : 'FAILED'} ${r.name} (${r.seconds.toFixed(1)} s)`);
+  const skipped = results.filter(r => r.skipped);
+  console.log(`\n${results.length - failed.length - skipped.length} passed, ${failed.length} failed, ${skipped.length} skipped`);
+  for (const r of results) console.log(`  ${r.ok ? (r.skipped ? 'skip  ' : 'ok    ') : 'FAILED'} ${r.name} (${r.seconds.toFixed(1)} s)`);
   process.exit(failed.length ? 1 : 0);
 }
 

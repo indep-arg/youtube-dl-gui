@@ -1077,7 +1077,8 @@
         "clear": "Limpar {label}"
       },
       "toolCard": {
-        "failed": "Falha ao instalar esta ferramenta. Expanda para obter mais informações."
+        "failed": "Falha ao instalar esta ferramenta. Expanda para obter mais informações.",
+        "reused": "Already downloaded together with another tool."
       }
     }
   },

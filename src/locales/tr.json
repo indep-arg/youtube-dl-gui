@@ -1077,7 +1077,8 @@
         "clear": "Temizle {label}"
       },
       "toolCard": {
-        "failed": "Bu aracı indirme başarısız oldu. Daha fazla bilgi için genişletin."
+        "failed": "Bu aracı indirme başarısız oldu. Daha fazla bilgi için genişletin.",
+        "reused": "Already downloaded together with another tool."
       }
     }
   },

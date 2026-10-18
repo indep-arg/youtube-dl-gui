@@ -1077,7 +1077,8 @@
         "clear": "Limpiar {label}"
       },
       "toolCard": {
-        "failed": "Error al instalar esta herramienta. Expandir para ver más información."
+        "failed": "Error al instalar esta herramienta. Expandir para ver más información.",
+        "reused": "Ya descargado junto con otra herramienta."
       }
     }
   },

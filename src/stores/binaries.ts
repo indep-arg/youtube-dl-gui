@@ -37,6 +37,7 @@ export const useBinariesStore = defineStore('binaries', () => {
     const tool = tools.value[payload.tool];
     tool.total = payload.total;
     tool.received = payload.received;
+    tool.reused = payload.reused;
     tool.percent = Math.round(tool.received / tool.total * 100);
   }
 

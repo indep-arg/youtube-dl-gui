@@ -1077,7 +1077,8 @@
         "clear": "Fjern {label}"
       },
       "toolCard": {
-        "failed": "Kunne ikke installere dette verktøyet. Utvid for mer informasjon."
+        "failed": "Kunne ikke installere dette verktøyet. Utvid for mer informasjon.",
+        "reused": "Already downloaded together with another tool."
       }
     }
   },

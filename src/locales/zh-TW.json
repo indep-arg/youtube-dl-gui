@@ -1077,7 +1077,8 @@
         "clear": "清除 {label}"
       },
       "toolCard": {
-        "failed": "安裝此工具失敗。展開以取得更多資訊。"
+        "failed": "安裝此工具失敗。展開以取得更多資訊。",
+        "reused": "Already downloaded together with another tool."
       }
     }
   },

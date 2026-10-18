@@ -1077,7 +1077,8 @@
         "clear": "Effacer {label}"
       },
       "toolCard": {
-        "failed": "Échec de l’installation de cet outil. Développez pour plus d’informations."
+        "failed": "Échec de l’installation de cet outil. Développez pour plus d’informations.",
+        "reused": "Already downloaded together with another tool."
       }
     }
   },

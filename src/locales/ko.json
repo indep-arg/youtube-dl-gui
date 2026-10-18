@@ -1077,7 +1077,8 @@
         "clear": "{label} 지우기"
       },
       "toolCard": {
-        "failed": "이 도구를 설치하지 못했습니다. 더 많은 정보를 보려면 펼치세요."
+        "failed": "이 도구를 설치하지 못했습니다. 더 많은 정보를 보려면 펼치세요.",
+        "reused": "Already downloaded together with another tool."
       }
     }
   },

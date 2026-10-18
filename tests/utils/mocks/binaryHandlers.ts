@@ -28,6 +28,7 @@ export const binaryHandlers: Record<string, IPCHandler> = {
             tool: window.E2E.binaries?.check[0] ?? 'yt-dlp',
             received: 1024 * 1024 * 5,
             total: 1024 * 1024 * 10,
+            reused: false,
           });
         }, 1000);
         setTimeout((): void => {

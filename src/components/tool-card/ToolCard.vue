@@ -47,10 +47,13 @@
           {{ tool.version }}
         </span>
       </section>
-      <p v-if="!hasError && tool.total > 0" class="mt-2">
+      <p v-if="!hasError && tool.reused" class="mt-2">
+        {{ t('components.base.toolCard.reused') }}
+      </p>
+      <p v-else-if="!hasError && tool.total > 0" class="mt-2">
         {{ t('common.divide', { left: formatBytes(tool.received), right: formatBytes(tool.total) }) }}
       </p>
-      <details v-else class="collapse collapse-arrow bg-base-200 list-none">
+      <details v-else-if="hasError" class="collapse collapse-arrow bg-base-200 list-none">
         <summary class="collapse-title font-semibold py-2 px-4">
           {{ t('components.base.toolCard.failed') }}
         </summary>

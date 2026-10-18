@@ -1077,7 +1077,8 @@
         "clear": "Azzera {label}"
       },
       "toolCard": {
-        "failed": "Impossibile installare questo strumento. Per ulteriori info espandi."
+        "failed": "Impossibile installare questo strumento. Per ulteriori info espandi.",
+        "reused": "Already downloaded together with another tool."
       }
     }
   },

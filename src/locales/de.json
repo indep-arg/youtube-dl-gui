@@ -1077,7 +1077,8 @@
         "clear": "{label} löschen"
       },
       "toolCard": {
-        "failed": "Dieses Tool konnte nicht installiert werden. Erweitere für weitere Informationen."
+        "failed": "Dieses Tool konnte nicht installiert werden. Erweitere für weitere Informationen.",
+        "reused": "Already downloaded together with another tool."
       }
     }
   },

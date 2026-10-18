@@ -11,6 +11,7 @@ export interface BinaryDownloadProgressPayload {
   tool: string;
   received: number;
   total: number;
+  reused: boolean;
 }
 
 export interface BinaryDownloadCompletePayload {
@@ -30,4 +31,6 @@ export interface BinaryProgress {
   percent: number;
   error?: string;
   version?: string;
+  /** The file was already downloaded for another tool: nothing is downloaded for this one. */
+  reused?: boolean;
 }

@@ -1077,7 +1077,8 @@
         "clear": "{label} wissen"
       },
       "toolCard": {
-        "failed": "Kon deze tool niet installeren. Vouw uit voor meer informatie."
+        "failed": "Kon deze tool niet installeren. Vouw uit voor meer informatie.",
+        "reused": "Already downloaded together with another tool."
       }
     }
   },

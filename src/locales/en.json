@@ -1077,7 +1077,8 @@
         "clear": "Clear {label}"
       },
       "toolCard": {
-        "failed": "Failed to install this tool. Expand for more information."
+        "failed": "Failed to install this tool. Expand for more information.",
+        "reused": "Already downloaded together with another tool."
       }
     }
   },

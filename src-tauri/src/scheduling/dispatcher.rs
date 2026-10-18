@@ -281,6 +281,9 @@ mod tests {
     ensure_group_running(&group_b);
 
     let sem = Arc::new(DynamicSemaphore::new(1));
+    // Hold the only permit while both groups are sent: otherwise the first
+    // entry of A can start and finish before B arrives, and A runs twice.
+    let held = sem.acquire_owned().await;
     let started: Arc<Mutex<Vec<String>>> = Arc::new(Mutex::new(Vec::new()));
     let done = Arc::new(Notify::new());
     let total = 4usize;
@@ -330,6 +333,7 @@ mod tests {
       .sender()
       .send(DispatchRequest::Pipeline((group_b.clone(), 2)))
       .unwrap();
+    drop(held);
 
     timeout(Duration::from_secs(5), done.notified())
       .await

@@ -104,10 +104,10 @@ impl PathsManager {
   }
 
   fn resolve_executable_path() -> Option<PathBuf> {
-    if let Ok(exe_path) = std::env::current_exe() {
-      if let Some(exe_dir) = exe_path.parent() {
-        return Some(exe_dir.to_path_buf());
-      }
+    if let Ok(exe_path) = std::env::current_exe()
+      && let Some(exe_dir) = exe_path.parent()
+    {
+      return Some(exe_dir.to_path_buf());
     }
 
     None

@@ -1,5 +1,5 @@
-use crate::state::config_models::Config;
 use crate::SharedConfig;
+use crate::state::config_models::Config;
 use tauri::{AppHandle, State};
 
 #[tauri::command]

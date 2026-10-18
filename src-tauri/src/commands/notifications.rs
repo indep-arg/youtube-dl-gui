@@ -1,5 +1,5 @@
-use crate::state::config_models::NotificationBehavior;
 use crate::SharedConfig;
+use crate::state::config_models::NotificationBehavior;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use tauri::{AppHandle, Manager, State};
@@ -63,11 +63,11 @@ pub fn notify(
     NotificationBehavior::Always => {}
     NotificationBehavior::Never => return Ok(()),
     NotificationBehavior::OnBackground => {
-      if let Some(window) = app.get_webview_window("main") {
-        if (window.is_visible().unwrap_or(false) || window.is_focused().unwrap_or(false)) && !force
-        {
-          return Ok(());
-        }
+      if let Some(window) = app.get_webview_window("main")
+        && (window.is_visible().unwrap_or(false) || window.is_focused().unwrap_or(false))
+        && !force
+      {
+        return Ok(());
       }
     }
   }

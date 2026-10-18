@@ -2,14 +2,14 @@ use std::collections::{HashMap, HashSet};
 use std::path::{Path, PathBuf};
 
 use crate::binaries::binaries_extractor::{
-  extract_tar, extract_tar_bundle, extract_tar_entries, extract_zip, extract_zip_bundle,
-  TarCompression,
+  TarCompression, extract_tar, extract_tar_bundle, extract_tar_entries, extract_zip,
+  extract_zip_bundle,
 };
 use crate::binaries::binaries_state::CheckResult;
 use crate::paths::PathsManager;
 use base64::Engine;
 use ed25519_dalek::{Signature, Verifier, VerifyingKey};
-use fs_extra::dir::{move_dir, CopyOptions};
+use fs_extra::dir::{CopyOptions, move_dir};
 use indexmap::IndexMap;
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
@@ -169,10 +169,10 @@ impl BinariesManager {
   ) -> Result<Vec<(&'a str, &'a ToolInfo)>, AnyError> {
     let mut plan = Vec::new();
     for (name, info) in &manifest.tools {
-      if let Some(allow) = allow {
-        if !allow.iter().any(|n| n == name) {
-          continue;
-        }
+      if let Some(allow) = allow
+        && !allow.iter().any(|n| n == name)
+      {
+        continue;
       }
 
       if Self::select_file(&info.files, arch).is_none() {

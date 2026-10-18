@@ -1,5 +1,5 @@
-use crate::models::ytdlp::YtdlpFormat;
 use crate::models::MediaTrack;
+use crate::models::ytdlp::YtdlpFormat;
 
 pub(super) fn has_audio_stream(fmt: &YtdlpFormat) -> bool {
   fmt.acodec.as_deref().is_some_and(|ac| ac != "none")

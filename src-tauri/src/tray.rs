@@ -1,6 +1,6 @@
+use crate::SharedConfig;
 use crate::i18n::I18nManager;
 use crate::models::payloads::ShortcutPayload;
-use crate::SharedConfig;
 use std::sync::Mutex;
 use tauri::menu::{MenuBuilder, MenuItem};
 use tauri::tray::{TrayIconBuilder, TrayIconId};

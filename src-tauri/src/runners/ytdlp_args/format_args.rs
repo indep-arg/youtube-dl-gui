@@ -1,5 +1,5 @@
-use crate::models::download::{AudioFormat, FormatOptions, VideoContainer};
 use crate::models::TrackType;
+use crate::models::download::{AudioFormat, FormatOptions, VideoContainer};
 use crate::state::config_models::OutputSettings;
 
 pub fn build_format_args(
@@ -298,10 +298,10 @@ impl TrackPreference {
         if let Some(lang) = non_empty(Some(lang)) {
           pref.language = Some(lang.to_string());
         }
-      } else if let Some(ch) = part.strip_prefix("channels:") {
-        if let Ok(value) = ch.trim().parse::<u32>() {
-          pref.channels = Some(value);
-        }
+      } else if let Some(ch) = part.strip_prefix("channels:")
+        && let Ok(value) = ch.trim().parse::<u32>()
+      {
+        pref.channels = Some(value);
       }
     }
     pref

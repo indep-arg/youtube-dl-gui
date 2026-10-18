@@ -1,5 +1,5 @@
-use crate::models::ytdlp::YtdlpFormat;
 use crate::models::YtdlpInfo;
+use crate::models::ytdlp::YtdlpFormat;
 
 pub(super) fn base_info(formats: Vec<YtdlpFormat>) -> YtdlpInfo {
   YtdlpInfo {

@@ -45,30 +45,30 @@ pub(super) fn process_formats(formats: &[YtdlpFormat]) -> ProcessedFormats {
   let mut aggregates: HashMap<String, FormatAggregate> = HashMap::new();
 
   for fmt in formats {
-    if let Some(vc) = &fmt.vcodec {
-      if is_real_video_codec(vc) {
-        insert_codec(&mut video_codecs, vc);
-      }
+    if let Some(vc) = &fmt.vcodec
+      && is_real_video_codec(vc)
+    {
+      insert_codec(&mut video_codecs, vc);
     }
-    if let Some(ac) = &fmt.acodec {
-      if ac != "none" {
-        insert_codec(&mut audio_codecs, ac);
-      }
+    if let Some(ac) = &fmt.acodec
+      && ac != "none"
+    {
+      insert_codec(&mut audio_codecs, ac);
     }
 
     let audio_track = has_audio_stream(fmt).then(|| to_track(fmt));
     let video_track = has_video_stream(fmt).then(|| to_track(fmt));
 
-    if let Some(track) = &audio_track {
-      if detected_audio_tracks.insert(track.id.clone()) {
-        audio_tracks.push(track.clone());
-      }
+    if let Some(track) = &audio_track
+      && detected_audio_tracks.insert(track.id.clone())
+    {
+      audio_tracks.push(track.clone());
     }
 
-    if let Some(track) = &video_track {
-      if detected_video_tracks.insert(track.id.clone()) {
-        video_tracks.push(track.clone());
-      }
+    if let Some(track) = &video_track
+      && detected_video_tracks.insert(track.id.clone())
+    {
+      video_tracks.push(track.clone());
     }
 
     if let Some(group) = detect_format_group(fmt) {
@@ -85,25 +85,25 @@ pub(super) fn process_formats(formats: &[YtdlpFormat]) -> ProcessedFormats {
           video_track_ids: HashSet::new(),
         });
 
-      if let Some(ac) = &fmt.acodec {
-        if ac != "none" {
-          insert_codec(&mut entry.audio_codecs, ac);
-        }
+      if let Some(ac) = &fmt.acodec
+        && ac != "none"
+      {
+        insert_codec(&mut entry.audio_codecs, ac);
       }
-      if let Some(vc) = &fmt.vcodec {
-        if is_real_video_codec(vc) {
-          insert_codec(&mut entry.video_codecs, vc);
-        }
+      if let Some(vc) = &fmt.vcodec
+        && is_real_video_codec(vc)
+      {
+        insert_codec(&mut entry.video_codecs, vc);
       }
-      if let Some(track) = &audio_track {
-        if track.id != "auto" {
-          entry.audio_track_ids.insert(track.id.clone());
-        }
+      if let Some(track) = &audio_track
+        && track.id != "auto"
+      {
+        entry.audio_track_ids.insert(track.id.clone());
       }
-      if let Some(track) = &video_track {
-        if track.id != "auto" {
-          entry.video_track_ids.insert(track.id.clone());
-        }
+      if let Some(track) = &video_track
+        && track.id != "auto"
+      {
+        entry.video_track_ids.insert(track.id.clone());
       }
     }
   }
@@ -214,7 +214,7 @@ fn sort_media_format(a: &MediaFormat, b: &MediaFormat) -> Ordering {
 
 #[cfg(test)]
 mod tests {
-  use super::super::test_support::{make_format, make_group_format, GroupFormatSpec};
+  use super::super::test_support::{GroupFormatSpec, make_format, make_group_format};
   use super::process_formats;
   use crate::models::ytdlp::YtdlpFormat;
 
@@ -270,22 +270,30 @@ mod tests {
       .iter()
       .find(|fmt| fmt.height == Some(1080))
       .expect("1080p");
-    assert!(fmt1080
-      .audio_track_ids
-      .iter()
-      .any(|id| id == "lang:en|channels:2"));
-    assert!(fmt1080
-      .audio_track_ids
-      .iter()
-      .any(|id| id == "lang:fr|channels:2"));
-    assert!(fmt1080
-      .video_track_ids
-      .iter()
-      .any(|id| id == "lang:en|channels:2"));
-    assert!(fmt1080
-      .video_track_ids
-      .iter()
-      .any(|id| id == "lang:fr|channels:2"));
+    assert!(
+      fmt1080
+        .audio_track_ids
+        .iter()
+        .any(|id| id == "lang:en|channels:2")
+    );
+    assert!(
+      fmt1080
+        .audio_track_ids
+        .iter()
+        .any(|id| id == "lang:fr|channels:2")
+    );
+    assert!(
+      fmt1080
+        .video_track_ids
+        .iter()
+        .any(|id| id == "lang:en|channels:2")
+    );
+    assert!(
+      fmt1080
+        .video_track_ids
+        .iter()
+        .any(|id| id == "lang:fr|channels:2")
+    );
 
     let fmt720 = processed
       .media_formats
@@ -343,14 +351,18 @@ mod tests {
     assert!(fmt128.height.is_none());
     assert_eq!(fmt128.audio_codecs.len(), 1);
     assert_eq!(fmt128.audio_codecs[0].id, "aac");
-    assert!(fmt128
-      .audio_track_ids
-      .iter()
-      .any(|id| id == "lang:en|channels:2"));
-    assert!(fmt128
-      .audio_track_ids
-      .iter()
-      .any(|id| id == "lang:fr|channels:2"));
+    assert!(
+      fmt128
+        .audio_track_ids
+        .iter()
+        .any(|id| id == "lang:en|channels:2")
+    );
+    assert!(
+      fmt128
+        .audio_track_ids
+        .iter()
+        .any(|id| id == "lang:fr|channels:2")
+    );
     assert!(fmt128.video_track_ids.is_empty());
   }
 

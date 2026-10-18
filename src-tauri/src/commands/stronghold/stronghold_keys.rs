@@ -1,4 +1,4 @@
-use crate::stronghold::stronghold_state::{StrongholdState, CLIENT};
+use crate::stronghold::stronghold_state::{CLIENT, StrongholdState};
 use tauri::State;
 
 #[tauri::command]

@@ -12,7 +12,7 @@ mod tests;
 
 use crate::models::{ParsedMedia, ParsedSingleVideo, SubtitleInventory, YtdlpInfo};
 use chapters::process_chapters;
-use formats::{process_formats, ProcessedFormats};
+use formats::{ProcessedFormats, process_formats};
 use std::collections::{HashMap, HashSet};
 use tracks::auto_track;
 

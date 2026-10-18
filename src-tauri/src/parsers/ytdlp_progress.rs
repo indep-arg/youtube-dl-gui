@@ -238,11 +238,7 @@ impl YtdlpProgressParser {
     }
 
     fn get_or_empty<'a>(parts: &[&'a str], i: usize) -> &'a str {
-      if i < parts.len() {
-        parts[i]
-      } else {
-        ""
-      }
+      if i < parts.len() { parts[i] } else { "" }
     }
 
     const fn clamp01pct(p: f64) -> f64 {
@@ -421,11 +417,7 @@ fn extract_token_value<'a>(line: &'a str, token: &str) -> Option<&'a str> {
   let rest = &line[start..];
   let end = rest.find(char::is_whitespace).unwrap_or(rest.len());
   let value = rest[..end].trim();
-  if value.is_empty() {
-    None
-  } else {
-    Some(value)
-  }
+  if value.is_empty() { None } else { Some(value) }
 }
 
 fn parse_clock_to_secs(value: &str) -> Option<f64> {
@@ -451,7 +443,7 @@ fn parse_clock_to_secs(value: &str) -> Option<f64> {
 
 #[cfg(test)]
 mod tests {
-  use super::{progress_category_for_track_type, YtdlpProgressParser};
+  use super::{YtdlpProgressParser, progress_category_for_track_type};
   use crate::models::{ProgressCategory, ProgressEvent, ProgressStage, TrackType};
 
   #[test]
@@ -468,9 +460,11 @@ mod tests {
     };
 
     assert_eq!(progress.category, ProgressCategory::Video);
-    assert!(progress
-      .percentage
-      .is_some_and(|value| value > 48.0 && value < 49.0));
+    assert!(
+      progress
+        .percentage
+        .is_some_and(|value| value > 48.0 && value < 49.0)
+    );
     assert_eq!(progress.eta_secs, Some(13));
     assert_eq!(progress.speed_bps, None);
   }
@@ -479,9 +473,11 @@ mod tests {
   fn ignores_ffmpeg_progress_without_partial_duration() {
     let parser = YtdlpProgressParser::new("item", "group", ProgressCategory::Audio, None);
 
-    assert!(parser
-      .try_ffmpeg_progress_update("frame=1 time=00:00:05.00 speed=1.0x")
-      .is_none());
+    assert!(
+      parser
+        .try_ffmpeg_progress_update("frame=1 time=00:00:05.00 speed=1.0x")
+        .is_none()
+    );
   }
 
   #[test]

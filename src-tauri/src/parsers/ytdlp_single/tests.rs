@@ -52,14 +52,18 @@ fn parse_single_collects_codecs_from_muxed_formats() {
     panic!("expected single");
   };
 
-  assert!(single
-    .video_codecs
-    .iter()
-    .any(|codec| codec.id == "avc1" && codec.label == "avc1"));
-  assert!(single
-    .audio_codecs
-    .iter()
-    .any(|codec| codec.id == "mp4a.40.2" && codec.label == "AAC LC"));
+  assert!(
+    single
+      .video_codecs
+      .iter()
+      .any(|codec| codec.id == "avc1" && codec.label == "avc1")
+  );
+  assert!(
+    single
+      .audio_codecs
+      .iter()
+      .any(|codec| codec.id == "mp4a.40.2" && codec.label == "AAC LC")
+  );
 }
 
 #[test]

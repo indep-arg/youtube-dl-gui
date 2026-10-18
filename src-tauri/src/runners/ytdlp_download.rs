@@ -4,7 +4,7 @@ use crate::models::{
   MediaDiagnosticPayload, MediaFatalPayload, MediaProgressComplete, ProgressEvent,
 };
 use crate::parsers::ytdlp_error::{DiagnosticMatcher, YtdlpErrorParser};
-use crate::parsers::ytdlp_progress::{progress_category_for_track_type, YtdlpProgressParser};
+use crate::parsers::ytdlp_progress::{YtdlpProgressParser, progress_category_for_track_type};
 use crate::runners::ytdlp_runner::{YtdlpCommandEvent, YtdlpRunner};
 use crate::scheduling::download_pipeline::DownloadEntry;
 use crate::scheduling::group_state::subscribe_group;

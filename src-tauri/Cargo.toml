@@ -4,7 +4,7 @@ version = "2026.10.3"
 description = "Download videos from all over the web."
 license = "AGPL-3.0-or-later"
 authors = ["Jelle Glebbeek", "indep-arg"]
-edition = "2021"
+edition = "2024"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

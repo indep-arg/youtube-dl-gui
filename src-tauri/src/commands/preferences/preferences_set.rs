@@ -1,5 +1,5 @@
-use crate::state::preferences_models::Preferences;
 use crate::SharedPreferences;
+use crate::state::preferences_models::Preferences;
 use serde_json::Value;
 use tauri::{AppHandle, State};
 

@@ -26,21 +26,22 @@ pub async fn updater_check(
       available_version: None,
     });
   }
-  if let Some(update) = app.updater()?.check().await? {
-    tracing::info!("[updater] Update available: {}", update.version);
-    let mut s = store.lock().await;
-    s.bytes = None;
-    s.update = Some(update.clone());
-    Ok(UpdateCheck {
-      available: true,
-      current_version: current,
-      available_version: Some(update.version),
-    })
-  } else {
-    Ok(UpdateCheck {
+  match app.updater()?.check().await? {
+    Some(update) => {
+      tracing::info!("[updater] Update available: {}", update.version);
+      let mut s = store.lock().await;
+      s.bytes = None;
+      s.update = Some(update.clone());
+      Ok(UpdateCheck {
+        available: true,
+        current_version: current,
+        available_version: Some(update.version),
+      })
+    }
+    _ => Ok(UpdateCheck {
       available: false,
       current_version: current,
       available_version: None,
-    })
+    }),
   }
 }

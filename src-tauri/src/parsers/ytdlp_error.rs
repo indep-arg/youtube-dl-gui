@@ -86,17 +86,17 @@ impl DiagnosticMatcher {
       for p in &r.patterns {
         match p.kind {
           PatternKind::Substr => {
-            if let Some(needle) = &p.value_lower {
-              if msg_lower.contains(needle) {
-                return &r.code;
-              }
+            if let Some(needle) = &p.value_lower
+              && msg_lower.contains(needle)
+            {
+              return &r.code;
             }
           }
           PatternKind::Regex => {
-            if let Some(re) = &p.regex {
-              if re.is_match(msg) {
-                return &r.code;
-              }
+            if let Some(re) = &p.regex
+              && re.is_match(msg)
+            {
+              return &r.code;
             }
           }
         }
@@ -237,12 +237,12 @@ fn normalize_skip_message(line: &str) -> Option<String> {
 }
 
 fn split_component(s: &'_ str) -> (Option<String>, Cow<'_, str>) {
-  if let Some(rest) = s.strip_prefix('[') {
-    if let Some(end) = rest.find(']') {
-      let comp = rest[..end].to_string();
-      let msg = rest[end + 1..].trim();
-      return (Some(comp), Cow::Borrowed(msg));
-    }
+  if let Some(rest) = s.strip_prefix('[')
+    && let Some(end) = rest.find(']')
+  {
+    let comp = rest[..end].to_string();
+    let msg = rest[end + 1..].trim();
+    return (Some(comp), Cow::Borrowed(msg));
   }
   (None, Cow::Borrowed(s))
 }
@@ -252,10 +252,10 @@ fn split_video_id(s: &str) -> (Option<String>, Cow<'_, str>) {
   let first = parts.next().unwrap_or("").trim();
   let rest = parts.next();
 
-  if let Some(msg) = rest {
-    if is_probable_id(first) {
-      return (Some(first.to_string()), Cow::Borrowed(msg.trim()));
-    }
+  if let Some(msg) = rest
+    && is_probable_id(first)
+  {
+    return (Some(first.to_string()), Cow::Borrowed(msg.trim()));
   }
 
   (None, Cow::Borrowed(s.trim()))
@@ -313,9 +313,11 @@ mod tests {
 
   #[test]
   fn ignores_non_skip_download_lines() {
-    assert!(parser()
-      .parse_line("[download] Destination: /tmp/video.mp4")
-      .is_none());
+    assert!(
+      parser()
+        .parse_line("[download] Destination: /tmp/video.mp4")
+        .is_none()
+    );
   }
 
   #[test]

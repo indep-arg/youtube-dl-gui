@@ -1,5 +1,5 @@
-use tauri::menu::MenuBuilder;
 use tauri::AppHandle;
+use tauri::menu::MenuBuilder;
 
 /// Windows and Linux get an empty menu bar: everything is reachable from the window itself.
 pub fn setup_menu(handle: &AppHandle) {

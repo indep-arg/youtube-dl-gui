@@ -1,5 +1,5 @@
-use crate::state::library::{add_to_history, remove_from_history, HistoryEntry, MAX_HISTORY};
 use crate::SharedLibrary;
+use crate::state::library::{HistoryEntry, MAX_HISTORY, add_to_history, remove_from_history};
 use serde_json::json;
 use tauri::{AppHandle, State};
 

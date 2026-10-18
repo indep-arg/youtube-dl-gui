@@ -1,8 +1,8 @@
+use crate::models::TrackType;
 use crate::models::download::{
   AudioFormat, AudioPostprocessPreset, FormatOptions, PartialDownloadOverride, TranscodePolicy,
   VideoContainer, VideoPostprocessMode, VideoPostprocessPreset,
 };
-use crate::models::TrackType;
 use crate::state::config_models::{AudioOutputSettings, OutputSettings, VideoOutputSettings};
 use shlex::split as shell_split;
 
@@ -273,11 +273,11 @@ fn ensure_video_reencode_allowed(video: &VideoOutputSettings, message: &str) -> 
 fn build_audio_ffmpeg_postprocess_args(audio: &AudioOutputSettings) -> Result<Vec<String>, String> {
   let mut args = Vec::new();
 
-  if matches!(audio.postprocess_preset, AudioPostprocessPreset::Custom) {
-    if let Some(custom_args) = parse_custom_postprocess_args(&audio.postprocess_args)? {
-      args.push("--postprocessor-args".into());
-      args.push(format!("ffmpeg:{custom_args}"));
-    }
+  if matches!(audio.postprocess_preset, AudioPostprocessPreset::Custom)
+    && let Some(custom_args) = parse_custom_postprocess_args(&audio.postprocess_args)?
+  {
+    args.push("--postprocessor-args".into());
+    args.push(format!("ffmpeg:{custom_args}"));
   }
 
   Ok(args)

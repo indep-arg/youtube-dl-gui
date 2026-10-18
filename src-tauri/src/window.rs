@@ -1,5 +1,5 @@
-use crate::state::json_merge;
 use crate::SharedPreferences;
+use crate::state::json_merge;
 use serde::Serialize;
 use serde_json::Value;
 use std::sync::Arc;
@@ -178,22 +178,18 @@ pub fn restore_main_window(app: &AppHandle<Wry>) {
     true
   };
 
-  if has_size {
-    if let Err(e) = window.set_size(PhysicalSize::new(s.width, s.height)) {
-      tracing::warn!("Failed to restore window size: {e}");
-    }
+  if has_size && let Err(e) = window.set_size(PhysicalSize::new(s.width, s.height)) {
+    tracing::warn!("Failed to restore window size: {e}");
   }
 
-  if ok_to_apply_position {
-    if let Err(e) = window.set_position(PhysicalPosition::new(rx, ry)) {
-      tracing::warn!("Failed to restore window position: {e}");
-    }
+  if ok_to_apply_position && let Err(e) = window.set_position(PhysicalPosition::new(rx, ry)) {
+    tracing::warn!("Failed to restore window position: {e}");
   }
 
-  if s.maximized {
-    if let Err(e) = window.maximize() {
-      tracing::warn!("Failed to restore maximized state: {e}");
-    }
+  if s.maximized
+    && let Err(e) = window.maximize()
+  {
+    tracing::warn!("Failed to restore maximized state: {e}");
   }
 }
 
@@ -300,8 +296,8 @@ pub fn setup_close_behaviour(app: &AppHandle<Wry>) {
     };
 
     {
-      use crate::state::config_models::CloseBehavior;
       use crate::SharedConfig;
+      use crate::state::config_models::CloseBehavior;
 
       let cfg_handle = match app_handle.try_state::<SharedConfig>() {
         Some(h) => h,

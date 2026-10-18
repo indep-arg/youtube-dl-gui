@@ -2,12 +2,12 @@ use super::{
   build_format_args, build_input_filter_args, build_live_args, build_location_args,
   build_output_args, build_performance_args,
 };
+use crate::models::TrackType;
 use crate::models::download::{
   AudioFormat, AudioPostprocessPreset, DownloadSection, FormatOptions, InputFilterOptions,
   PartialDownloadOverride, PlaylistMode, TranscodePolicy, VideoContainer, VideoPostprocessMode,
   VideoPostprocessPreset,
 };
-use crate::models::TrackType;
 use crate::runners::template_context::TemplateContext;
 use crate::state::config_models::{OutputSettings, PerformanceSettings};
 use crate::state::preferences_models::PathPreferences;

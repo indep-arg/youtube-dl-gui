@@ -9,7 +9,7 @@ use crate::state::config_models::{
 use crate::stronghold::stronghold_state::AuthSecrets;
 
 macro_rules! apply_nested_patch {
-  ($patch:expr, $target:expr, $field:ident) => {
+  ($patch:expr_2021, $target:expr_2021, $field:ident) => {
     if let Some(value) = $patch.$field.as_ref() {
       value.apply_to(&mut $target.$field);
     }
@@ -17,7 +17,7 @@ macro_rules! apply_nested_patch {
 }
 
 macro_rules! apply_copy_patch {
-  ($patch:expr, $target:expr, $field:ident) => {
+  ($patch:expr_2021, $target:expr_2021, $field:ident) => {
     if let Some(value) = $patch.$field {
       $target.$field = value;
     }
@@ -25,7 +25,7 @@ macro_rules! apply_copy_patch {
 }
 
 macro_rules! apply_clone_patch {
-  ($patch:expr, $target:expr, $field:ident) => {
+  ($patch:expr_2021, $target:expr_2021, $field:ident) => {
     if let Some(value) = $patch.$field.as_ref() {
       $target.$field = value.clone();
     }

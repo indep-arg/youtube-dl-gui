@@ -27,31 +27,31 @@ fn parse_codec_label(codec: &str) -> MediaCodec {
 
   let lower = raw.to_lowercase();
 
-  if lower.starts_with("av01.") {
-    if let Some(label) = parse_av1_codec_label(raw) {
-      return MediaCodec {
-        id: raw.to_string(),
-        label,
-      };
-    }
+  if lower.starts_with("av01.")
+    && let Some(label) = parse_av1_codec_label(raw)
+  {
+    return MediaCodec {
+      id: raw.to_string(),
+      label,
+    };
   }
 
-  if lower.starts_with("avc1.") {
-    if let Some(label) = parse_avc1_codec_label(raw) {
-      return MediaCodec {
-        id: raw.to_string(),
-        label,
-      };
-    }
+  if lower.starts_with("avc1.")
+    && let Some(label) = parse_avc1_codec_label(raw)
+  {
+    return MediaCodec {
+      id: raw.to_string(),
+      label,
+    };
   }
 
-  if lower.starts_with("mp4a.") {
-    if let Some(label) = parse_mp4a_codec_label(raw) {
-      return MediaCodec {
-        id: raw.to_string(),
-        label,
-      };
-    }
+  if lower.starts_with("mp4a.")
+    && let Some(label) = parse_mp4a_codec_label(raw)
+  {
+    return MediaCodec {
+      id: raw.to_string(),
+      label,
+    };
   }
 
   let label = match lower.as_str() {
@@ -96,7 +96,7 @@ fn parse_av1_codec_label(codec: &str) -> Option<String> {
     other => {
       return Some(format!(
         "AV1 Profile {other}, Level {parsed_level}, {bit_depth}-bit"
-      ))
+      ));
     }
   };
 

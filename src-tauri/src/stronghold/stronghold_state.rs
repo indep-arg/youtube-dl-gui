@@ -1,5 +1,5 @@
-use base64::engine::general_purpose;
 use base64::Engine;
+use base64::engine::general_purpose;
 use rand::Rng;
 use std::path::PathBuf;
 use std::sync::Mutex;
@@ -130,11 +130,11 @@ pub fn init_on_startup(app: &AppHandle, state: &State<StrongholdState>) {
       if let Some(b64) = opt {
         match general_purpose::STANDARD.decode(&b64) {
           Ok(key_bytes) => {
-            if let Err(_e) = open_with_key(state, &key_bytes) {
-              if let Err(setup_err) = create_and_store_new(app, state) {
-                *state.init_error.lock().unwrap() =
-                  Some(format!("Recreate vault failed after bad key: {setup_err}"));
-              }
+            if let Err(_e) = open_with_key(state, &key_bytes)
+              && let Err(setup_err) = create_and_store_new(app, state)
+            {
+              *state.init_error.lock().unwrap() =
+                Some(format!("Recreate vault failed after bad key: {setup_err}"));
             }
           }
           Err(_) => {

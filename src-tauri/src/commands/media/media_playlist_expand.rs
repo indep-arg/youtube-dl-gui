@@ -1,9 +1,9 @@
-use crate::models::download::DownloadOverrides;
+use crate::FetchSender;
 use crate::models::PlaylistEntry;
+use crate::models::download::DownloadOverrides;
 use crate::scheduling::dispatcher::DispatchRequest;
 use crate::scheduling::fetch_pipeline::FetchRequest;
 use crate::scheduling::group_state::ensure_group_running;
-use crate::FetchSender;
 use tauri::State;
 
 #[tauri::command]

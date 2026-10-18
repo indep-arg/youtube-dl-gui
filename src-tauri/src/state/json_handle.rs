@@ -1,5 +1,5 @@
 use crate::paths::PathsManager;
-use crate::state::json_state::{json_merge, JsonBackedState};
+use crate::state::json_state::{JsonBackedState, json_merge};
 use arc_swap::ArcSwap;
 use serde_json::{Map, Value};
 use std::{error::Error, sync::Arc};

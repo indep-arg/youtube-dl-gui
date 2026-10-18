@@ -1,5 +1,5 @@
 use crate::SharedConfig;
-use include_dir::{include_dir, Dir};
+use include_dir::{Dir, include_dir};
 use serde_json::Value;
 use std::{collections::HashMap, sync::RwLock};
 use tauri::{AppHandle, Manager};
@@ -76,10 +76,10 @@ impl I18nManager {
       return Some(s.to_string());
     }
 
-    if locale != FALLBACK_LOCALE {
-      if let Some(s) = lookup_str(self.locale_root(FALLBACK_LOCALE), key) {
-        return Some(s.to_string());
-      }
+    if locale != FALLBACK_LOCALE
+      && let Some(s) = lookup_str(self.locale_root(FALLBACK_LOCALE), key)
+    {
+      return Some(s.to_string());
     }
 
     None
@@ -188,10 +188,10 @@ fn resolve_locale_from_sources(
       if locales.contains_key(&norm) {
         return norm;
       }
-      if let Some(primary) = norm.split('-').next() {
-        if locales.contains_key(primary) {
-          return primary.to_string();
-        }
+      if let Some(primary) = norm.split('-').next()
+        && locales.contains_key(primary)
+      {
+        return primary.to_string();
       }
     }
   }
@@ -202,10 +202,10 @@ fn resolve_locale_from_sources(
     if locales.contains_key(&norm) {
       return norm;
     }
-    if let Some(primary) = norm.split('-').next() {
-      if locales.contains_key(primary) {
-        return primary.to_string();
-      }
+    if let Some(primary) = norm.split('-').next()
+      && locales.contains_key(primary)
+    {
+      return primary.to_string();
     }
   }
 

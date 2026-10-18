@@ -1,5 +1,5 @@
-use crate::models::ytdlp::YtdlpChapter;
 use crate::models::Chapter;
+use crate::models::ytdlp::YtdlpChapter;
 
 pub(super) fn process_chapters(chapters: Option<&[YtdlpChapter]>) -> Vec<Chapter> {
   chapters

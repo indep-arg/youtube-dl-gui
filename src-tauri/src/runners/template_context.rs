@@ -87,17 +87,18 @@ impl TemplateContext {
           let ty = fmt.chars().last().unwrap_or('s');
           let width_str = &fmt[..fmt.len().saturating_sub(1)];
 
-          if ty == 'd' && !width_str.is_empty() {
-            if let Ok(num) = out.trim().parse::<i64>() {
-              let pad_zero = width_str.starts_with('0');
-              let width: usize = width_str.trim_start_matches('0').parse().unwrap_or(0);
-              if width > 0 {
-                out = if pad_zero {
-                  format!("{num:0width$}")
-                } else {
-                  format!("{num:width$}")
-                };
-              }
+          if ty == 'd'
+            && !width_str.is_empty()
+            && let Ok(num) = out.trim().parse::<i64>()
+          {
+            let pad_zero = width_str.starts_with('0');
+            let width: usize = width_str.trim_start_matches('0').parse().unwrap_or(0);
+            if width > 0 {
+              out = if pad_zero {
+                format!("{num:0width$}")
+              } else {
+                format!("{num:width$}")
+              };
             }
           }
 

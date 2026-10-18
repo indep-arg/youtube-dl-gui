@@ -164,11 +164,11 @@ mod tests {
   use super::*;
   use crate::scheduling::concurrency::DynamicSemaphore;
   use crate::scheduling::group_state::ensure_group_running;
-  use std::sync::atomic::{AtomicUsize, Ordering};
   use std::sync::Arc;
+  use std::sync::atomic::{AtomicUsize, Ordering};
   use tauri::test::mock_app;
   use tokio::sync::{Mutex, Notify};
-  use tokio::time::{sleep, timeout, Duration};
+  use tokio::time::{Duration, sleep, timeout};
 
   #[derive(Clone)]
   struct TestEntry {

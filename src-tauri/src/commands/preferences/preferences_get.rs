@@ -1,5 +1,5 @@
-use crate::state::preferences_models::Preferences;
 use crate::SharedPreferences;
+use crate::state::preferences_models::Preferences;
 use tauri::State;
 
 #[tauri::command]

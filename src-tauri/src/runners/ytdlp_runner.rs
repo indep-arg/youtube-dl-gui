@@ -1,6 +1,6 @@
-use crate::models::download::{DownloadOverrides, FormatOptions, PlaylistMode};
 use crate::models::SubtitleInventory;
 use crate::models::TrackType;
+use crate::models::download::{DownloadOverrides, FormatOptions, PlaylistMode};
 use crate::paths::PathsManager;
 use crate::runners::override_resolver::resolve_with_patch;
 use crate::runners::template_context::TemplateContext;
@@ -9,7 +9,7 @@ use crate::runners::ytdlp_args::{
   build_output_args, build_performance_args,
 };
 use crate::runners::ytdlp_process::{
-  configure_command, kill_platform_process, platform_process_from_child, PlatformProcess,
+  PlatformProcess, configure_command, kill_platform_process, platform_process_from_child,
 };
 use crate::state::config_models::{
   AuthSettings, Config, NetworkSettings, OutputSettings, SponsorBlockSettings, SubtitleSettings,
@@ -24,7 +24,7 @@ use std::process::{Command, ExitStatus, Stdio};
 use std::sync::Arc;
 use std::thread;
 use tauri::{AppHandle, Manager};
-use tokio::sync::mpsc::{unbounded_channel, UnboundedReceiver, UnboundedSender};
+use tokio::sync::mpsc::{UnboundedReceiver, UnboundedSender, unbounded_channel};
 
 #[derive(Debug, Clone)]
 pub struct TerminatedPayload {
@@ -134,10 +134,10 @@ impl<'a> YtdlpRunner<'a> {
     }
 
     let mut effective_auth_secrets = AuthSecrets::default();
-    if let Some(sh_state) = self.app.try_state::<StrongholdState>() {
-      if let Ok(secrets) = sh_state.load_auth_secrets() {
-        effective_auth_secrets = secrets;
-      }
+    if let Some(sh_state) = self.app.try_state::<StrongholdState>()
+      && let Ok(secrets) = sh_state.load_auth_secrets()
+    {
+      effective_auth_secrets = secrets;
     }
     let effective_auth_secrets = resolve_with_patch(&effective_auth_secrets, auth_overrides);
     self.apply_auth_secrets(effective_auth_secrets);
@@ -536,14 +536,12 @@ fn build_network_args(network: &NetworkSettings) -> Vec<String> {
   let mut args = Vec::new();
 
   let proxy_enabled = network.enable_proxy.is_some_and(|enabled| enabled);
-  if proxy_enabled {
-    if let Some(proxy) = network.proxy.as_ref() {
-      args.push("--proxy".to_string());
-      args.push(proxy.clone());
-      // Only relevant for HTTPS proxies whose certificate chain cannot be verified.
-      if network.no_check_certificates {
-        args.push("--no-check-certificates".to_string());
-      }
+  if proxy_enabled && let Some(proxy) = network.proxy.as_ref() {
+    args.push("--proxy".to_string());
+    args.push(proxy.clone());
+    // Only relevant for HTTPS proxies whose certificate chain cannot be verified.
+    if network.no_check_certificates {
+      args.push("--no-check-certificates".to_string());
     }
   }
 

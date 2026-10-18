@@ -113,7 +113,7 @@ fn safe_join(root: &Path, candidate: &Path) -> Result<PathBuf, ExtractError> {
       Component::Normal(p) => out.push(p),
       Component::CurDir => {}
       Component::ParentDir | Component::Prefix(_) | Component::RootDir => {
-        return Err(ExtractError::PathTraversal(candidate.display().to_string()))
+        return Err(ExtractError::PathTraversal(candidate.display().to_string()));
       }
     }
   }
@@ -537,16 +537,15 @@ fn list_tree(root: &Path, max: usize) -> EntriesDisplay {
     }
     let rel = p.strip_prefix(base).unwrap_or(p);
     acc.push(rel.to_string_lossy().into_owned());
-    if let Ok(meta) = std::fs::metadata(p) {
-      if meta.is_dir() {
-        if let Ok(rd) = std::fs::read_dir(p) {
-          for ch in rd.flatten().map(|e| e.path()) {
-            if acc.len() >= max {
-              break;
-            }
-            walk(acc, base, &ch, max);
-          }
+    if let Ok(meta) = std::fs::metadata(p)
+      && meta.is_dir()
+      && let Ok(rd) = std::fs::read_dir(p)
+    {
+      for ch in rd.flatten().map(|e| e.path()) {
+        if acc.len() >= max {
+          break;
         }
+        walk(acc, base, &ch, max);
       }
     }
   }
@@ -557,7 +556,7 @@ fn list_tree(root: &Path, max: usize) -> EntriesDisplay {
 
 #[cfg(test)]
 mod tests {
-  use super::{extract_tar, extract_tar_entries, ExtractError, TarCompression};
+  use super::{ExtractError, TarCompression, extract_tar, extract_tar_entries};
   use std::io::Write;
   use std::path::{Path, PathBuf};
 

@@ -1,8 +1,9 @@
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use std::path::{Path, PathBuf};
 
 use crate::binaries::binaries_extractor::{
-  extract_tar, extract_tar_bundle, extract_zip, extract_zip_bundle, TarCompression,
+  extract_tar, extract_tar_bundle, extract_tar_entries, extract_zip, extract_zip_bundle,
+  TarCompression,
 };
 use crate::binaries::binaries_state::CheckResult;
 use crate::paths::PathsManager;
@@ -85,11 +86,24 @@ struct ToolStart {
   version: String,
 }
 
+/// What the install loop knows about the other tools that come from the same archive.
+#[derive(Default)]
+struct SharedArchive {
+  /// Another tool of this run will need the archive: do not delete it yet.
+  keep_archive: bool,
+  /// This tool was already extracted together with an earlier one.
+  already_extracted: bool,
+  /// Later tools in the same archive: `(tool, where its binary goes, its entry)`.
+  later_tools: Vec<(String, PathBuf, String)>,
+}
+
 #[derive(Default, Serialize, Deserialize, Clone)]
 struct ToolProgress {
   tool: String,
   total: u64,
   received: u64,
+  /// The file was already downloaded for another tool in this run.
+  reused: bool,
 }
 
 #[derive(Default, Serialize, Deserialize, Clone)]
@@ -215,21 +229,39 @@ impl BinariesManager {
     let mut failures: Vec<ToolError> = Vec::new();
 
     // ffmpeg and ffprobe can come from the same (large) archive: it is
-    // downloaded once and kept until the last tool that needs it is installed.
+    // downloaded once, kept until the last tool that needs it is installed, and
+    // read once: the first tool also extracts the binaries of the later ones.
     let urls: Vec<Option<String>> = plan
       .iter()
       .map(|(_, info)| Self::select_file(&info.files, &arch).map(|(_, f)| f.url.clone()))
       .collect();
+    let mut extracted_early: HashSet<String> = HashSet::new();
 
-    for (index, (name, info)) in plan.into_iter().enumerate() {
-      let keep_archive = urls[index]
-        .as_ref()
-        .is_some_and(|url| urls[index + 1..].iter().flatten().any(|later| later == url));
+    for (index, (name, info)) in plan.iter().enumerate() {
+      let shares_with_later = |later: usize| urls[index].is_some() && urls[later] == urls[index];
+      let mut shared = SharedArchive {
+        keep_archive: (index + 1..plan.len()).any(shares_with_later),
+        already_extracted: extracted_early.contains(*name),
+        later_tools: Vec::new(),
+      };
+      for later in (index + 1..plan.len()).filter(|l| shares_with_later(*l)) {
+        let (later_name, later_info) = plan[later];
+        let entry = Self::select_file(&later_info.files, &arch)
+          .filter(|(_, f)| f.bundle.is_none())
+          .and_then(|(_, f)| f.entry.clone());
+        if let (Some(entry), Ok(canonical)) = (entry, self.canonical_path(later_name)) {
+          shared
+            .later_tools
+            .push((later_name.to_string(), canonical, entry));
+        }
+      }
+
       match self
-        .install_single_tool(bin, &arch, name, info, keep_archive)
+        .install_single_tool(bin, &arch, name, info, &shared)
         .await
       {
-        Ok(()) => {
+        Ok(extracted) => {
+          extracted_early.extend(extracted);
           // only update meta + successes on fully successful install
           meta.versions.insert(name.to_string(), info.version.clone());
           successes.push(name.to_string());
@@ -277,8 +309,8 @@ impl BinariesManager {
     arch: &str,
     name: &str,
     info: &ToolInfo,
-    keep_archive: bool,
-  ) -> Result<(), ToolError> {
+    shared: &SharedArchive,
+  ) -> Result<Vec<String>, ToolError> {
     let Some((_key, file)) = Self::select_file(&info.files, arch) else {
       return self.fail_stage(
         name,
@@ -307,19 +339,33 @@ impl BinariesManager {
       },
     );
 
-    if let Err(e) = self
-      .download_and_verify(name, file, &dest, keep_archive)
-      .await
-    {
-      return self.fail_stage(name, &info.version, "download_verify", e.to_string());
+    let mut extracted_for_others = Vec::new();
+    if shared.already_extracted {
+      // Its binary came out of the archive together with an earlier tool.
+      self.report_reused(name, &dest).await;
+      let _ = remove_archive(&dest, shared.keep_archive).await;
+    } else {
+      match self.download_and_verify(name, file, &dest, shared).await {
+        Ok(written) => {
+          extracted_for_others = shared
+            .later_tools
+            .iter()
+            .filter(|(_, canonical, _)| written.contains(canonical))
+            .map(|(later, _, _)| later.clone())
+            .collect();
+        }
+        Err(e) => {
+          return self.fail_stage(name, &info.version, "download_verify", e.to_string());
+        }
+      }
     }
 
-    let canonical = self.canonical_path(name).map_err(|e| {
-      self
-        .fail_stage(name, &info.version, "canonical_path", e.to_string())
-        .err()
-        .unwrap()
-    })?;
+    let canonical = match self.canonical_path(name) {
+      Ok(path) => path,
+      Err(e) => {
+        return self.fail_stage(name, &info.version, "canonical_path", e.to_string());
+      }
+    };
 
     if tokio::fs::metadata(&canonical).await.is_err() {
       let err = format!(
@@ -336,16 +382,30 @@ impl BinariesManager {
       },
     );
 
-    Ok(())
+    Ok(extracted_for_others)
   }
 
-  fn fail_stage(
+  /// Tells the install screen that this tool needs no download of its own.
+  async fn report_reused(&self, tool: &str, archive: &Path) {
+    let size = fs::metadata(archive).await.map(|m| m.len()).unwrap_or(0);
+    let _ = self.app.emit(
+      "binary_download_progress",
+      ToolProgress {
+        tool: tool.to_string(),
+        received: size,
+        total: size,
+        reused: true,
+      },
+    );
+  }
+
+  fn fail_stage<T>(
     &self,
     name: &str,
     version: &str,
     stage: &str,
     msg: String,
-  ) -> Result<(), ToolError> {
+  ) -> Result<T, ToolError> {
     self.emit_tool_error(name, version, stage, &msg);
     Err(ToolError {
       tool: name.to_string(),
@@ -383,13 +443,14 @@ impl BinariesManager {
     Ok(manifest)
   }
 
+  /// Returns the binaries of other tools that came out of the same archive.
   async fn download_and_verify(
     &self,
     tool: &str,
     file: &FileInfo,
     dest: &Path,
-    keep_archive: bool,
-  ) -> Result<(), AnyError> {
+    shared: &SharedArchive,
+  ) -> Result<Vec<PathBuf>, AnyError> {
     // Already downloaded for another tool in this run, and still intact.
     let reuse = file_sha256(dest).await.as_deref() == Some(file.sha256.as_str());
     self
@@ -401,7 +462,7 @@ impl BinariesManager {
         dest,
         file.entry.as_deref(),
         file.bundle.as_ref(),
-        keep_archive,
+        shared,
       )
       .await
   }
@@ -424,6 +485,7 @@ impl BinariesManager {
           tool: tool.to_string(),
           received: size,
           total: size,
+          reused: true,
         },
       );
       return Ok(());
@@ -448,6 +510,7 @@ impl BinariesManager {
           tool: tool.to_string(),
           received,
           total,
+          reused: false,
         },
       );
     }
@@ -467,9 +530,12 @@ impl BinariesManager {
     dest: &Path,
     entry: Option<&str>,
     bundle: Option<&BundleInfo>,
-    keep_archive: bool,
-  ) -> Result<(), AnyError> {
+    shared: &SharedArchive,
+  ) -> Result<Vec<PathBuf>, AnyError> {
+    let keep_archive = shared.keep_archive;
     let canonical = self.canonical_path(tool)?;
+    // Binaries of other tools that were extracted from the same archive.
+    let mut extras: Vec<PathBuf> = Vec::new();
     let parent = dest.parent().unwrap();
 
     if let Some(ext) = dest.extension().and_then(|e| e.to_str()) {
@@ -509,8 +575,20 @@ impl BinariesManager {
             self
               .hoist_bundle_contents_into_bin(&dir, &canonical)
               .await?;
+          } else if let Some(entry) = entry {
+            // One pass over the archive for this tool and the later ones.
+            let mut targets = vec![(canonical.clone(), entry.to_string())];
+            targets.extend(
+              shared
+                .later_tools
+                .iter()
+                .map(|(_, path, entry)| (path.clone(), entry.clone())),
+            );
+            let written = extract_tar_entries(dest, parent, targets, compression).await?;
+            extras = written.into_iter().filter(|p| *p != canonical).collect();
+            remove_archive(dest, keep_archive).await?;
           } else {
-            extract_tar(tool, canonical.clone(), dest, parent, entry, compression).await?;
+            extract_tar(tool, canonical.clone(), dest, parent, None, compression).await?;
             remove_archive(dest, keep_archive).await?;
           }
         }
@@ -525,14 +603,16 @@ impl BinariesManager {
     #[cfg(unix)]
     {
       use std::os::unix::fs::PermissionsExt;
-      let mut perms = std::fs::metadata(&canonical)?.permissions();
-      if perms.mode() & 0o111 == 0 {
-        perms.set_mode(0o755);
-        std::fs::set_permissions(&canonical, perms)?;
+      for path in std::iter::once(&canonical).chain(extras.iter()) {
+        let mut perms = std::fs::metadata(path)?.permissions();
+        if perms.mode() & 0o111 == 0 {
+          perms.set_mode(0o755);
+          std::fs::set_permissions(path, perms)?;
+        }
       }
     }
 
-    Ok(())
+    Ok(extras)
   }
 
   async fn load_metadata(&self, path: &Path) -> Result<Metadata, AnyError> {

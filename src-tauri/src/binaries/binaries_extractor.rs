@@ -216,6 +216,71 @@ fn open_tar(archive: &Path, compression: TarCompression) -> io::Result<TarArchiv
   Ok(TarArchive::new(reader))
 }
 
+/// Extracts several files of a tar archive in one pass over it. Each target is
+/// `(where to write it, name of the entry in the archive)`.
+///
+/// Decompressing a large archive is the slow part, so two tools that come from
+/// the same archive (ffmpeg and ffprobe) should not read it twice. The first
+/// target must be in the archive; a missing later one is left out of the result
+/// (the caller installs that tool on its own). Returns what was written.
+pub async fn extract_tar_entries(
+  archive: &Path,
+  out_dir: &Path,
+  targets: Vec<(PathBuf, String)>,
+  compression: TarCompression,
+) -> Result<Vec<PathBuf>, ExtractError> {
+  let archive = archive.to_owned();
+  let out_dir = out_dir.to_owned();
+
+  tokio::task::spawn_blocking(move || -> Result<Vec<PathBuf>, ExtractError> {
+    let Some((first, first_entry)) = targets.first().cloned() else {
+      return Ok(Vec::new());
+    };
+    let mut pending = targets;
+    let mut written = Vec::new();
+    let mut seen = Vec::new();
+
+    let mut tar = open_tar(&archive, compression)?;
+    for e in tar.entries()? {
+      let mut e = e?;
+      if !e.header().entry_type().is_file() {
+        continue;
+      }
+      let path = e.path()?.into_owned();
+      let Some(position) = pending
+        .iter()
+        .position(|(_, entry)| path.as_os_str() == std::ffi::OsStr::new(entry))
+      else {
+        seen.push(path.to_string_lossy().into_owned());
+        continue;
+      };
+
+      let (canonical, _) = pending.remove(position);
+      let base = path
+        .file_name()
+        .and_then(|n| n.to_str())
+        .unwrap_or("extracted");
+      let tmp_out = out_dir.join(format!("{base}.tmp"));
+      ensure_parent(&tmp_out)?;
+      e.unpack(&tmp_out)?;
+      atomic_file_replace(&tmp_out, &canonical)?;
+      written.push(canonical);
+      if pending.is_empty() {
+        break;
+      }
+    }
+
+    if !written.contains(&first) {
+      return Err(ExtractError::EntryNotFound {
+        wanted: first_entry,
+        available: EntriesDisplay(seen),
+      });
+    }
+    Ok(written)
+  })
+  .await?
+}
+
 pub async fn extract_tar(
   tool: &str,
   canonical: PathBuf,
@@ -224,10 +289,17 @@ pub async fn extract_tar(
   entry: Option<&str>,
   compression: TarCompression,
 ) -> Result<PathBuf, ExtractError> {
+  // With a known entry the archive is read once: decompressing a large
+  // archive twice (once to list it, once to extract) is slow.
+  if let Some(expect) = entry {
+    let target = vec![(canonical.clone(), expect.to_string())];
+    extract_tar_entries(archive, out_dir, target, compression).await?;
+    return Ok(canonical);
+  }
+
   let tool_name = tool.to_string();
   let archive = archive.to_owned();
   let out_dir = out_dir.to_owned();
-  let entry = entry.map(str::to_owned);
 
   tokio::task::spawn_blocking(move || -> Result<PathBuf, ExtractError> {
     let unpack =
@@ -242,28 +314,6 @@ pub async fn extract_tar(
         atomic_file_replace(&tmp_out, &canonical)?;
         Ok(canonical.clone())
       };
-
-    // With a known entry the archive is read once: decompressing a large
-    // archive twice (once to list it, once to extract) is slow.
-    if let Some(expect) = entry {
-      let mut seen = Vec::new();
-      let mut tar = open_tar(&archive, compression)?;
-      for e in tar.entries()? {
-        let mut e = e?;
-        if !e.header().entry_type().is_file() {
-          continue;
-        }
-        let path = e.path()?.into_owned();
-        if path.as_os_str() == std::ffi::OsStr::new(&expect) {
-          return unpack(&mut e, &path);
-        }
-        seen.push(path.to_string_lossy().into_owned());
-      }
-      return Err(ExtractError::EntryNotFound {
-        wanted: expect,
-        available: EntriesDisplay(seen),
-      });
-    }
 
     let mut files = Vec::<PathBuf>::new();
     for e in open_tar(&archive, compression)?.entries()? {
@@ -507,7 +557,7 @@ fn list_tree(root: &Path, max: usize) -> EntriesDisplay {
 
 #[cfg(test)]
 mod tests {
-  use super::{extract_tar, ExtractError, TarCompression};
+  use super::{extract_tar, extract_tar_entries, ExtractError, TarCompression};
   use std::io::Write;
   use std::path::{Path, PathBuf};
 
@@ -604,6 +654,58 @@ mod tests {
       .await
       .unwrap();
     assert_eq!(data, b"ffmpeg binary");
+  }
+
+  #[tokio::test]
+  async fn extracts_two_entries_in_one_pass() {
+    let dir = temp_dir();
+    let archive = write_archive(&dir, TarCompression::Xz);
+    let ffmpeg = dir.join("ffmpeg");
+    let ffprobe = dir.join("ffprobe");
+    let targets = vec![
+      (ffmpeg.clone(), "pkg/bin/ffmpeg".to_string()),
+      (ffprobe.clone(), "pkg/bin/ffprobe".to_string()),
+    ];
+
+    let written = extract_tar_entries(&archive, &dir, targets, TarCompression::Xz)
+      .await
+      .unwrap();
+
+    assert_eq!(written.len(), 2);
+    assert_eq!(std::fs::read(ffmpeg).unwrap(), b"ffmpeg binary");
+    assert_eq!(std::fs::read(ffprobe).unwrap(), b"ffprobe binary");
+  }
+
+  #[tokio::test]
+  async fn a_missing_extra_entry_is_left_out() {
+    let dir = temp_dir();
+    let archive = write_archive(&dir, TarCompression::Xz);
+    let targets = vec![
+      (dir.join("ffmpeg"), "pkg/bin/ffmpeg".to_string()),
+      (dir.join("other"), "pkg/bin/nope".to_string()),
+    ];
+
+    let written = extract_tar_entries(&archive, &dir, targets, TarCompression::Xz)
+      .await
+      .unwrap();
+
+    assert_eq!(written, vec![dir.join("ffmpeg")]);
+  }
+
+  #[tokio::test]
+  async fn the_first_entry_must_exist() {
+    let dir = temp_dir();
+    let archive = write_archive(&dir, TarCompression::Xz);
+    let targets = vec![
+      (dir.join("other"), "pkg/bin/nope".to_string()),
+      (dir.join("ffprobe"), "pkg/bin/ffprobe".to_string()),
+    ];
+
+    let err = extract_tar_entries(&archive, &dir, targets, TarCompression::Xz)
+      .await
+      .unwrap_err();
+
+    assert!(matches!(err, ExtractError::EntryNotFound { .. }));
   }
 
   #[test]

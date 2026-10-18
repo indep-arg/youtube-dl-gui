@@ -21,6 +21,7 @@
     "rust:test": "cargo test --manifest-path=src-tauri/Cargo.toml --all-features --all-targets",
     "test:unit": "vitest run",
     "test:e2e": "playwright test",
+    "test:app": "node tests/app/run.ts",
     "test": "npm run test:unit && npm run test:e2e",
     "version:check": "node scripts/check-version.ts",
     "manifest:gen": "node scripts/gen-manifest.ts",

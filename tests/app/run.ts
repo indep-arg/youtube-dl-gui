@@ -20,6 +20,7 @@ const TOOLS = join(CACHE, 'tools');
 const RUNS = join(CACHE, 'runs');
 const RESULTS = join(ROOT, 'test-results', 'app');
 const DATA_ID = 'io.github.indep-arg.youtube-dl-gui';
+const MANIFEST_URL = 'https://github.com/indep-arg/youtube-dl-gui/releases/download/manifest/manifest.json';
 const APP_VERSION = (JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8')) as { version: string }).version;
 
 const argv = process.argv.slice(2);
@@ -451,6 +452,70 @@ const tests: TestCase[] = [
         await s.waitForText('Live stream', 10_000);
       } finally {
         await live.stop();
+      }
+    },
+  },
+  {
+    name: 'reinstall-yt-dlp',
+    network: true,
+    async run(ctx) {
+      ctx.seedTools();
+      const ytDlp = join(ctx.bin, 'yt-dlp');
+      unlinkSync(ytDlp); // a hard link to the cache: replace it, do not write through it
+      writeFileSync(ytDlp, 'not a program');
+      writeFileSync(join(ctx.bin, '_internal', 'left-over.txt'), 'from an older version');
+      ctx.writeConfig({ update: { updateBinaries: true } });
+      const s = await ctx.start();
+      await s.waitFor('the install screen with yt-dlp', async () => {
+        const text = await s.text();
+        return text.includes('yt-dlp') && !text.includes('Your queue is empty');
+      }, 60_000);
+      await homeReady(s);
+      check(isProgram(ytDlp), 'yt-dlp was not installed again');
+      check(!existsSync(join(ctx.bin, '_internal', 'left-over.txt')), 'files of the old yt-dlp were left behind');
+      const aside = readdirSync(ctx.bin).filter(f => f.startsWith('.old-') || f.startsWith('.extract-'));
+      check(aside.length === 0, `left in the tools folder: ${aside.join(', ')}`);
+      const version = execFileSync(ytDlp, ['--version'], { timeout: 30_000 }).toString().trim();
+      check(/^\d{4}\.\d{2}\.\d{2}/.test(version), `yt-dlp --version printed ${version}`);
+    },
+  },
+  {
+    name: 'yt-dlp-channel',
+    network: true,
+    async run(ctx) {
+      // What the app will find: before the manifest has nightly builds, it keeps the installed yt-dlp.
+      const manifest = await (await fetch(MANIFEST_URL)).json() as {
+        tools: Record<string, { version: string }>;
+        channels?: Record<string, { tools: Record<string, { version: string }> }>;
+      };
+      const nightly = manifest.channels?.nightly?.tools['yt-dlp']?.version;
+      ctx.seedTools();
+      ctx.writeConfig({ update: { updateBinaries: true } });
+      const before = execFileSync(join(ctx.bin, 'yt-dlp'), ['--version'], { timeout: 30_000 }).toString().trim();
+      let s = await ctx.start();
+      await homeReady(s);
+      await s.go('/settings/system');
+      await s.waitForSelector('#ytDlpChannel');
+      await s.exec(`
+        const select = document.querySelector('#ytDlpChannel');
+        select.value = 'nightly';
+        select.dispatchEvent(new Event('change', { bubbles: true }));
+        return true;`);
+      await s.click('nav button', 'Save');
+      await s.waitForText('Settings saved!', 10_000);
+
+      if (nightly) {
+        await s.waitFor('the install screen', async () => (await s.route()) === '/install', 30_000);
+        await homeReady(s);
+        const after = execFileSync(join(ctx.bin, 'yt-dlp'), ['--version'], { timeout: 30_000 }).toString().trim();
+        check(after === nightly, `yt-dlp is ${after}, expected the nightly ${nightly}`);
+      } else {
+        await new Promise(r => setTimeout(r, 3_000));
+        check(await s.route() === '/settings/system', 'it went to the install screen without nightly builds');
+        s = await ctx.restart();
+        await homeReady(s);
+        const after = execFileSync(join(ctx.bin, 'yt-dlp'), ['--version'], { timeout: 30_000 }).toString().trim();
+        check(after === before, `yt-dlp changed from ${before} to ${after}`);
       }
     },
   },

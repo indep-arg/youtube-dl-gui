@@ -144,7 +144,9 @@ body > iframe {
 .tabs .tab {
     color: var(--color-base-content);
     border-radius: var(--radius-field);
-    transition: background-color 0.15s ease, color 0.15s ease;
+    /* Every tab has the border, so the active one is not wider and the others do not move. */
+    border: var(--border) solid transparent;
+    transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 }
 
 .tabs .tab:hover:not(.tab-active) {
@@ -153,7 +155,7 @@ body > iframe {
 
 .tabs .tab-active {
     background-color: var(--color-neutral);
-    border: var(--border) solid var(--color-primary);
+    border-color: var(--color-primary);
 }
 
 /* A disabled field has no border by default and looks like loose text. */

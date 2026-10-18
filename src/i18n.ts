@@ -19,7 +19,7 @@ export const availableLocales = {
 } as const;
 
 type MessageSchema = typeof en;
-export type Locale = keyof typeof availableLocales;
+type Locale = keyof typeof availableLocales;
 
 // English is always there (it is also the fallback); the other languages are
 // loaded when they are used, so the app does not carry all of them at start.

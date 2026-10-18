@@ -6,7 +6,7 @@ declare global {
   var __E2E_CLIPBOARD__: string | undefined;
 }
 
-export const E2E_DIAGNOSTICS = [
+const E2E_DIAGNOSTICS = [
   'Open Video Downloader 2026.10.4',
   'System: linux x86_64 (Test Linux)',
   'Install: installed',

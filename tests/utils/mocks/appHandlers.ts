@@ -21,4 +21,7 @@ export const appHandlers: Record<string, IPCHandler> = {
     globalThis.__E2E_CLIPBOARD__ = (args as { text?: string } | undefined)?.text;
     return null;
   },
+  // The backend returns what is logged so far (a string, maybe empty).
+  'logging_subscribe': () => '',
+  'logging_unsubscribe': () => null,
 };

@@ -11,7 +11,7 @@
         v-if="group.isLive"
         :id="`${group.id}-progress`"
     >
-      {{ t('media.steps.download.recording') }}
+      {{ liveDisplay }}
     </base-progress>
     <base-progress
         v-else-if="isIndeterminate"
@@ -54,7 +54,7 @@ import { computed, PropType, ref, watch } from 'vue';
 import { useMediaProgressStore } from '../../../stores/media/progress';
 import BaseProgress from '../../base/BaseProgress.vue';
 import { capitalizeFirstLetter } from '../../../helpers/progress';
-import { formatBytesPerSec, formatDuration } from '../../../helpers/units';
+import { formatBytes, formatBytesPerSec, formatDuration } from '../../../helpers/units';
 import { ProgressCategory, ProgressStage } from '../../../tauri/types/progress';
 import { Group } from '../../../tauri/types/group';
 import { useI18n } from 'vue-i18n';
@@ -115,6 +115,16 @@ watch(rawEta, (newEta) => {
   displayEta.value = Math.round(
     displayEta.value * (1 - alpha) + newEta * alpha,
   );
+});
+
+const liveDisplay = computed(() => {
+  const value = progress.value;
+  if (value?.stage === ProgressStage.finalizing) return t('media.steps.download.saving');
+  if (value?.downloadedBytes == null) return t('media.steps.download.recording');
+  const size = formatBytes(value.downloadedBytes);
+  return value.recordedSecs != null
+    ? t('media.steps.download.recordingTime', { size, time: formatDuration(value.recordedSecs) })
+    : t('media.steps.download.recordingSize', { size });
 });
 
 const etaDisplay = computed(() =>

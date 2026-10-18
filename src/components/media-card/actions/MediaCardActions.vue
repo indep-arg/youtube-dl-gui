@@ -18,6 +18,13 @@
         :icon="ArrowPathIcon"
     />
     <media-card-action-item
+        v-else-if="canPause && group.isLive"
+        @click="stopItem"
+        :disabled="isSaving"
+        :label="t('media.card.actions.stop')"
+        :icon="StopIcon"
+    />
+    <media-card-action-item
        v-else-if="canPause"
        @click="pauseItem"
        :label="t('media.card.actions.pause')"
@@ -60,11 +67,14 @@ import {
   XCircleIcon,
   PauseIcon,
   PlayIcon,
+  StopIcon,
 } from '@heroicons/vue/24/solid';
 import MediaCardActionItem from './MediaCardActionItem.vue';
 import { computed, PropType } from 'vue';
 import { useOpener } from '../../../composables/useOpener';
 import { MediaState, useMediaStateStore } from '../../../stores/media/state';
+import { useMediaProgressStore } from '../../../stores/media/progress';
+import { ProgressStage } from '../../../tauri/types/progress';
 import { Group } from '../../../tauri/types/group';
 import { useI18n } from 'vue-i18n';
 
@@ -74,6 +84,7 @@ const { openUrl } = useOpener();
 const emit = defineEmits<{
   (e: 'download'): void;
   (e: 'pause'): void;
+  (e: 'stop'): void;
   (e: 'resume'): void;
   (e: 'remove'): void;
   (e: 'retry'): void;
@@ -87,11 +98,14 @@ const { group } = defineProps({
 });
 
 const stateStore = useMediaStateStore();
+const progressStore = useMediaProgressStore();
 const groupState = computed(() => stateStore.getGroupState(group.id));
 
 const canDownload = computed(() => groupState.value === MediaState.configure);
 const canPause = computed(() => groupState.value === MediaState.downloading || groupState.value === MediaState.downloadingList);
 const canResume = computed(() => groupState.value === MediaState.paused || groupState.value === MediaState.pausedList);
+// A stopped live recording is being saved.
+const isSaving = computed(() => progressStore.findDownloadProgress(group.id)?.stage === ProgressStage.finalizing);
 const canRetry = computed(() => groupState.value === MediaState.done || groupState.value === MediaState.error);
 const canViewInfo = computed(() => groupState.value !== MediaState.fetching && groupState.value !== MediaState.playlistSelection);
 const canSetPreferences = computed(() => groupState.value === MediaState.configure);
@@ -114,6 +128,10 @@ const downloadItem = (): void => {
 
 const pauseItem = (): void => {
   emit('pause');
+};
+
+const stopItem = (): void => {
+  emit('stop');
 };
 
 const resumeItem = (): void => {

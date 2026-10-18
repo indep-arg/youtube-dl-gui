@@ -25,6 +25,10 @@ pub struct MediaProgress {
   pub percentage: Option<f64>,
   pub speed_bps: Option<f64>,
   pub eta_secs: Option<u64>,
+  /// Live streams: bytes recorded so far (there is no total).
+  pub downloaded_bytes: Option<u64>,
+  /// Live streams: how much of the stream is recorded, when known.
+  pub recorded_secs: Option<f64>,
 }
 
 #[derive(Debug, Clone, Serialize)]

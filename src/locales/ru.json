@@ -295,6 +295,9 @@
         "progressList": "Скачивание… {percentage}% — {done} из {total}",
         "indeterminate": "{status}…",
         "recording": "Recording live stream…",
+        "recordingSize": "Recording live stream… {size}",
+        "recordingTime": "Recording live stream… {size}, {time}",
+        "saving": "Saving the recording…",
         "category": {
           "video": "видео",
           "audio": "аудио",
@@ -347,12 +350,14 @@
         "download": "Скачать отдельно",
         "preferences": "Параметры загрузки",
         "pause": "Приостановить загрузку",
+        "stop": "Stop and save recording",
         "resume": "Возобновить загрузку",
         "metadata": "Показать метаданные"
       },
       "toasts": {
         "retry": "Повторяем скачивание.",
-        "retryError": "Не удалось повторить скачивание."
+        "retryError": "Не удалось повторить скачивание.",
+        "stopError": "Could not stop the recording."
       },
       "live": "LIVE"
     },

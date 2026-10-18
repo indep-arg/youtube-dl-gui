@@ -295,6 +295,9 @@
         "progressList": "正在下載… {percentage}% — {done} / {total}",
         "indeterminate": "{status}…",
         "recording": "Recording live stream…",
+        "recordingSize": "Recording live stream… {size}",
+        "recordingTime": "Recording live stream… {size}, {time}",
+        "saving": "Saving the recording…",
         "category": {
           "video": "影片",
           "audio": "音訊",
@@ -347,12 +350,14 @@
         "download": "個別下載",
         "preferences": "下載偏好設定",
         "pause": "暫停下載",
+        "stop": "Stop and save recording",
         "resume": "繼續下載",
         "metadata": "顯示中繼資料"
       },
       "toasts": {
         "retry": "正在重試下載。",
-        "retryError": "無法重試下載。"
+        "retryError": "無法重試下載。",
+        "stopError": "Could not stop the recording."
       },
       "live": "LIVE"
     },

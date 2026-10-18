@@ -295,6 +295,9 @@
         "progressList": "A transferir… {percentage}% — {done} de {total}",
         "indeterminate": "{status}…",
         "recording": "Recording live stream…",
+        "recordingSize": "Recording live stream… {size}",
+        "recordingTime": "Recording live stream… {size}, {time}",
+        "saving": "Saving the recording…",
         "category": {
           "video": "vídeo",
           "audio": "áudio",
@@ -347,12 +350,14 @@
         "download": "Transferir individualmente",
         "preferences": "Preferências de transferência",
         "pause": "Pausar transferência",
+        "stop": "Stop and save recording",
         "resume": "Retomar transferência",
         "metadata": "Mostrar metadados"
       },
       "toasts": {
         "retry": "A tentar novamente a transferência.",
-        "retryError": "Não foi possível voltar a tentar a transferência."
+        "retryError": "Não foi possível voltar a tentar a transferência.",
+        "stopError": "Could not stop the recording."
       },
       "live": "LIVE"
     },

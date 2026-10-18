@@ -3,6 +3,7 @@ use crate::models::{
   MediaDestination, MediaProgress, MediaProgressStage, ProgressCategory, ProgressEvent,
   ProgressStage, TrackType,
 };
+use std::collections::BTreeMap;
 use std::path::Path;
 
 pub struct YtdlpProgressParser {
@@ -11,6 +12,10 @@ pub struct YtdlpProgressParser {
   current_category: ProgressCategory,
   current_stage: ProgressStage,
   partial_download_duration_secs: Option<f64>,
+  is_live: bool,
+  /// Live streams downloaded with --live-from-start: bytes and speed of each
+  /// stream (video and audio come down at the same time).
+  live_streams: BTreeMap<u32, (u64, f64)>,
 }
 
 impl YtdlpProgressParser {
@@ -26,7 +31,14 @@ impl YtdlpProgressParser {
       current_category: initial_category,
       current_stage: ProgressStage::Initializing,
       partial_download_duration_secs,
+      is_live: false,
+      live_streams: BTreeMap::new(),
     }
+  }
+
+  pub fn live(mut self, is_live: bool) -> Self {
+    self.is_live = is_live;
+    self
   }
 
   pub fn parse_line(&mut self, line: &str) -> Vec<ProgressEvent> {
@@ -51,7 +63,12 @@ impl YtdlpProgressParser {
       return evts;
     }
 
-    if let Some(progress) = self.try_ffmpeg_progress_update(line) {
+    let ffmpeg_progress = if self.is_live {
+      self.try_live_ffmpeg_progress_update(line)
+    } else {
+      self.try_ffmpeg_progress_update(line)
+    };
+    if let Some(progress) = ffmpeg_progress {
       if self.current_stage == ProgressStage::Initializing {
         self.current_stage = ProgressStage::Downloading;
         evts.push(ProgressEvent::StageChange(MediaProgressStage {
@@ -211,7 +228,7 @@ impl YtdlpProgressParser {
     None
   }
 
-  pub fn try_progress_update(&self, line: &str) -> Option<ProgressEvent> {
+  pub fn try_progress_update(&mut self, line: &str) -> Option<ProgressEvent> {
     fn parse_opt_u64(s: &str) -> Option<u64> {
       let t = s.trim();
       if t.is_empty() || t.eq_ignore_ascii_case("na") {
@@ -249,7 +266,7 @@ impl YtdlpProgressParser {
       }
     }
 
-    let line = line.trim_end();
+    let (stream, line) = split_stream(line.trim_end());
     let raw = line.strip_prefix("RAW|")?;
 
     // Expect 9 fields from a progress line, fewer is okay.
@@ -267,6 +284,30 @@ impl YtdlpProgressParser {
     let estimate = parse_opt_u64(get_or_empty(&parts, 6)); // total_bytes_estimate
     let frag_i = parse_opt_u64(get_or_empty(&parts, 7)); // fragment_index
     let frag_n = parse_opt_u64(get_or_empty(&parts, 8)); // fragment_count
+
+    if self.is_live {
+      // A live stream has no total: the percentage is always 0 and the fragment
+      // count is a sequence number. Report the bytes of all streams together.
+      let entry = self.live_streams.entry(stream.unwrap_or(0)).or_default();
+      if let Some(dl) = dl {
+        entry.0 = dl;
+      }
+      if let Some(speed) = speed_bps {
+        entry.1 = speed;
+      }
+      let recorded: u64 = self.live_streams.values().map(|(bytes, _)| bytes).sum();
+      let speed: f64 = self.live_streams.values().map(|(_, speed)| speed).sum();
+      return Some(ProgressEvent::Progress(MediaProgress {
+        id: self.id.clone(),
+        group_id: self.group_id.clone(),
+        category: self.current_category.clone(),
+        percentage: None,
+        speed_bps: (speed > 0.0).then_some(speed),
+        eta_secs: None,
+        downloaded_bytes: Some(recorded),
+        recorded_secs: None,
+      }));
+    }
 
     let percentage = pct_num
       .or(pct_str)
@@ -301,6 +342,8 @@ impl YtdlpProgressParser {
       percentage,
       speed_bps,
       eta_secs,
+      downloaded_bytes: None,
+      recorded_secs: None,
     }))
   }
 
@@ -331,6 +374,37 @@ impl YtdlpProgressParser {
       percentage: Some(percentage),
       speed_bps: None,
       eta_secs,
+      downloaded_bytes: None,
+      recorded_secs: None,
+    }))
+  }
+
+  /// yt-dlp records most live streams with ffmpeg, which prints its own
+  /// progress: `frame= 1199 fps= 47 q=-1.0 size=    4096KiB time=00:00:40.00
+  /// bitrate= 838.7kbits/s speed=1.57x`.
+  fn try_live_ffmpeg_progress_update(&self, line: &str) -> Option<ProgressEvent> {
+    let sample = extract_latest_ffmpeg_progress_sample(line)?;
+    let recorded_secs = parse_ffmpeg_progress_time_secs(sample);
+    let downloaded_bytes = extract_token_value(sample, "size=").and_then(parse_ffmpeg_size);
+    if recorded_secs.is_none() && downloaded_bytes.is_none() {
+      return None;
+    }
+    // How fast the stream comes in: its bitrate times how fast ffmpeg reads it.
+    let speed_bps = extract_token_value(sample, "bitrate=")
+      .and_then(parse_ffmpeg_bitrate)
+      .zip(parse_ffmpeg_speed_factor(sample))
+      .map(|(bits_per_sec, factor)| bits_per_sec / 8.0 * factor)
+      .filter(|speed| *speed > 0.0);
+
+    Some(ProgressEvent::Progress(MediaProgress {
+      id: self.id.clone(),
+      group_id: self.group_id.clone(),
+      category: self.current_category.clone(),
+      percentage: None,
+      speed_bps,
+      eta_secs: None,
+      downloaded_bytes,
+      recorded_secs,
     }))
   }
 
@@ -392,6 +466,48 @@ pub fn progress_category_for_track_type(track_type: &TrackType) -> ProgressCateg
   }
 }
 
+/// Splits the stream number from a progress line: yt-dlp numbers the lines
+/// (`1: RAW|…`, `2: RAW|…`) when it downloads several streams at once.
+fn split_stream(line: &str) -> (Option<u32>, &str) {
+  if let Some((number, rest)) = line.split_once(": ")
+    && !number.is_empty()
+    && number.bytes().all(|b| b.is_ascii_digit())
+    && let Ok(number) = number.parse()
+  {
+    return (Some(number), rest);
+  }
+  (None, line)
+}
+
+/// `4096KiB`, `1433kB`, `12MiB`; `N/A` while nothing is written yet.
+fn parse_ffmpeg_size(value: &str) -> Option<u64> {
+  let digits_end = value
+    .find(|c: char| !(c.is_ascii_digit() || c == '.'))
+    .unwrap_or(value.len());
+  let number: f64 = value[..digits_end].parse().ok()?;
+  let multiplier = match value[digits_end..].to_ascii_lowercase().as_str() {
+    "" | "b" => 1.0,
+    "kb" | "kib" => 1024.0,
+    "mb" | "mib" => 1024.0 * 1024.0,
+    "gb" | "gib" => 1024.0 * 1024.0 * 1024.0,
+    _ => return None,
+  };
+  Some((number * multiplier) as u64)
+}
+
+/// `838.7kbits/s` in bits per second.
+fn parse_ffmpeg_bitrate(value: &str) -> Option<f64> {
+  let rest = value.strip_suffix("bits/s")?;
+  let (number, multiplier) = if let Some(n) = rest.strip_suffix('k') {
+    (n, 1000.0)
+  } else if let Some(n) = rest.strip_suffix('M') {
+    (n, 1_000_000.0)
+  } else {
+    (rest, 1.0)
+  };
+  Some(number.trim().parse::<f64>().ok()? * multiplier)
+}
+
 fn parse_ffmpeg_progress_time_secs(line: &str) -> Option<f64> {
   extract_latest_ffmpeg_progress_sample(line)
     .and_then(|sample| extract_token_value(sample, "time="))
@@ -409,12 +525,16 @@ fn extract_latest_ffmpeg_progress_sample(line: &str) -> Option<&str> {
     .split('\r')
     .rev()
     .map(str::trim)
-    .find(|sample| sample.contains("time=") && sample.contains("frame="))
+    // Audio has no `frame=`.
+    .find(|sample| {
+      sample.contains("time=") && (sample.contains("frame=") || sample.contains("size="))
+    })
 }
 
 fn extract_token_value<'a>(line: &'a str, token: &str) -> Option<&'a str> {
   let start = line.find(token)? + token.len();
-  let rest = &line[start..];
+  // ffmpeg pads its values: `size=    4096KiB`.
+  let rest = line[start..].trim_start();
   let end = rest.find(char::is_whitespace).unwrap_or(rest.len());
   let value = rest[..end].trim();
   if value.is_empty() { None } else { Some(value) }
@@ -478,6 +598,89 @@ mod tests {
         .try_ffmpeg_progress_update("frame=1 time=00:00:05.00 speed=1.0x")
         .is_none()
     );
+  }
+
+  fn live_progress(events: Vec<ProgressEvent>) -> crate::models::MediaProgress {
+    events
+      .into_iter()
+      .find_map(|event| match event {
+        ProgressEvent::Progress(progress) => Some(progress),
+        _ => None,
+      })
+      .expect("expected progress")
+  }
+
+  // Lines of a real YouTube live stream recorded with --live-from-start.
+  #[test]
+  fn adds_up_the_streams_of_a_live_recording() {
+    let mut parser =
+      YtdlpProgressParser::new("item", "group", ProgressCategory::Video, None).live(true);
+
+    let first =
+      live_progress(parser.parse_line("1: RAW||  0.0%|240823.18862835388|0.0|492378|||2|1398270"));
+    assert_eq!(first.downloaded_bytes, Some(492_378));
+    assert_eq!(first.percentage, None);
+    assert_eq!(first.eta_secs, None);
+
+    let both =
+      live_progress(parser.parse_line("2: RAW||  0.0%|128275.65633085204|0.0|492746|||6|1398270"));
+    assert_eq!(both.downloaded_bytes, Some(492_378 + 492_746));
+    assert!(
+      both
+        .speed_bps
+        .is_some_and(|speed| (speed - 369_098.845).abs() < 1.0)
+    );
+
+    let later =
+      live_progress(parser.parse_line("1: RAW||  0.0%|315088.831493901|0.0|787625|||3|1398270"));
+    assert_eq!(later.downloaded_bytes, Some(787_625 + 492_746));
+  }
+
+  // A line of a real YouTube live stream recorded by ffmpeg (the default).
+  #[test]
+  fn reads_the_ffmpeg_progress_of_a_live_recording() {
+    let mut parser =
+      YtdlpProgressParser::new("item", "group", ProgressCategory::Video, None).live(true);
+    let progress = live_progress(parser.parse_line(
+      "frame= 1199 fps= 47 q=-1.0 size=    4096KiB time=00:00:40.00 bitrate= 838.7kbits/s speed=1.57x elapsed=0:00:25.52    ",
+    ));
+
+    assert_eq!(progress.downloaded_bytes, Some(4096 * 1024));
+    assert_eq!(progress.recorded_secs, Some(40.0));
+    assert_eq!(progress.percentage, None);
+    assert!(
+      progress
+        .speed_bps
+        .is_some_and(|speed| (speed - 838_700.0 / 8.0 * 1.57).abs() < 1.0)
+    );
+  }
+
+  #[test]
+  fn reads_the_ffmpeg_progress_of_a_live_audio_recording() {
+    let mut parser =
+      YtdlpProgressParser::new("item", "group", ProgressCategory::Audio, None).live(true);
+    let progress = live_progress(
+      parser.parse_line("size=     512KiB time=00:01:05.50 bitrate=  64.0kbits/s speed=1.01x"),
+    );
+    assert_eq!(progress.downloaded_bytes, Some(512 * 1024));
+    assert_eq!(progress.recorded_secs, Some(65.5));
+  }
+
+  #[test]
+  fn numbered_lines_also_work_for_normal_downloads() {
+    let mut parser = YtdlpProgressParser::new("item", "group", ProgressCategory::Video, None);
+    let progress = live_progress(parser.parse_line("1: RAW|42.5| 42.5%|1000|12|425|1000|||"));
+    assert_eq!(progress.percentage, Some(42.5));
+    assert_eq!(progress.eta_secs, Some(12));
+  }
+
+  #[test]
+  fn parses_ffmpeg_sizes_and_bitrates() {
+    assert_eq!(super::parse_ffmpeg_size("1433kB"), Some(1433 * 1024));
+    assert_eq!(super::parse_ffmpeg_size("2MiB"), Some(2 * 1024 * 1024));
+    assert_eq!(super::parse_ffmpeg_size("N/A"), None);
+    assert_eq!(super::parse_ffmpeg_bitrate("174.7kbits/s"), Some(174_700.0));
+    assert_eq!(super::parse_ffmpeg_bitrate("N/A"), None);
   }
 
   #[test]

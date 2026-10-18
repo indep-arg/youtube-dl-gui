@@ -411,6 +411,11 @@ export const useMediaStore = defineStore('media', () => {
     groupStore.cancelGroup(groupId);
   }
 
+  /** Stops a live recording and saves what was recorded so far. */
+  async function stopLiveGroup(groupId: string) {
+    await invoke('group_stop', { groupId });
+  }
+
   function buildTemplateContext(
     item: MediaItem,
     group: Group,
@@ -450,7 +455,9 @@ export const useMediaStore = defineStore('media', () => {
     for (const groupId of groupStore.groupOrder) {
       const state = stateStore.getGroupState(groupId);
       if (state === MediaState.downloading || state === MediaState.downloadingList) {
-        void pauseGroup(groupId);
+        // Pausing a live stream would lose the recording: save it instead.
+        if (groupStore.findGroupById(groupId)?.isLive) void stopLiveGroup(groupId);
+        else void pauseGroup(groupId);
       }
     }
   }
@@ -511,6 +518,7 @@ export const useMediaStore = defineStore('media', () => {
     downloadAllGroups,
     pauseAllGroups,
     pauseGroup,
+    stopLiveGroup,
     resumeAllGroups,
     deleteGroup,
     deleteAllGroups,

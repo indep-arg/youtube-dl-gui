@@ -295,6 +295,9 @@
         "progressList": "Download… {percentage}% — {done} di {total}",
         "indeterminate": "{status}…",
         "recording": "Recording live stream…",
+        "recordingSize": "Recording live stream… {size}",
+        "recordingTime": "Recording live stream… {size}, {time}",
+        "saving": "Saving the recording…",
         "category": {
           "video": "video",
           "audio": "audio",
@@ -347,12 +350,14 @@
         "download": "Download individuale",
         "preferences": "Preferenze di download",
         "pause": "Metti in pausa download",
+        "stop": "Stop and save recording",
         "resume": "Riprendi download",
         "metadata": "Visualizza metadati"
       },
       "toasts": {
         "retry": "Nuovo tentativo download.",
-        "retryError": "Impossibile riprovare il download."
+        "retryError": "Impossibile riprovare il download.",
+        "stopError": "Could not stop the recording."
       },
       "live": "LIVE"
     },

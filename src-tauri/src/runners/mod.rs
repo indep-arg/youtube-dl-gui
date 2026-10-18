@@ -1,3 +1,4 @@
+pub mod live_recording;
 pub mod override_resolver;
 pub mod template_context;
 pub mod ytdlp_args;

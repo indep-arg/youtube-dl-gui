@@ -8,19 +8,13 @@ export interface MediaProgressPayload {
   id: string;
   groupId: string;
   category: ProgressCategory;
-  downloadedBytes?: number;
-  totalBytes?: number;
-  speedBps?: number;
-  etaSecs?: number;
-}
-
-export interface MediaProgressPayload {
-  id: string;
-  groupId: string;
-  category: ProgressCategory;
   percentage?: number;
   speedBps?: number;
   etaSecs?: number;
+  /** Live streams: bytes recorded so far. */
+  downloadedBytes?: number;
+  /** Live streams: how much of the stream is recorded, when known. */
+  recordedSecs?: number;
 }
 
 export interface MediaGroupProgressPayload extends MediaItemsProgress {

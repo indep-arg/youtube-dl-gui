@@ -295,6 +295,9 @@
         "progressList": "Downloaden… {percentage}% — {done} van {total}",
         "indeterminate": "{status}…",
         "recording": "Recording live stream…",
+        "recordingSize": "Recording live stream… {size}",
+        "recordingTime": "Recording live stream… {size}, {time}",
+        "saving": "Saving the recording…",
         "category": {
           "video": "video",
           "audio": "audio",
@@ -347,12 +350,14 @@
         "download": "Los downloaden",
         "preferences": "Downloadvoorkeuren",
         "pause": "Download pauzeren",
+        "stop": "Stop and save recording",
         "resume": "Download hervatten",
         "metadata": "Toon meer informatie"
       },
       "toasts": {
         "retry": "De video wordt opnieuw gedownload.",
-        "retryError": "Er is een fout opgetreden bij het opnieuw downloaden."
+        "retryError": "Er is een fout opgetreden bij het opnieuw downloaden.",
+        "stopError": "Could not stop the recording."
       },
       "live": "LIVE"
     },

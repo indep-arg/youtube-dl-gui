@@ -28,6 +28,7 @@
         @retry="retryGroup"
         @remove="removeGroup"
         @pause="pauseGroup"
+        @stop="stopGroup"
         @resume="downloadGroup"
         :group="group"
     />
@@ -100,6 +101,12 @@ const downloadGroup = (): void => {
 
 const pauseGroup = (): void => {
   void mediaStore.pauseGroup(group.id);
+};
+
+const stopGroup = (): void => {
+  mediaStore.stopLiveGroup(group.id).catch(() => {
+    toastStore.showToast(t('media.card.toasts.stopError'), { style: 'error' });
+  });
 };
 
 const retryGroup = (): void => {

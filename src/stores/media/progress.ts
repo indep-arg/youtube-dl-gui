@@ -34,6 +34,8 @@ export const useMediaProgressStore = defineStore('media-progress', () => {
         percentage: payload.percentage ?? existing.percentage,
         etaSecs: payload.etaSecs ?? existing.etaSecs,
         speedBps: payload.speedBps ?? existing.speedBps,
+        downloadedBytes: payload.downloadedBytes ?? existing.downloadedBytes,
+        recordedSecs: payload.recordedSecs ?? existing.recordedSecs,
         stage: existing.stage ?? ProgressStage.initializing,
       });
     } else {

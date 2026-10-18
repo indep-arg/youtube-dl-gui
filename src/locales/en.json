@@ -295,6 +295,9 @@
         "progressList": "Downloading… {percentage}% — {done} of {total}",
         "indeterminate": "{status}…",
         "recording": "Recording live stream…",
+        "recordingSize": "Recording live stream… {size}",
+        "recordingTime": "Recording live stream… {size}, {time}",
+        "saving": "Saving the recording…",
         "category": {
           "video": "video",
           "audio": "audio",
@@ -347,12 +350,14 @@
         "download": "Download individually",
         "preferences": "Download preferences",
         "pause": "Pause download",
+        "stop": "Stop and save recording",
         "resume": "Resume download",
         "metadata": "Show metadata"
       },
       "toasts": {
         "retry": "Retrying download.",
-        "retryError": "Could not retry download."
+        "retryError": "Could not retry download.",
+        "stopError": "Could not stop the recording."
       },
       "live": "LIVE"
     },
@@ -730,7 +735,7 @@
       },
       "liveFromStart": {
         "label": "Record live streams from the start:",
-        "hint": "For live streams that are still going on: download them from the beginning instead of from now. Some sites support it, like YouTube."
+        "hint": "For live streams that are still going on: download them from the beginning instead of from now. Some sites support it, like YouTube. On streams that run all day, this can mean days of video."
       },
       "addMetadata": {
         "label": "Add title & artist info:",

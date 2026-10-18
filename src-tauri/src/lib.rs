@@ -166,6 +166,7 @@ pub fn run() {
       media_playlist_expand,
       media_download,
       group_cancel,
+      group_stop,
       logging_subscribe,
       logging_unsubscribe,
       config_get,

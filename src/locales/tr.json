@@ -295,6 +295,9 @@
         "progressList": "İndiriliyor… %{percentage} — {total} taneden {done} tanesi tamamlandı",
         "indeterminate": "{status}…",
         "recording": "Recording live stream…",
+        "recordingSize": "Recording live stream… {size}",
+        "recordingTime": "Recording live stream… {size}, {time}",
+        "saving": "Saving the recording…",
         "category": {
           "video": "video",
           "audio": "ses",
@@ -347,12 +350,14 @@
         "download": "Tek tek indir",
         "preferences": "İndirme tercihleri",
         "pause": "İndirmeyi duraklat",
+        "stop": "Stop and save recording",
         "resume": "İndirmeyi devam ettir",
         "metadata": "Üstveriyi göster"
       },
       "toasts": {
         "retry": "İndirme yeniden deneniyor.",
-        "retryError": "İndirme yeniden denenemedi."
+        "retryError": "İndirme yeniden denenemedi.",
+        "stopError": "Could not stop the recording."
       },
       "live": "LIVE"
     },

@@ -72,11 +72,14 @@ Keyboard shortcuts (they work even when the app is in the background; turn them 
 
 ### Live streams
 
-A link to a live stream gets a **LIVE** badge. It is recorded until the stream ends, so it has no size
-or duration while it is going on. To record it from the beginning instead of from now, turn on
-**Record live streams from the start** (in the output settings, or only for that download). YouTube
-supports it; other sites start recording from the moment you start it. Stopping a recording before
-the stream ends may leave an incomplete file.
+A link to a live stream gets a **LIVE** badge. It is recorded until the stream ends; while it records,
+the card shows how much it has recorded. To end it earlier, use **Stop and save recording** (the
+square button): what was recorded so far is saved as a normal video file.
+
+To record it from the beginning instead of from now, turn on **Record live streams from the start**
+(in the output settings, or only for that download). YouTube supports it; other sites start recording
+from the moment you start it. On YouTube streams that run all day, the beginning can be several days
+back.
 
 ### History
 

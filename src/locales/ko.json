@@ -295,6 +295,9 @@
         "progressList": "다운로드 중… {percentage}% — {total}개 중 {done}개",
         "indeterminate": "{status}…",
         "recording": "Recording live stream…",
+        "recordingSize": "Recording live stream… {size}",
+        "recordingTime": "Recording live stream… {size}, {time}",
+        "saving": "Saving the recording…",
         "category": {
           "video": "영상",
           "audio": "오디오",
@@ -347,12 +350,14 @@
         "download": "개별 다운로드",
         "preferences": "다운로드 설정",
         "pause": "다운로드 일시정지",
+        "stop": "Stop and save recording",
         "resume": "다운로드 재개",
         "metadata": "메타데이터 보기"
       },
       "toasts": {
         "retry": "다운로드를 재시도합니다.",
-        "retryError": "다운로드를 재시도할 수 없습니다."
+        "retryError": "다운로드를 재시도할 수 없습니다.",
+        "stopError": "Could not stop the recording."
       },
       "live": "LIVE"
     },

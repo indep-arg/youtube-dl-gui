@@ -295,6 +295,9 @@
         "progressList": "Descargando… {percentage}% — {done} de {total}",
         "indeterminate": "{status}…",
         "recording": "Grabando directo…",
+        "recordingSize": "Grabando directo… {size}",
+        "recordingTime": "Grabando directo… {size}, {time}",
+        "saving": "Guardando la grabación…",
         "category": {
           "video": "video",
           "audio": "audio",
@@ -347,12 +350,14 @@
         "download": "Descargar",
         "preferences": "Ajustes de descarga",
         "pause": "Pausar descarga",
+        "stop": "Detener y guardar la grabación",
         "resume": "Reanudar descarga",
         "metadata": "Mostrar metadatos"
       },
       "toasts": {
         "retry": "Reintentando descarga.",
-        "retryError": "No se pudo reintentar la descarga."
+        "retryError": "No se pudo reintentar la descarga.",
+        "stopError": "No se pudo detener la grabación."
       },
       "live": "EN DIRECTO"
     },
@@ -730,7 +735,7 @@
       },
       "liveFromStart": {
         "label": "Grabar directos desde el principio:",
-        "hint": "Para directos que siguen en curso: los descarga desde el inicio en vez de desde ahora. Lo admiten algunos sitios, como YouTube."
+        "hint": "Para directos que siguen en curso: los descarga desde el inicio en vez de desde ahora. Lo admiten algunos sitios, como YouTube. En directos que emiten todo el día, eso puede ser varios días de vídeo."
       },
       "addMetadata": {
         "label": "Agregar información de título y artista:",

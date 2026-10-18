@@ -1,15 +1,22 @@
 use crate::logging::LogStoreState;
 use crate::models::download::DownloadSection;
+use crate::models::progress::MediaDestinationPath;
 use crate::models::{
-  MediaDiagnosticPayload, MediaFatalPayload, MediaProgressComplete, ProgressEvent,
+  MediaDestination, MediaDiagnosticPayload, MediaFatalPayload, MediaProgressComplete,
+  MediaProgressStage, ProgressEvent, ProgressStage,
 };
 use crate::parsers::ytdlp_error::{DiagnosticMatcher, YtdlpErrorParser};
 use crate::parsers::ytdlp_progress::{YtdlpProgressParser, progress_category_for_track_type};
-use crate::runners::ytdlp_runner::{YtdlpCommandEvent, YtdlpRunner};
+use crate::paths::PathsManager;
+use crate::runners::live_recording::{destination_from_line, save_recording, wait_until_written};
+use crate::runners::ytdlp_runner::{YtdlpChild, YtdlpCommandEvent, YtdlpRunner};
 use crate::scheduling::download_pipeline::DownloadEntry;
-use crate::scheduling::group_state::subscribe_group;
+use crate::scheduling::group_state::{is_stop_requested, subscribe_group};
 use std::fmt;
+use std::path::PathBuf;
+use std::time::Duration;
 use tauri::{AppHandle, Emitter, Manager, State};
+use tokio::sync::mpsc::UnboundedReceiver;
 use tokio::sync::watch;
 
 #[derive(Debug)]
@@ -102,7 +109,8 @@ pub async fn run_ytdlp_download(
     &entry.group_id,
     progress_category_for_track_type(&entry.format.track_type),
     partial_download_duration_secs,
-  );
+  )
+  .live(entry.is_live);
 
   let (mut rx, child) = match runner.spawn() {
     Ok(result) => result,
@@ -116,6 +124,8 @@ pub async fn run_ytdlp_download(
     }
   };
   let mut cancel_rx = subscribe_group(&entry.group_id);
+  // The files a live recording writes to, to save them if it is stopped.
+  let mut destinations: Vec<PathBuf> = Vec::new();
 
   loop {
     tokio::select! {
@@ -125,9 +135,7 @@ pub async fn run_ytdlp_download(
         };
 
         if is_cancelled_now(&cancel_rx) {
-          tracing::info!("Cancelled processing for group_id {}", entry.group_id);
-          let _ = child.kill_tree();
-          return Ok(());
+          return stop_download(&app, &entry, &child, &mut rx, &destinations).await;
         }
 
         let log_state = app.state::<LogStoreState>();
@@ -135,6 +143,12 @@ pub async fn run_ytdlp_download(
         match event {
           YtdlpCommandEvent::Stdout(line) => {
             let line_str = String::from_utf8_lossy(&line);
+            if entry.is_live
+              && let Some(destination) = destination_from_line(&line_str)
+              && !destinations.contains(&destination)
+            {
+              destinations.push(destination);
+            }
             store_log_line(&line_str, &entry, log_state, &app);
             parse_progress_line(&line_str, &mut progress_parser, &app);
             parse_error_line(&line_str, &error_parser, &app);
@@ -179,9 +193,7 @@ pub async fn run_ytdlp_download(
       }
       _ = cancel_rx.changed() => {
         if is_cancelled_now(&cancel_rx) {
-          tracing::info!("Cancelled processing for group_id {}", entry.group_id);
-          let _ = child.kill_tree();
-          return Ok(());
+          return stop_download(&app, &entry, &child, &mut rx, &destinations).await;
         }
       }
     }
@@ -194,6 +206,82 @@ pub async fn run_ytdlp_download(
     None,
   );
   Err(YtdlpDownloadError::EventStreamEnded)
+}
+
+/// Cancels a download. A live recording that the user stopped is saved.
+async fn stop_download(
+  app: &AppHandle,
+  entry: &DownloadEntry,
+  child: &YtdlpChild,
+  rx: &mut UnboundedReceiver<YtdlpCommandEvent>,
+  destinations: &[PathBuf],
+) -> Result<(), YtdlpDownloadError> {
+  let _ = child.kill_tree();
+  if !(entry.is_live && is_stop_requested(&entry.group_id)) {
+    tracing::info!("Cancelled processing for group_id {}", entry.group_id);
+    return Ok(());
+  }
+
+  tracing::info!("Saving the live recording of group_id {}", entry.group_id);
+  let _ = app.emit(
+    "media_progress_stage",
+    MediaProgressStage {
+      id: entry.id.clone(),
+      group_id: entry.group_id.clone(),
+      stage: ProgressStage::Finalizing,
+    },
+  );
+
+  // yt-dlp has to exit first, so that its files are closed.
+  let exited = async {
+    while let Some(event) = rx.recv().await {
+      if matches!(
+        event,
+        YtdlpCommandEvent::Terminated(_) | YtdlpCommandEvent::Error(_)
+      ) {
+        break;
+      }
+    }
+  };
+  let _ = tokio::time::timeout(Duration::from_secs(15), exited).await;
+  wait_until_written(destinations).await;
+
+  let ffmpeg = app
+    .state::<PathsManager>()
+    .bin_dir()
+    .join(if cfg!(windows) {
+      "ffmpeg.exe"
+    } else {
+      "ffmpeg"
+    });
+  match save_recording(&ffmpeg, destinations).await {
+    Ok(path) => {
+      let _ = app.emit(
+        "media_destination",
+        MediaDestination {
+          id: entry.id.clone(),
+          group_id: entry.group_id.clone(),
+          destination: MediaDestinationPath {
+            confidence: 100,
+            path: path.to_string_lossy().into_owned(),
+          },
+          is_merged: true,
+        },
+      );
+      let _ = app.emit(
+        "media_complete",
+        MediaProgressComplete {
+          id: entry.id.clone(),
+          group_id: entry.group_id.clone(),
+        },
+      );
+      Ok(())
+    }
+    Err(err) => {
+      emit_internal_fatal(app, entry, err.clone(), None);
+      Err(YtdlpDownloadError::RunnerError(err))
+    }
+  }
 }
 
 fn emit_internal_fatal(
@@ -218,7 +306,16 @@ fn store_log_line(
   log_state: State<LogStoreState>,
   app: &AppHandle,
 ) {
-  if line.is_empty() || line.starts_with("RAW") {
+  // Progress lines of yt-dlp and ffmpeg: a live recording prints one every
+  // half second.
+  let unnumbered = line.split_once(": ").map_or(line, |(number, rest)| {
+    if number.bytes().all(|b| b.is_ascii_digit()) {
+      rest
+    } else {
+      line
+    }
+  });
+  if line.is_empty() || unnumbered.starts_with("RAW") || line.starts_with("frame=") {
     return;
   }
   let mut store = log_state.write();

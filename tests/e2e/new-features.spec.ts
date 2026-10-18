@@ -73,6 +73,21 @@ test('a live stream gets a LIVE badge and no size', async ({ page }) => {
   await expect(page.getByText('Size:')).toHaveCount(0);
 });
 
+test('a live recording shows what it recorded and can be stopped and saved', async ({ page }) => {
+  await page.goto('/');
+  await addLink(page, 'https://example.com/live');
+  await expect(page.getByText('Live Video')).toBeVisible();
+  await page.getByRole('button', { name: 'Download', exact: true }).click();
+
+  await expect(page.getByText('Recording live stream… 3.0 MB, 1:15')).toBeVisible();
+  await expect(page.getByTitle('Pause download')).toHaveCount(0);
+  await page.getByTitle('Stop and save recording').click();
+
+  await expect(page.getByText('Download complete – 1 item downloaded.')).toBeVisible();
+  await page.getByRole('link', { name: 'Download history' }).click();
+  await expect(page.getByTestId('history-entry').first()).toContainText('Live Video');
+});
+
 test.describe('history', () => {
   test('a finished download shows up in the history and can be removed', async ({ page }) => {
     await page.goto('/');

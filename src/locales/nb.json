@@ -295,6 +295,9 @@
         "progressList": "Laster ned… {percentage}% — {done} av {total}",
         "indeterminate": "{status}…",
         "recording": "Recording live stream…",
+        "recordingSize": "Recording live stream… {size}",
+        "recordingTime": "Recording live stream… {size}, {time}",
+        "saving": "Saving the recording…",
         "category": {
           "video": "video",
           "audio": "lyd",
@@ -347,12 +350,14 @@
         "download": "Last ned individuelt",
         "preferences": "Nedlastingsinnstillinger",
         "pause": "Sett nedlasting på pause",
+        "stop": "Stop and save recording",
         "resume": "Fortsett nedlasting",
         "metadata": "Vis metadata"
       },
       "toasts": {
         "retry": "Prøver nedlasting på nytt.",
-        "retryError": "Kunne ikke prøve nedlasting på nytt."
+        "retryError": "Kunne ikke prøve nedlasting på nytt.",
+        "stopError": "Could not stop the recording."
       },
       "live": "LIVE"
     },

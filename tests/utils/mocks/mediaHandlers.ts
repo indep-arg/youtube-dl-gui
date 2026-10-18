@@ -49,7 +49,19 @@ export const mediaHandlers: Record<string, IPCHandler> = {
     for (const item of items) {
       if (item.url.includes('finish')) {
         void finishDownload(groupId, item.id);
+      } else if (item.url.includes('live')) {
+        void startRecording(groupId, item.id);
       }
+    }
+    return null;
+  },
+  // Stops a live recording and saves it, like the backend does.
+  group_stop: (_cmd: string, args: InvokeArgs | undefined): null => {
+    const { groupId } = ensureInvokeArgsObject<{ groupId: string }>(args, 'group_stop');
+    const id = recordings.get(groupId);
+    if (id) {
+      recordings.delete(groupId);
+      void saveRecording(groupId, id);
     }
     return null;
   },
@@ -102,6 +114,27 @@ async function emitExpandedPlaylist(groupId: string, entries: EntryItem[]): Prom
       },
     });
   }
+}
+
+const recordings = new Map<string, string>();
+
+async function startRecording(groupId: string, id: string): Promise<void> {
+  recordings.set(groupId, id);
+  await emit('media_progress_stage', { groupId, id, stage: 'downloading' });
+  await emit('media_progress', {
+    groupId, id, category: 'video', speedBps: 104_857, downloadedBytes: 3_145_728, recordedSecs: 75,
+  });
+}
+
+async function saveRecording(groupId: string, id: string): Promise<void> {
+  await emit('media_progress_stage', { groupId, id, stage: 'finalizing' });
+  await new Promise(resolve => setTimeout(resolve, 300));
+  await emit('media_destination', {
+    groupId,
+    id,
+    destination: { path: '/downloads/Live Video.mp4', confidence: 100 },
+  });
+  await emit('media_complete', { groupId, id });
 }
 
 async function finishDownload(groupId: string, id: string): Promise<void> {

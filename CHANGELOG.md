@@ -18,6 +18,29 @@ Releases are tagged `app-vYEAR.MONTH.N` and the version is kept equal in
 The number does not say whether a release breaks anything. Breaking changes are listed in
 this file under **Breaking changes**.
 
+## 2026.10.3
+
+### Changes
+
+- Long descriptions in the settings and in the preferences of a download no longer run past the edge of
+  the window. This was most visible in languages with longer texts, such as Spanish.
+- At the smallest window size the controls at the bottom move to a second row instead of being cut off,
+  and the format list no longer touches its arrow.
+- The text of the progress bars is readable in the light theme.
+- The error of a card is no longer cut in the middle of a line, and the card of a playlist keeps its title.
+- The description of a video wraps instead of scrolling sideways.
+- Disabled fields have a border, and the placeholder of a video without a picture is visible in the light theme.
+- The queue bar at the bottom is hidden while the queue is empty, and the settings button is hidden while
+  the settings are open.
+- The precise cut option was shown twice in the download settings; only one is left. The logs of a download
+  show the sections for skipped items and warnings only when they have something to show.
+- The list of subtitle languages uses the names in the language of the app.
+- The About page links to this project's guide, privacy page and changelog.
+- Installing ffmpeg and ffprobe is faster: the archive is read once for both. The install screen says when a
+  tool uses a file that was already downloaded.
+- The Linux AppImage is built with newer versions of the tools that package it.
+- Updated dependencies.
+
 ## 2026.10.2
 
 ### Breaking changes

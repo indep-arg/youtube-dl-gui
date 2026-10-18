@@ -104,7 +104,7 @@ fn collect_subtitle_languages(
 
   for (language, tracks) in subtitles {
     let normalized = language.trim().to_ascii_lowercase();
-    if normalized.is_empty() || tracks.is_empty() {
+    if normalized.is_empty() || tracks.is_empty() || is_chat_track(&normalized) {
       continue;
     }
     if tracks
@@ -120,4 +120,10 @@ fn collect_subtitle_languages(
 
   languages.sort();
   languages
+}
+
+/// yt-dlp lists the chat of a live stream (YouTube) or VOD (Twitch) as a
+/// subtitle. It is not one, and on a live stream it downloads until the end.
+fn is_chat_track(language: &str) -> bool {
+  matches!(language, "live_chat" | "rechat")
 }

@@ -130,6 +130,18 @@ fn parse_single_collects_subtitle_inventory() {
         ext: Some("srt".into()),
       }],
     ),
+    (
+      "live_chat".into(),
+      vec![YtdlpSubtitle {
+        ext: Some("json".into()),
+      }],
+    ),
+    (
+      "rechat".into(),
+      vec![YtdlpSubtitle {
+        ext: Some("json".into()),
+      }],
+    ),
   ]));
   info.automatic_captions = Some(HashMap::from([
     (

@@ -494,28 +494,37 @@ const tests: TestCase[] = [
       const before = execFileSync(join(ctx.bin, 'yt-dlp'), ['--version'], { timeout: 30_000 }).toString().trim();
       let s = await ctx.start();
       await homeReady(s);
-      await s.go('/settings/system');
-      await s.waitForSelector('#ytDlpChannel');
-      await s.exec(`
-        const select = document.querySelector('#ytDlpChannel');
-        select.value = 'nightly';
-        select.dispatchEvent(new Event('change', { bubbles: true }));
-        return true;`);
-      await s.click('nav button', 'Save');
-      await s.waitForText('Settings saved!', 10_000);
+      const ytDlpVersion = () => execFileSync(join(ctx.bin, 'yt-dlp'), ['--version'], { timeout: 30_000 }).toString().trim();
+      const choose = async (channel: string) => {
+        await s.go('/settings/system');
+        await s.waitForSelector('#ytDlpChannel');
+        await s.exec(`
+          const select = document.querySelector('#ytDlpChannel');
+          select.value = arguments[0];
+          select.dispatchEvent(new Event('change', { bubbles: true }));
+          return true;`, channel);
+        await s.click('nav button', 'Save');
+        await s.waitForText('Settings saved!', 10_000);
+      };
+      await choose('nightly');
 
       if (nightly) {
         await s.waitFor('the install screen', async () => (await s.route()) === '/install', 30_000);
         await homeReady(s);
-        const after = execFileSync(join(ctx.bin, 'yt-dlp'), ['--version'], { timeout: 30_000 }).toString().trim();
-        check(after === nightly, `yt-dlp is ${after}, expected the nightly ${nightly}`);
+        check(ytDlpVersion() === nightly, `yt-dlp is ${ytDlpVersion()}, expected the nightly ${nightly}`);
+        // And back to stable.
+        await choose('stable');
+        await s.waitFor('the install screen', async () => (await s.route()) === '/install', 30_000);
+        await homeReady(s);
+        check(ytDlpVersion() === manifest.tools['yt-dlp'].version, `yt-dlp is ${ytDlpVersion()} after going back to stable`);
+        const aside = readdirSync(ctx.bin).filter(f => f.startsWith('.old-'));
+        check(aside.length === 0, `left in the tools folder: ${aside.join(', ')}`);
       } else {
         await new Promise(r => setTimeout(r, 3_000));
         check(await s.route() === '/settings/system', 'it went to the install screen without nightly builds');
         s = await ctx.restart();
         await homeReady(s);
-        const after = execFileSync(join(ctx.bin, 'yt-dlp'), ['--version'], { timeout: 30_000 }).toString().trim();
-        check(after === before, `yt-dlp changed from ${before} to ${after}`);
+        check(ytDlpVersion() === before, `yt-dlp changed from ${before} to ${ytDlpVersion()}`);
       }
     },
   },

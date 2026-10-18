@@ -158,6 +158,7 @@ pub fn system_name() -> String {
   base
 }
 
+#[cfg(any(target_os = "linux", test))]
 fn os_release_name(text: &str) -> Option<String> {
   text.lines().find_map(|line| {
     let value = line.strip_prefix("PRETTY_NAME=")?;
@@ -240,7 +241,12 @@ mod tests {
   #[tokio::test]
   async fn a_missing_tool_and_an_archive_are_reported() {
     let dir = temp_dir();
-    std::fs::write(dir.join("ffmpeg"), [0xfd, b'7', b'z', b'X', b'Z', 0]).unwrap();
+    let ffmpeg = if cfg!(windows) {
+      "ffmpeg.exe"
+    } else {
+      "ffmpeg"
+    };
+    std::fs::write(dir.join(ffmpeg), [0xfd, b'7', b'z', b'X', b'Z', 0]).unwrap();
 
     assert_eq!(
       check_tool(&dir, "ffmpeg", "-version").await,

@@ -97,7 +97,7 @@
       "legendBadge": "Aanbevolen",
       "legendLabel": "Gebruik ingelogde sessies via een cookies-bestand of importeer uit je browser.",
       "file": {
-        "label": "Cookies laden uit een cookies.txt-bestand",
+        "label": "Cookies laden uit een cookies.txt-bestand:",
         "hint": "Om je cookies naar een bestand te exporteren {link}",
         "hintLink": "bekijk de handleiding."
       },
@@ -185,12 +185,10 @@
           "empty": "Geen foutmeldingen gevonden."
         },
         "warnings": {
-          "count": "Waarschuwingen ({count})",
-          "empty": "Geen waarschuwingen gevonden."
+          "count": "Waarschuwingen ({count})"
         },
         "skipped": {
           "count": "Overgeslagen items ({count})",
-          "empty": "Er zijn geen items door filters overgeslagen.",
           "items": "{count} item | {count} items"
         },
         "all": {
@@ -360,10 +358,6 @@
   },
   "subtitles": {
     "title": "Ondertitels",
-    "defaults": {
-      "legend": "Standaard ondertitels",
-      "hint": "Wordt gebruikt wanneer een video ondertitels heeft."
-    },
     "options": {
       "enable": {
         "legend": "Ondertitel-downloads",
@@ -537,6 +531,7 @@
       "date": {
         "modeLabel": "Matchregel",
         "clearMode": "Uit",
+        "noPreset": "None",
         "hint": "Kies eerst de datumregel en daarna de datum.",
         "mode": {
           "exact": "Op datum",
@@ -571,7 +566,6 @@
       "title": "Afspeellijstitems kiezen",
       "description": "Selecteer welke items je wilt downloaden:",
       "selectionSummary": "{count} van {total} item geselecteerd | {count} van {total} items geselecteerd",
-      "selectionSummaryAll": "Alle items geselecteerd | Alle {count} items geselecteerd",
       "advancedButton": "Geavanceerd",
       "simpleButton": "Resetten",
       "advancedTitle": "Geavanceerde afspeellijstselectie",
@@ -610,7 +604,6 @@
     }
   },
   "settings": {
-    "title": "Instellingen",
     "reset": {
       "label": "Resetten",
       "confirm": "Klik nogmaals"
@@ -743,7 +736,7 @@
       },
       "preciseCuts": {
         "label": "Nauwkeurig knippen:",
-        "hint": "Knipt op exacte frames in plaats van op nabije keyframes. Erg traag.\nAlleen inschakelen als normale knipbewerkingen fout gaan, beschadigd zijn of zwarte/ontbrekende segmenten geven."
+        "hint": "Laat SponsorBlock-verwijderingen en gedeeltelijke downloads op exacte frames knippen. Erg traag.\nAlleen inschakelen als normale knipbewerkingen fout gaan, beschadigd zijn of zwarte/ontbrekende segmenten geven."
       },
       "partialDownload": {
         "legend": "Gedeeltelijke download",
@@ -771,7 +764,7 @@
         "link": "Ondertitels instellen"
       },
       "keepOriginalStreams": {
-        "label": "Oorspronkelijke streams behouden",
+        "label": "Oorspronkelijke streams behouden:",
         "hint": "Voorkomt hercodering, tenzij dit nodig is voor verdere verwerking."
       },
       "postprocess": {
@@ -850,7 +843,7 @@
         }
       },
       "language": {
-        "label": "Taal",
+        "label": "Taal:",
         "options": {
           "system": "Systeem ({language})"
         }
@@ -897,19 +890,15 @@
       "legend": "SponsorBlock",
       "legendLabel": "Verwijder of markeer delen van een video.",
       "removeParts": {
-        "label": "Delen om te verwijderen",
+        "label": "Delen om te verwijderen:",
         "placeholder": "Selecteer delen om te verwijderen."
       },
       "markParts": {
-        "label": "Delen om te markeren",
+        "label": "Delen om te markeren:",
         "placeholder": "Selecteer delen om te markeren."
       },
       "apiUrl": {
-        "label": "API URL"
-      },
-      "preciseCuts": {
-        "label": "Nauwkeurig knippen:",
-        "hint": "Laat SponsorBlock-verwijderingen en gedeeltelijke downloads op exacte frames knippen. Erg traag.\nAlleen inschakelen als normale knipbewerkingen fout gaan, beschadigd zijn of zwarte/ontbrekende segmenten geven."
+        "label": "API URL:"
       },
       "parts": {
         "sponsor": {
@@ -971,23 +960,23 @@
       "legendLabel": "Configureer hoe deze applicatie met het systeem integreert.",
       "trayEnabled": {
         "label": {
-          "generic": "Systeemvakpictogram tonen"
+          "generic": "Systeemvakpictogram tonen:"
         },
         "hint": {
           "generic": "Toont een pictogram in het systeemvak voor snelle toegang."
         }
       },
       "minimiseToTray": {
-        "label": "Minimaliseren naar systeemvak bij sluiten",
+        "label": "Minimaliseren naar systeemvak bij sluiten:",
         "hint": "Bij het sluiten van het venster wordt de app verborgen in het systeemvak in plaats van afgesloten."
       },
       "autoStart": {
-        "label": "Starten bij aanmelden",
+        "label": "Starten bij aanmelden:",
         "hint": "Start Open Video Downloader automatisch wanneer u zich aanmeldt."
       },
       "autoStartMinimised": {
         "label": {
-          "windows": "Geminimaliseerd naar systeemvak starten bij aanmelden"
+          "windows": "Geminimaliseerd naar systeemvak starten bij aanmelden:"
         },
         "hint": {
           "windows": "Wanneer de app bij het aanmelden start, wordt deze in het systeemvak gestart zonder een venster te openen.",
@@ -1253,7 +1242,9 @@
     "version": "Versie: {version}",
     "links": {
       "github": "GitHub",
-      "wiki": "Wiki",
+      "guide": "User guide",
+      "privacy": "Privacy",
+      "changelog": "Changelog",
       "reportABug": "Meld een bug"
     }
   }

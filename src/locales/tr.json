@@ -97,7 +97,7 @@
       "legendBadge": "Önerilen",
       "legendLabel": "Çerez dosyasından oturum açmış kullanıcıları kullanın veya tarayıcınızdan içe aktarın..",
       "file": {
-        "label": "cookies.txt dosyasından çerezleri yükle",
+        "label": "cookies.txt dosyasından çerezleri yükle:",
         "hint": "Çerezlerinizi bir dosyaya aktarmak için{link}",
         "hintLink": "kılavuza bir göz atın."
       },
@@ -185,12 +185,10 @@
           "empty": "Hata bulunamadı."
         },
         "warnings": {
-          "count": "Uyarılar ({count})",
-          "empty": "Uyarı bulunamadı."
+          "count": "Uyarılar ({count})"
         },
         "skipped": {
           "count": "Atlanan öğeler ({count})",
-          "empty": "Filtreler nedeniyle hiçbir öğe atlanmadı.",
           "items": "{count} öğe | {count} öğe"
         },
         "all": {
@@ -360,10 +358,6 @@
   },
   "subtitles": {
     "title": "Altyazılar",
-    "defaults": {
-      "legend": "Varsayılan altyazılar",
-      "hint": "Bir videoda altyazı varsa kullanılır."
-    },
     "options": {
       "enable": {
         "legend": "Altyazı indirmeleri",
@@ -537,6 +531,7 @@
       "date": {
         "modeLabel": "Eşleşme kuralı",
         "clearMode": "Kapalı",
+        "noPreset": "None",
         "hint": "Önce tarih kuralını, sonra tarihi seçin.",
         "mode": {
           "exact": "Tarihte",
@@ -571,7 +566,6 @@
       "title": "Oynatma listesi öğelerini seç",
       "description": "İndirilecek öğeleri seçin:",
       "selectionSummary": "{total} öğeden {count} öğe seçildi | {total} öğeden {count} öğe seçildi",
-      "selectionSummaryAll": "Tüm öğeler seçildi | {count} öğenin tamamı seçildi",
       "advancedButton": "Gelişmiş",
       "simpleButton": "Sıfırla",
       "advancedTitle": "Gelişmiş oynatma listesi seçimi",
@@ -610,7 +604,6 @@
     }
   },
   "settings": {
-    "title": "Ayarlar",
     "reset": {
       "label": "Sıfırla",
       "confirm": "Sıfırlamak için tekrar tıkla"
@@ -743,7 +736,7 @@
       },
       "preciseCuts": {
         "label": "Hassas kesim:",
-        "hint": "Yakındaki ana kareler yerine tam karelerde keser. Çok yavaştır.\nYalnızca normal kesimler yanlışsa, bozuluyorsa veya siyah/eksik bölümler oluşturuyorsa etkinleştirin."
+        "hint": "SponsorBlock kaldırmaları ve kısmi indirmelerin tam karelerde kesilmesini sağlar. Çok yavaştır.\nYalnızca normal kesimler yanlışsa, bozuluyorsa veya siyah/eksik bölümler oluşturuyorsa etkinleştirin."
       },
       "partialDownload": {
         "legend": "Kısmi indirme",
@@ -771,7 +764,7 @@
         "link": "Altyazıları ayarla"
       },
       "keepOriginalStreams": {
-        "label": "Özgün akışları koru",
+        "label": "Özgün akışları koru:",
         "hint": "Seçilen son işlem bunu gerektirmedikçe kapsayıcı değişimini ve yeniden kodlamayı önler."
       },
       "postprocess": {
@@ -850,7 +843,7 @@
         }
       },
       "language": {
-        "label": "Dil",
+        "label": "Dil:",
         "options": {
           "system": "Sistem ({language})"
         }
@@ -897,19 +890,15 @@
       "legend": "SponsorBlock",
       "legendLabel": "Videonun kısımlarını kaldır ya da işaretle.",
       "removeParts": {
-        "label": "Kaldırılacak bölümler",
+        "label": "Kaldırılacak bölümler:",
         "placeholder": "Videodan kaldırmak için 1 ya da daha fazla kısım seçin."
       },
       "markParts": {
-        "label": "İşaretlenecek bölümler",
+        "label": "İşaretlenecek bölümler:",
         "placeholder": "Bölüm ile işaretlemek için 1 ya da daha fazla kısım seçin."
       },
       "apiUrl": {
-        "label": "API URL"
-      },
-      "preciseCuts": {
-        "label": "Hassas kesim:",
-        "hint": "SponsorBlock kaldırmaları ve kısmi indirmelerin tam karelerde kesilmesini sağlar. Çok yavaştır.\nYalnızca normal kesimler yanlışsa, bozuluyorsa veya siyah/eksik bölümler oluşturuyorsa etkinleştirin."
+        "label": "API URL:"
       },
       "parts": {
         "sponsor": {
@@ -971,23 +960,23 @@
       "legendLabel": "Bu uygulamanın sistemle nasıl entegre olacağını yapılandır.",
       "trayEnabled": {
         "label": {
-          "generic": "Sistem tepsisi simgesini göster"
+          "generic": "Sistem tepsisi simgesini göster:"
         },
         "hint": {
           "generic": "Sistem tepsisinde hızlı erişim için bir simge gösterir.."
         }
       },
       "minimiseToTray": {
-        "label": "Küçültürken tepsiye küçült.",
+        "label": "Küçültürken tepsiye küçült.:",
         "hint": "Pencereyi kapatmak, uygulamayı tamamen kapatmak yerine sistem tepsisinde gizler."
       },
       "autoStart": {
-        "label": "Oturum açışında başlat",
+        "label": "Oturum açışında başlat:",
         "hint": "Oturum açtığınızda Open Video Downloader'ı' otomatik olarak başlat."
       },
       "autoStartMinimised": {
         "label": {
-          "windows": "Oturum açtığınızda tepsiye simge durumuna küçültülmüş olarak başlatır"
+          "windows": "Oturum açtığınızda tepsiye simge durumuna küçültülmüş olarak başlatır:"
         },
         "hint": {
           "windows": "Uygulama oturum açıldığında pencere açmadan sistem tepsisinde başlayacaktır.",
@@ -1253,7 +1242,9 @@
     "version": "Sürüm: {version}",
     "links": {
       "github": "GitHub",
-      "wiki": "Wiki",
+      "guide": "User guide",
+      "privacy": "Privacy",
+      "changelog": "Changelog",
       "reportABug": "Hata bildir"
     }
   }

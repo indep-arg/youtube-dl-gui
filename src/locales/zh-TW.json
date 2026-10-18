@@ -97,7 +97,7 @@
       "legendBadge": "建議",
       "legendLabel": "使用已登入工作階段的 cookies 檔案，或從瀏覽器匯入。",
       "file": {
-        "label": "從 cookies.txt 檔案載入 Cookie",
+        "label": "從 cookies.txt 檔案載入 Cookie:",
         "hint": "如需將 Cookie 匯出為檔案 {link}，",
         "hintLink": "請參閱指南。"
       },
@@ -185,12 +185,10 @@
           "empty": "找不到錯誤。"
         },
         "warnings": {
-          "count": "警告 ({count})",
-          "empty": "找不到警告。"
+          "count": "警告 ({count})"
         },
         "skipped": {
           "count": "已略過項目 ({count})",
-          "empty": "沒有任何項目被篩選條件略過。",
           "items": "{count} 個項目 | {count} 個項目"
         },
         "all": {
@@ -360,10 +358,6 @@
   },
   "subtitles": {
     "title": "字幕",
-    "defaults": {
-      "legend": "預設字幕",
-      "hint": "當影片有字幕時使用。"
-    },
     "options": {
       "enable": {
         "legend": "字幕下載",
@@ -537,6 +531,7 @@
       "date": {
         "modeLabel": "比對規則",
         "clearMode": "關閉",
+        "noPreset": "None",
         "hint": "先選擇日期規則，再選擇日期。",
         "mode": {
           "exact": "在該日期",
@@ -571,7 +566,6 @@
       "title": "選擇播放清單項目",
       "description": "選擇要下載的項目:",
       "selectionSummary": "已選取 {count} / {total} 個項目 | 已選取 {count} / {total} 個項目",
-      "selectionSummaryAll": "已選取全部項目 | 已選取全部 {count} 個項目",
       "advancedButton": "進階",
       "simpleButton": "重設",
       "advancedTitle": "進階播放清單選取",
@@ -610,7 +604,6 @@
     }
   },
   "settings": {
-    "title": "設定",
     "reset": {
       "label": "重設",
       "confirm": "再按一次以重設"
@@ -743,7 +736,7 @@
       },
       "preciseCuts": {
         "label": "精準裁切:",
-        "hint": "在精確影格處裁切，而不是在鄰近關鍵影格處裁切。速度非常慢。\n只有在一般裁切結果錯誤、損壞或出現黑畫面/缺失片段時才啟用。"
+        "hint": "讓 SponsorBlock 移除與部分下載在精確影格處裁切。速度非常慢。\n只有在一般裁切結果錯誤、損壞或出現黑畫面/缺失片段時才啟用。"
       },
       "partialDownload": {
         "legend": "部分下載",
@@ -771,7 +764,7 @@
         "link": "設定字幕"
       },
       "keepOriginalStreams": {
-        "label": "保留原始串流",
+        "label": "保留原始串流:",
         "hint": "除非所選後處理需要，否則避免更換容器或重新編碼。"
       },
       "postprocess": {
@@ -850,7 +843,7 @@
         }
       },
       "language": {
-        "label": "語言",
+        "label": "語言:",
         "options": {
           "system": "系統預設 ({language})"
         }
@@ -897,19 +890,15 @@
       "legend": "SponsorBlock",
       "legendLabel": "移除或標記影片中的部分片段。",
       "removeParts": {
-        "label": "要移除的片段",
+        "label": "要移除的片段:",
         "placeholder": "選取 1 個或多個要從影片中移除的片段。"
       },
       "markParts": {
-        "label": "要標記的片段",
+        "label": "要標記的片段:",
         "placeholder": "選取 1 個或多個要以章節標記的片段。"
       },
       "apiUrl": {
-        "label": "API URL"
-      },
-      "preciseCuts": {
-        "label": "精準裁切:",
-        "hint": "讓 SponsorBlock 移除與部分下載在精確影格處裁切。速度非常慢。\n只有在一般裁切結果錯誤、損壞或出現黑畫面/缺失片段時才啟用。"
+        "label": "API URL:"
       },
       "parts": {
         "sponsor": {
@@ -971,23 +960,23 @@
       "legendLabel": "設定此應用程式與系統的整合方式。",
       "trayEnabled": {
         "label": {
-          "generic": "顯示系統匣圖示"
+          "generic": "顯示系統匣圖示:"
         },
         "hint": {
           "generic": "在系統匣中顯示圖示以便快速存取。"
         }
       },
       "minimiseToTray": {
-        "label": "關閉時最小化至系統匣",
+        "label": "關閉時最小化至系統匣:",
         "hint": "關閉視窗時，將應用程式隱藏在系統匣而非結束工作。"
       },
       "autoStart": {
-        "label": "登入時啟動",
+        "label": "登入時啟動:",
         "hint": "登入時自動啟動 Open Video Downloader。"
       },
       "autoStartMinimised": {
         "label": {
-          "windows": "登入時最小化至系統匣啟動"
+          "windows": "登入時最小化至系統匣啟動:"
         },
         "hint": {
           "windows": "登入時啟動後會在系統匣中執行，不會開啟視窗。",
@@ -1253,7 +1242,9 @@
     "version": "版本: {version}",
     "links": {
       "github": "GitHub",
-      "wiki": "Wiki",
+      "guide": "User guide",
+      "privacy": "Privacy",
+      "changelog": "Changelog",
       "reportABug": "回報錯誤"
     }
   }

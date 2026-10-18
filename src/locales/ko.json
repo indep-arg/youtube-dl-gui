@@ -97,7 +97,7 @@
       "legendBadge": "권장",
       "legendLabel": "쿠키 파일 또는 브라우저에서 가져온 로그인 세션을 사용합니다.",
       "file": {
-        "label": "cookies.txt 파일에서 쿠키 불러오기",
+        "label": "cookies.txt 파일에서 쿠키 불러오기:",
         "hint": "쿠키를 파일로 내보내려면 {link}",
         "hintLink": "가이드를 참고하세요."
       },
@@ -185,12 +185,10 @@
           "empty": "오류가 없습니다."
         },
         "warnings": {
-          "count": "경고 ({count})",
-          "empty": "경고가 없습니다."
+          "count": "경고 ({count})"
         },
         "skipped": {
           "count": "건너뛴 항목 ({count})",
-          "empty": "필터에 의해 건너뛴 항목이 없습니다.",
           "items": "{count}개 항목 | {count}개 항목"
         },
         "all": {
@@ -360,10 +358,6 @@
   },
   "subtitles": {
     "title": "자막",
-    "defaults": {
-      "legend": "자막 기본값",
-      "hint": "동영상에 자막이 있을 때 사용됩니다."
-    },
     "options": {
       "enable": {
         "legend": "자막 다운로드",
@@ -537,6 +531,7 @@
       "date": {
         "modeLabel": "일치 규칙",
         "clearMode": "끄기",
+        "noPreset": "None",
         "hint": "날짜 규칙을 선택한 다음 날짜를 선택하세요.",
         "mode": {
           "exact": "해당 날짜",
@@ -571,7 +566,6 @@
       "title": "재생목록 항목 선택",
       "description": "다운로드할 항목을 선택하세요:",
       "selectionSummary": "{total}개 중 {count}개 항목 선택됨 | {total}개 중 {count}개 항목 선택됨",
-      "selectionSummaryAll": "모든 항목 선택됨 | 전체 {count}개 항목 선택됨",
       "advancedButton": "고급",
       "simpleButton": "초기화",
       "advancedTitle": "고급 재생목록 선택",
@@ -610,7 +604,6 @@
     }
   },
   "settings": {
-    "title": "설정",
     "reset": {
       "label": "초기화",
       "confirm": "다시 클릭하면 초기화됩니다"
@@ -743,7 +736,7 @@
       },
       "preciseCuts": {
         "label": "정밀 자르기:",
-        "hint": "가까운 키프레임이 아닌 정확한 프레임에서 자릅니다. 매우 느립니다.\n일반 자르기가 잘못되거나, 깨지거나, 화면이 검게 나오거나 일부가 누락될 때만 사용하세요."
+        "hint": "SponsorBlock 제거 및 부분 다운로드가 정확한 프레임에서 잘리도록 합니다. 매우 느립니다.\n일반 자르기가 잘못되거나, 깨지거나, 화면이 검게 나오거나 일부가 누락될 때만 사용하세요."
       },
       "partialDownload": {
         "legend": "부분 다운로드",
@@ -771,7 +764,7 @@
         "link": "자막 설정"
       },
       "keepOriginalStreams": {
-        "label": "원본 스트림 유지",
+        "label": "원본 스트림 유지:",
         "hint": "선택한 후처리 단계에서 필요로 하지 않는 한 컨테이너 변환 및 재인코딩을 피합니다."
       },
       "postprocess": {
@@ -907,10 +900,6 @@
       "apiUrl": {
         "label": "API URL:"
       },
-      "preciseCuts": {
-        "label": "정밀 자르기:",
-        "hint": "SponsorBlock 제거 및 부분 다운로드가 정확한 프레임에서 잘리도록 합니다. 매우 느립니다.\n일반 자르기가 잘못되거나, 깨지거나, 화면이 검게 나오거나 일부가 누락될 때만 사용하세요."
-      },
       "parts": {
         "sponsor": {
           "label": "스폰서",
@@ -971,23 +960,23 @@
       "legendLabel": "이 앱이 시스템과 통합되는 방식을 구성하세요.",
       "trayEnabled": {
         "label": {
-          "generic": "시스템 트레이 아이콘 표시"
+          "generic": "시스템 트레이 아이콘 표시:"
         },
         "hint": {
           "generic": "빠른 접근을 위해 시스템 트레이에 아이콘을 표시합니다."
         }
       },
       "minimiseToTray": {
-        "label": "닫을 때 트레이로 최소화",
+        "label": "닫을 때 트레이로 최소화:",
         "hint": "창을 닫으면 앱이 종료되지 않고 시스템 트레이에 숨겨집니다."
       },
       "autoStart": {
-        "label": "로그인 시 자동 시작",
+        "label": "로그인 시 자동 시작:",
         "hint": "로그인할 때 Open Video Downloader를 자동으로 실행합니다."
       },
       "autoStartMinimised": {
         "label": {
-          "windows": "로그인 시 트레이로 최소화된 상태로 시작"
+          "windows": "로그인 시 트레이로 최소화된 상태로 시작:"
         },
         "hint": {
           "windows": "앱이 로그인 시 시작될 때 창을 열지 않고 시스템 트레이에서 시작됩니다.",
@@ -1253,7 +1242,9 @@
     "version": "버전: {version}",
     "links": {
       "github": "GitHub",
-      "wiki": "위키",
+      "guide": "User guide",
+      "privacy": "Privacy",
+      "changelog": "Changelog",
       "reportABug": "버그 신고"
     }
   }

@@ -97,7 +97,7 @@
       "legendBadge": "Empfohlen",
       "legendLabel": "Verwende angemeldete Sitzungen aus einer Cookie-Datei oder importiere sie aus deinem Browser.",
       "file": {
-        "label": "Cookies aus einer cookies.txt-Datei laden",
+        "label": "Cookies aus einer cookies.txt-Datei laden:",
         "hint": "Um deine Cookies in eine Datei zu exportieren {link}",
         "hintLink": "siehe die Anleitung."
       },
@@ -185,12 +185,10 @@
           "empty": "Keine Fehler gefunden."
         },
         "warnings": {
-          "count": "Warnungen ({count})",
-          "empty": "Keine Warnungen gefunden."
+          "count": "Warnungen ({count})"
         },
         "skipped": {
           "count": "Übersprungene Elemente ({count})",
-          "empty": "Es wurden keine Elemente durch Filter übersprungen.",
           "items": "{count} Element | {count} Elemente"
         },
         "all": {
@@ -360,10 +358,6 @@
   },
   "subtitles": {
     "title": "Untertitel",
-    "defaults": {
-      "legend": "Untertitel-Standards",
-      "hint": "Wird verwendet, wenn ein Video Untertitel hat."
-    },
     "options": {
       "enable": {
         "legend": "Untertitel-Downloads",
@@ -537,6 +531,7 @@
       "date": {
         "modeLabel": "Abgleichsregel",
         "clearMode": "Aus",
+        "noPreset": "None",
         "hint": "Wähle zuerst die Datumsregel und dann das Datum.",
         "mode": {
           "exact": "Am Datum",
@@ -571,7 +566,6 @@
       "title": "Playlist-Elemente auswählen",
       "description": "Wähle aus, welche Elemente heruntergeladen werden sollen:",
       "selectionSummary": "{count} von {total} Element ausgewählt | {count} von {total} Elemente ausgewählt",
-      "selectionSummaryAll": "Alle Elemente ausgewählt | Alle {count} Elemente ausgewählt",
       "advancedButton": "Erweitert",
       "simpleButton": "Zurücksetzen",
       "advancedTitle": "Erweiterte Playlist-Auswahl",
@@ -610,7 +604,6 @@
     }
   },
   "settings": {
-    "title": "Einstellungen",
     "reset": {
       "label": "Zurücksetzen",
       "confirm": "Zum Zurücksetzen erneut klicken"
@@ -743,7 +736,7 @@
       },
       "preciseCuts": {
         "label": "Präziser Schnitt:",
-        "hint": "Schneidet an exakten Frames statt an benachbarten Keyframes. Sehr langsam.\nNur aktivieren, wenn normale Schnitte falsch, beschädigt oder mit schwarzen/fehlenden Segmenten sind."
+        "hint": "Sorgt dafür, dass SponsorBlock-Entfernungen und Teil-Downloads an exakten Frames schneiden. Sehr langsam.\nNur aktivieren, wenn normale Schnitte falsch, beschädigt oder mit schwarzen/fehlenden Segmenten sind."
       },
       "partialDownload": {
         "legend": "Teilweiser Download",
@@ -771,7 +764,7 @@
         "link": "Untertitel konfigurieren"
       },
       "keepOriginalStreams": {
-        "label": "Originalspuren behalten",
+        "label": "Originalspuren behalten:",
         "hint": "Vermeidet Container-Wechsel und Neu-Kodierung, außer eine gewählte Nachbearbeitung erfordert es."
       },
       "postprocess": {
@@ -850,7 +843,7 @@
         }
       },
       "language": {
-        "label": "Sprache",
+        "label": "Sprache:",
         "options": {
           "system": "System ({language})"
         }
@@ -897,19 +890,15 @@
       "legend": "SponsorBlock",
       "legendLabel": "Entferne oder markiere Teile eines Videos.",
       "removeParts": {
-        "label": "Zu entfernende Teile",
+        "label": "Zu entfernende Teile:",
         "placeholder": "Wähle 1 oder mehrere Teile aus, die aus dem Video entfernt werden sollen."
       },
       "markParts": {
-        "label": "Zu markierende Teile",
+        "label": "Zu markierende Teile:",
         "placeholder": "Wähle 1 oder mehrere Teile aus, die als Kapitel markiert werden sollen."
       },
       "apiUrl": {
-        "label": "API-URL"
-      },
-      "preciseCuts": {
-        "label": "Präziser Schnitt:",
-        "hint": "Sorgt dafür, dass SponsorBlock-Entfernungen und Teil-Downloads an exakten Frames schneiden. Sehr langsam.\nNur aktivieren, wenn normale Schnitte falsch, beschädigt oder mit schwarzen/fehlenden Segmenten sind."
+        "label": "API-URL:"
       },
       "parts": {
         "sponsor": {
@@ -971,23 +960,23 @@
       "legendLabel": "Konfigurieren Sie, wie sich diese Anwendung in das System integriert.",
       "trayEnabled": {
         "label": {
-          "generic": "Systemtray-Symbol anzeigen"
+          "generic": "Systemtray-Symbol anzeigen:"
         },
         "hint": {
           "generic": "Zeigt ein Symbol im Systemtray für schnellen Zugriff an."
         }
       },
       "minimiseToTray": {
-        "label": "Beim Schließen ins Systemtray minimieren",
+        "label": "Beim Schließen ins Systemtray minimieren:",
         "hint": "Beim Schließen des Fensters wird die App im Systemtray ausgeblendet, anstatt beendet zu werden."
       },
       "autoStart": {
-        "label": "Beim Anmelden starten",
+        "label": "Beim Anmelden starten:",
         "hint": "Open Video Downloader automatisch beim Anmelden starten."
       },
       "autoStartMinimised": {
         "label": {
-          "windows": "Beim Anmelden minimiert im Systemtray starten"
+          "windows": "Beim Anmelden minimiert im Systemtray starten:"
         },
         "hint": {
           "windows": "Wenn die App beim Anmelden startet, wird sie im Systemtray gestartet, ohne ein Fenster zu öffnen.",
@@ -1253,7 +1242,9 @@
     "version": "Version: {version}",
     "links": {
       "github": "GitHub",
-      "wiki": "Wiki",
+      "guide": "User guide",
+      "privacy": "Privacy",
+      "changelog": "Changelog",
       "reportABug": "Fehler melden"
     }
   }

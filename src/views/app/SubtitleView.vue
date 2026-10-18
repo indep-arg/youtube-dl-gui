@@ -65,9 +65,9 @@
                   @change="toggleLanguage(option.code)"
                 />
                 <span class="flex flex-col">
-                  <span class="font-medium">{{ option.englishName }}</span>
+                  <span class="font-medium">{{ option.displayName }}</span>
                   <span
-                    v-if="option.nativeName && option.nativeName !== option.englishName"
+                    v-if="option.nativeName && option.nativeName !== option.displayName"
                     class="text-xs text-base-content/60"
                   >
                     {{ option.nativeName }}
@@ -159,6 +159,7 @@ import BaseFieldset from '../../components/base/BaseFieldset.vue';
 import BaseSubNav from '../../components/base/BaseSubNav.vue';
 import {
   languageOptions,
+  getLocalizedLanguageName,
   getSubtitleLanguageLabel,
   type SubtitleLanguageOption,
 } from '../../helpers/subtitles/languages.ts';
@@ -174,7 +175,7 @@ import { useToastStore } from '../../stores/toast.ts';
 import { useI18n } from 'vue-i18n';
 import type { SubtitleSettings } from '../../tauri/types/config.ts';
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
 const settingsStore = useSettingsStore();
 const toastStore = useToastStore();
 
@@ -229,21 +230,29 @@ function isLanguageSelected(code: string): boolean {
   return languageSelection.value.includes(code);
 }
 
-function matchesQuery(option: SubtitleLanguageOption): boolean {
+type LocalizedLanguageOption = SubtitleLanguageOption & { displayName: string };
+
+// Names in the language of the app (the English ones are still found by searching).
+const localizedLanguageOptions = computed<LocalizedLanguageOption[]>(() => languageOptions
+  .map(option => ({ ...option, displayName: getLocalizedLanguageName(option, locale.value) }))
+  .sort((a, b) => a.displayName.localeCompare(b.displayName, locale.value)));
+
+function matchesQuery(option: LocalizedLanguageOption): boolean {
   const query = languageQuery.value.trim().toLowerCase();
   if (!query) {
     return true;
   }
 
   return (
-    option.englishName.toLowerCase().includes(query)
+    option.displayName.toLowerCase().includes(query)
+    || option.englishName.toLowerCase().includes(query)
     || option.nativeName.toLowerCase().includes(query)
     || option.code.toLowerCase().includes(query)
   );
 }
 
 const filteredLanguageOptions = computed(() =>
-  languageOptions.filter(option => matchesQuery(option) || isLanguageSelected(option.code)),
+  localizedLanguageOptions.value.filter(option => matchesQuery(option) || isLanguageSelected(option.code)),
 );
 
 const selectedLanguageBadges = computed(() => {
@@ -252,7 +261,7 @@ const selectedLanguageBadges = computed(() => {
   }
 
   return languageSelection.value
-    .map(code => getSubtitleLanguageLabel(code))
+    .map(code => getSubtitleLanguageLabel(code, locale.value))
     .filter((label, index, array) => array.indexOf(label) === index);
 });
 

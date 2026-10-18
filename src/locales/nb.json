@@ -97,7 +97,7 @@
       "legendBadge": "Anbefalt",
       "legendLabel": "Bruk påloggede økter fra en informasjonskapselfil eller importer fra nettleseren din.",
       "file": {
-        "label": "Last inn informasjonskapsler fra en cookies.txt-fil",
+        "label": "Last inn informasjonskapsler fra en cookies.txt-fil:",
         "hint": "For å eksportere informasjonskapslene dine til en fil {link}",
         "hintLink": "se veiledningen."
       },
@@ -185,12 +185,10 @@
           "empty": "Ingen feil funnet."
         },
         "warnings": {
-          "count": "Advarsler ({count})",
-          "empty": "Ingen advarsler funnet."
+          "count": "Advarsler ({count})"
         },
         "skipped": {
           "count": "Hoppede over elementer ({count})",
-          "empty": "Ingen elementer ble hoppet over av filtrene.",
           "items": "{count} element | {count} elementer"
         },
         "all": {
@@ -360,10 +358,6 @@
   },
   "subtitles": {
     "title": "Undertekster",
-    "defaults": {
-      "legend": "Standard for undertekster",
-      "hint": "Brukes når en video har undertekster."
-    },
     "options": {
       "enable": {
         "legend": "Nedlasting av undertekster",
@@ -537,6 +531,7 @@
       "date": {
         "modeLabel": "Matchregel",
         "clearMode": "Av",
+        "noPreset": "None",
         "hint": "Velg datoregel først, og deretter datoen.",
         "mode": {
           "exact": "På datoen",
@@ -571,7 +566,6 @@
       "title": "Velg spillelisteelementer",
       "description": "Velg hvilke elementer som skal lastes ned:",
       "selectionSummary": "{count} av {total} element valgt | {count} av {total} elementer valgt",
-      "selectionSummaryAll": "Alle elementer valgt | Alle {count} elementer valgt",
       "advancedButton": "Avansert",
       "simpleButton": "Tilbakestill",
       "advancedTitle": "Avansert spillelistevalg",
@@ -610,7 +604,6 @@
     }
   },
   "settings": {
-    "title": "Innstillinger",
     "reset": {
       "label": "Tilbakestill",
       "confirm": "Klikk igjen for å tilbakestille"
@@ -743,7 +736,7 @@
       },
       "preciseCuts": {
         "label": "Presist klipp:",
-        "hint": "Klipper på nøyaktige bilder i stedet for nærliggende nøkkelbilder. Veldig tregt.\nAktiver bare hvis vanlige klipp blir feil, forvrengt eller får svarte/manglende segmenter."
+        "hint": "Gjør at SponsorBlock-fjerning og delvise nedlastinger klipper på nøyaktige bilder. Veldig tregt.\nAktiver bare hvis vanlige klipp blir feil, forvrengt eller får svarte/manglende segmenter."
       },
       "partialDownload": {
         "legend": "Delvis nedlasting",
@@ -771,7 +764,7 @@
         "link": "Konfigurer undertekster"
       },
       "keepOriginalStreams": {
-        "label": "Behold originalstrømmene",
+        "label": "Behold originalstrømmene:",
         "hint": "Unngår containerbytte og omkoding, med mindre valgt etterbehandling krever det."
       },
       "postprocess": {
@@ -850,7 +843,7 @@
         }
       },
       "language": {
-        "label": "Språk",
+        "label": "Språk:",
         "options": {
           "system": "System ({language})"
         }
@@ -897,19 +890,15 @@
       "legend": "SponsorBlock",
       "legendLabel": "Fjern eller merk deler av en video.",
       "removeParts": {
-        "label": "Deler å fjerne",
+        "label": "Deler å fjerne:",
         "placeholder": "Velg 1 eller flere deler å fjerne fra videoen."
       },
       "markParts": {
-        "label": "Deler å merke",
+        "label": "Deler å merke:",
         "placeholder": "Velg 1 eller flere deler å merke med et kapittel."
       },
       "apiUrl": {
-        "label": "API URL"
-      },
-      "preciseCuts": {
-        "label": "Presist klipp:",
-        "hint": "Gjør at SponsorBlock-fjerning og delvise nedlastinger klipper på nøyaktige bilder. Veldig tregt.\nAktiver bare hvis vanlige klipp blir feil, forvrengt eller får svarte/manglende segmenter."
+        "label": "API URL:"
       },
       "parts": {
         "sponsor": {
@@ -971,23 +960,23 @@
       "legendLabel": "Konfigurer hvordan denne applikasjonen integreres med systemet.",
       "trayEnabled": {
         "label": {
-          "generic": "Vis ikon i systemstatusfeltet"
+          "generic": "Vis ikon i systemstatusfeltet:"
         },
         "hint": {
           "generic": "Viser et ikon i systemstatusfeltet for rask tilgang."
         }
       },
       "minimiseToTray": {
-        "label": "Minimer til systemstatusfeltet ved lukking",
+        "label": "Minimer til systemstatusfeltet ved lukking:",
         "hint": "Når vinduet lukkes, skjules appen i systemstatusfeltet i stedet for å avsluttes."
       },
       "autoStart": {
-        "label": "Start ved pålogging",
+        "label": "Start ved pålogging:",
         "hint": "Start Open Video Downloader automatisk når du logger på."
       },
       "autoStartMinimised": {
         "label": {
-          "windows": "Start minimert til systemstatusfeltet ved pålogging"
+          "windows": "Start minimert til systemstatusfeltet ved pålogging:"
         },
         "hint": {
           "windows": "Når appen starter ved pålogging, starter den i systemstatusfeltet uten å åpne et vindu.",
@@ -1253,7 +1242,9 @@
     "version": "Versjon: {version}",
     "links": {
       "github": "GitHub",
-      "wiki": "Wiki",
+      "guide": "User guide",
+      "privacy": "Privacy",
+      "changelog": "Changelog",
       "reportABug": "Rapporter en feil"
     }
   }

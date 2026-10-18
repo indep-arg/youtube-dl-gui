@@ -97,7 +97,7 @@
       "legendBadge": "Recomendado",
       "legendLabel": "Utiliza sesiones iniciadas desde un archivo de cookies o impórtalas desde tu navegador.",
       "file": {
-        "label": "Cargar cookies desde un archivo cookies.txt",
+        "label": "Cargar cookies desde un archivo cookies.txt:",
         "hint": "Para exportar tus cookies a un archivo {link}",
         "hintLink": "consulta la guía."
       },
@@ -185,12 +185,10 @@
           "empty": "No se encontraron errores."
         },
         "warnings": {
-          "count": "Advertencias ({count})",
-          "empty": "No se encontraron advertencias."
+          "count": "Advertencias ({count})"
         },
         "skipped": {
           "count": "Elementos omitidos ({count})",
-          "empty": "Ningún elemento fue omitido por los filtros.",
           "items": "{count} elemento | {count} elementos"
         },
         "all": {
@@ -360,10 +358,6 @@
   },
   "subtitles": {
     "title": "Subtítulos",
-    "defaults": {
-      "legend": "Valores predeterminados de subtítulos",
-      "hint": "Se usan cuando un video tiene subtítulos."
-    },
     "options": {
       "enable": {
         "legend": "Descargas de subtítulos",
@@ -411,7 +405,7 @@
   "location": {
     "title": "Carpeta de descargas",
     "downloadDir": {
-      "label": "Carpeta de descargas",
+      "label": "Carpeta",
       "hint": "Haz clic para seleccionar dónde se guardarán los videos."
     },
     "directory": {
@@ -537,6 +531,7 @@
       "date": {
         "modeLabel": "Condición de fecha",
         "clearMode": "Desactivar",
+        "noPreset": "Ninguno",
         "hint": "Elige la condición de fecha y luego selecciona la fecha.",
         "mode": {
           "exact": "En esa fecha",
@@ -571,7 +566,6 @@
       "title": "Elegir elementos de la lista",
       "description": "Selecciona los elementos que deseas descargar:",
       "selectionSummary": "{count} de {total} elemento seleccionado | {count} de {total} elementos seleccionados",
-      "selectionSummaryAll": "Todos los elementos seleccionados | Todos los {count} elementos seleccionados",
       "advancedButton": "Avanzado",
       "simpleButton": "Restablecer",
       "advancedTitle": "Selección avanzada de lista",
@@ -610,7 +604,6 @@
     }
   },
   "settings": {
-    "title": "Configuración",
     "reset": {
       "label": "Restablecer",
       "confirm": "Presiona de nuevo para restablecer"
@@ -743,7 +736,7 @@
       },
       "preciseCuts": {
         "label": "Corte preciso:",
-        "hint": "Permite que las eliminaciones de SponsorBlock y las descargas parciales se realicen en fotogramas exactos, aunque el proceso es mucho más lento.\nHabilítalo solo si los cortes normales son incorrectos, están distorsionados o contienen segmentos negros o faltantes."
+        "hint": "Permite que las eliminaciones de SponsorBlock y las descargas parciales se realicen en fotogramas exactos, aunque el proceso es mucho más lento.\nHabilítalo solo si los cortes normales son incorrectos, distorsionados o contienen segmentos negros o faltantes."
       },
       "partialDownload": {
         "legend": "Descarga parcial",
@@ -771,7 +764,7 @@
         "link": "Configurar subtítulos"
       },
       "keepOriginalStreams": {
-        "label": "Mantener pistas originales",
+        "label": "Mantener pistas originales:",
         "hint": "Evita la conversión de contenedor y la recodificación a menos que un paso de posprocesamiento seleccionado lo requiera."
       },
       "postprocess": {
@@ -907,10 +900,6 @@
       "apiUrl": {
         "label": "URL de la API:"
       },
-      "preciseCuts": {
-        "label": "Corte preciso:",
-        "hint": "Permite que las eliminaciones de SponsorBlock y las descargas parciales se realicen en fotogramas exactos, aunque el proceso es mucho más lento.\nHabilítalo solo si los cortes normales son incorrectos, distorsionados o contienen segmentos negros o faltantes."
-      },
       "parts": {
         "sponsor": {
           "label": "Patrocinador",
@@ -971,23 +960,23 @@
       "legendLabel": "Configura cómo se integra esta aplicación con el sistema.",
       "trayEnabled": {
         "label": {
-          "generic": "Mostrar ícono en la bandeja del sistema"
+          "generic": "Mostrar ícono en la bandeja del sistema:"
         },
         "hint": {
           "generic": "Muestra un ícono en la bandeja del sistema para acceso rápido."
         }
       },
       "minimiseToTray": {
-        "label": "Minimizar en la bandeja del sistema al cerrar",
+        "label": "Minimizar en la bandeja del sistema al cerrar:",
         "hint": "Cerrar la ventana oculta la app en la bandeja del sistema en lugar de cerrarla por completo."
       },
       "autoStart": {
-        "label": "Ejecutar al iniciar sesión",
+        "label": "Ejecutar al iniciar sesión:",
         "hint": "Lanza Open Video Downloader automáticamente cuando inicies sesión."
       },
       "autoStartMinimised": {
         "label": {
-          "windows": "Iniciar minimizado en la bandeja al iniciar sesión"
+          "windows": "Iniciar minimizado en la bandeja al iniciar sesión:"
         },
         "hint": {
           "windows": "Al iniciar sesión, la app se ejecutará en la bandeja del sistema sin abrir una ventana.",
@@ -1253,7 +1242,9 @@
     "version": "Versión: {version}",
     "links": {
       "github": "GitHub",
-      "wiki": "Wiki",
+      "guide": "Guía del usuario",
+      "privacy": "Privacidad",
+      "changelog": "Historial de cambios",
       "reportABug": "Reportar un error (bug)"
     }
   }

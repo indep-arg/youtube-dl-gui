@@ -97,7 +97,7 @@
       "legendBadge": "Suggerito",
       "legendLabel": "Usa le sessioni registrate da un file cookie o importalo dal browser.",
       "file": {
-        "label": "Carica i cookie da un file cookies.txt",
+        "label": "Carica i cookie da un file cookies.txt:",
         "hint": "Per esportare i cookie in un file {link}",
         "hintLink": "vedi la guida."
       },
@@ -185,12 +185,10 @@
           "empty": "Nessun errore."
         },
         "warnings": {
-          "count": "Avvisi ({count})",
-          "empty": "Nessun avviso."
+          "count": "Avvisi ({count})"
         },
         "skipped": {
           "count": "Elementi ignorati ({count})",
-          "empty": "Nessun elemento è stato escluso dai filtri.",
           "items": "{count} elemento | {count} elementi"
         },
         "all": {
@@ -360,10 +358,6 @@
   },
   "subtitles": {
     "title": "Sottotitoli",
-    "defaults": {
-      "legend": "Predefiniti sottotitoli",
-      "hint": "Usati quando il video ha i sottotitoli."
-    },
     "options": {
       "enable": {
         "legend": "Download sottotitoli",
@@ -537,6 +531,7 @@
       "date": {
         "modeLabel": "Regola di corrispondenza",
         "clearMode": "Disattivato",
+        "noPreset": "None",
         "hint": "Scegli prima la regola della data, poi la data.",
         "mode": {
           "exact": "Nella data",
@@ -571,7 +566,6 @@
       "title": "Scegli gli elementi della playlist",
       "description": "Seleziona quali elementi scaricare:",
       "selectionSummary": "{count} elemento selezionato su {total} | {count} elementi selezionati su {total}",
-      "selectionSummaryAll": "Tutti gli elementi selezionati | Tutti i {count} elementi selezionati",
       "advancedButton": "Avanzate",
       "simpleButton": "Reimposta",
       "advancedTitle": "Selezione avanzata della playlist",
@@ -610,7 +604,6 @@
     }
   },
   "settings": {
-    "title": "Impostazioni",
     "reset": {
       "label": "Ripristina",
       "confirm": "Clic di nuovo"
@@ -743,7 +736,7 @@
       },
       "preciseCuts": {
         "label": "Taglio preciso:",
-        "hint": "Taglia i fotogrammi esatti invece che i fotogrammi chiave vicini. Molto lento.\nAbilita solo se i tagli normali sono sbagliati, confusi o presentano segmenti neri/mancanti."
+        "hint": "Le rimozioni di SponsorBlock e i download parziali vengono tagliati a fotogrammi esatti. Molto lento.\nAbilita solo se i tagli normali sono sbagliati, confusi o presentano segmenti neri/mancanti."
       },
       "partialDownload": {
         "legend": "Download parziale",
@@ -771,7 +764,7 @@
         "link": "Configura sottotitoli"
       },
       "keepOriginalStreams": {
-        "label": "Mantieni stream originali",
+        "label": "Mantieni stream originali:",
         "hint": "Evita la conversione e la ricodifica del contenitore a meno che non sia richiesto da una fase di post-elaborazione selezionata."
       },
       "postprocess": {
@@ -850,7 +843,7 @@
         }
       },
       "language": {
-        "label": "Lingua UI",
+        "label": "Lingua UI:",
         "options": {
           "system": "Sistema ({language})"
         }
@@ -906,10 +899,6 @@
       },
       "apiUrl": {
         "label": "URL API:"
-      },
-      "preciseCuts": {
-        "label": "Taglio preciso:",
-        "hint": "Le rimozioni di SponsorBlock e i download parziali vengono tagliati a fotogrammi esatti. Molto lento.\nAbilita solo se i tagli normali sono sbagliati, confusi o presentano segmenti neri/mancanti."
       },
       "parts": {
         "sponsor": {
@@ -971,23 +960,23 @@
       "legendLabel": "Configura come l'applicazione si integra con il sistema.",
       "trayEnabled": {
         "label": {
-          "generic": "Visualizza icona nella barra di sistema"
+          "generic": "Visualizza icona nella barra di sistema:"
         },
         "hint": {
           "generic": "Visualizza un'icona nella barra di sistema per un accesso rapido."
         }
       },
       "minimiseToTray": {
-        "label": "Alla chiusura minimizza nella barra sistema",
+        "label": "Alla chiusura minimizza nella barra sistema:",
         "hint": "Chiudendo la finestra, l'app viene nascosta nella barra di sistema invece di essere chiusa."
       },
       "autoStart": {
-        "label": "Avvio automatico",
+        "label": "Avvio automatico:",
         "hint": "Esegui automaticamente Open Video Downloader all'avvio sistema."
       },
       "autoStartMinimised": {
         "label": {
-          "windows": "Avvia ridotto nella barra di sistema"
+          "windows": "Avvia ridotto nella barra di sistema:"
         },
         "hint": {
           "windows": "Quando l’app si avvia all’accesso, viene avviata nella barra di sistema senza aprire una finestra.",
@@ -1253,7 +1242,9 @@
     "version": "Versione: {version}",
     "links": {
       "github": "GitHub",
-      "wiki": "Wiki",
+      "guide": "User guide",
+      "privacy": "Privacy",
+      "changelog": "Changelog",
       "reportABug": "Segnala bug"
     }
   }

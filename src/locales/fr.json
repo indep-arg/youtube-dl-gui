@@ -97,7 +97,7 @@
       "legendBadge": "Recommandé",
       "legendLabel": "Utiliser des sessions connectées depuis un fichier cookies ou importer depuis votre navigateur.",
       "file": {
-        "label": "Charger les cookies depuis un fichier cookies.txt",
+        "label": "Charger les cookies depuis un fichier cookies.txt :",
         "hint": "Pour exporter vos cookies vers un fichier {link}",
         "hintLink": "voir le guide."
       },
@@ -185,12 +185,10 @@
           "empty": "Aucune erreur trouvée."
         },
         "warnings": {
-          "count": "Avertissements ({count})",
-          "empty": "Aucun avertissement trouvé."
+          "count": "Avertissements ({count})"
         },
         "skipped": {
           "count": "Éléments ignorés ({count})",
-          "empty": "Aucun élément n’a été ignoré par les filtres.",
           "items": "{count} élément | {count} éléments"
         },
         "all": {
@@ -360,10 +358,6 @@
   },
   "subtitles": {
     "title": "Sous-titres",
-    "defaults": {
-      "legend": "Sous-titres par défaut",
-      "hint": "Utilisé lorsqu’une vidéo a des sous-titres."
-    },
     "options": {
       "enable": {
         "legend": "Téléchargement des sous-titres",
@@ -537,6 +531,7 @@
       "date": {
         "modeLabel": "Règle de correspondance",
         "clearMode": "Désactivé",
+        "noPreset": "None",
         "hint": "Choisissez d’abord la règle de date, puis la date.",
         "mode": {
           "exact": "À la date",
@@ -571,7 +566,6 @@
       "title": "Choisir les éléments de la playlist",
       "description": "Sélectionnez les éléments à télécharger :",
       "selectionSummary": "{count} élément sélectionné sur {total} | {count} éléments sélectionnés sur {total}",
-      "selectionSummaryAll": "Tous les éléments sont sélectionnés | Les {count} éléments sont sélectionnés",
       "advancedButton": "Avancé",
       "simpleButton": "Réinitialiser",
       "advancedTitle": "Sélection avancée de playlist",
@@ -610,7 +604,6 @@
     }
   },
   "settings": {
-    "title": "Paramètres",
     "reset": {
       "label": "Réinitialiser",
       "confirm": "Cliquez encore"
@@ -743,7 +736,7 @@
       },
       "preciseCuts": {
         "label": "Découpe précise :",
-        "hint": "Découpe à des images exactes plutôt qu’aux images clés voisines. Très lent.\nÀ activer uniquement si les découpes normales sont incorrectes, corrompues ou produisent des segments noirs/manquants."
+        "hint": "Force SponsorBlock et les téléchargements partiels à découper sur des images exactes. Très lent.\nÀ activer uniquement si les découpes normales sont incorrectes, corrompues ou produisent des segments noirs/manquants."
       },
       "partialDownload": {
         "legend": "Téléchargement partiel",
@@ -771,7 +764,7 @@
         "link": "Configurer les sous-titres"
       },
       "keepOriginalStreams": {
-        "label": "Garder les flux d'origine",
+        "label": "Garder les flux d'origine :",
         "hint": "Évite les changements de conteneur et le réencodage, sauf si un post-traitement l’exige."
       },
       "postprocess": {
@@ -850,7 +843,7 @@
         }
       },
       "language": {
-        "label": "Langue",
+        "label": "Langue :",
         "options": {
           "system": "Système ({language})"
         }
@@ -897,19 +890,15 @@
       "legend": "SponsorBlock",
       "legendLabel": "Supprimer ou marquer des parties d’une vidéo.",
       "removeParts": {
-        "label": "Parties à supprimer",
+        "label": "Parties à supprimer :",
         "placeholder": "Sélectionnez 1 ou plusieurs parties à supprimer de la vidéo."
       },
       "markParts": {
-        "label": "Parties à marquer",
+        "label": "Parties à marquer :",
         "placeholder": "Sélectionnez 1 ou plusieurs parties à marquer avec un chapitre."
       },
       "apiUrl": {
-        "label": "URL de l’API"
-      },
-      "preciseCuts": {
-        "label": "Découpe précise :",
-        "hint": "Force SponsorBlock et les téléchargements partiels à découper sur des images exactes. Très lent.\nÀ activer uniquement si les découpes normales sont incorrectes, corrompues ou produisent des segments noirs/manquants."
+        "label": "URL de l’API :"
       },
       "parts": {
         "sponsor": {
@@ -971,23 +960,23 @@
       "legendLabel": "Configurer la manière dont cette application s’intègre au système.",
       "trayEnabled": {
         "label": {
-          "generic": "Afficher l’icône dans la zone de notification"
+          "generic": "Afficher l’icône dans la zone de notification :"
         },
         "hint": {
           "generic": "Affiche une icône dans la zone de notification pour un accès rapide."
         }
       },
       "minimiseToTray": {
-        "label": "Réduire dans la zone de notification à la fermeture",
+        "label": "Réduire dans la zone de notification à la fermeture :",
         "hint": "Fermer la fenêtre masque l’application dans la zone de notification au lieu de la quitter."
       },
       "autoStart": {
-        "label": "Démarrer à la connexion",
+        "label": "Démarrer à la connexion :",
         "hint": "Lancer automatiquement Open Video Downloader lors de la connexion."
       },
       "autoStartMinimised": {
         "label": {
-          "windows": "Démarrer réduit dans la zone de notification à la connexion"
+          "windows": "Démarrer réduit dans la zone de notification à la connexion :"
         },
         "hint": {
           "windows": "Lorsque l’application démarre à la connexion, elle se lance dans la zone de notification sans ouvrir de fenêtre.",
@@ -1253,7 +1242,9 @@
     "version": "Version : {version}",
     "links": {
       "github": "GitHub",
-      "wiki": "Wiki",
+      "guide": "User guide",
+      "privacy": "Privacy",
+      "changelog": "Changelog",
       "reportABug": "Signaler un bug"
     }
   }

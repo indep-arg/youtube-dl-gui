@@ -30,6 +30,36 @@ export const languageOptionsLookup = new Map(
   languageOptions.map(option => [option.code, option] as const),
 );
 
+const displayNamesByLocale = new Map<string, Intl.DisplayNames | null>();
+
+function displayNamesFor(locale: string): Intl.DisplayNames | null {
+  if (!displayNamesByLocale.has(locale)) {
+    try {
+      displayNamesByLocale.set(locale, new Intl.DisplayNames([locale], { type: 'language' }));
+    } catch {
+      displayNamesByLocale.set(locale, null);
+    }
+  }
+  return displayNamesByLocale.get(locale) ?? null;
+}
+
+/** The name of a language in the language of the app, falling back to the English name. */
+export function getLocalizedLanguageName(option: SubtitleLanguageOption, locale: string): string {
+  if (!locale || locale.toLowerCase().startsWith('en')) {
+    return option.englishName;
+  }
+
+  try {
+    const name = displayNamesFor(locale)?.of(option.code);
+    if (name && name.toLowerCase() !== option.code.toLowerCase()) {
+      return name.charAt(0).toLocaleUpperCase(locale) + name.slice(1);
+    }
+  } catch {
+    // Not a code Intl knows: use the English name.
+  }
+  return option.englishName;
+}
+
 function normalizeLocale(candidate: string): string {
   const parts = candidate.replace(/_/g, '-').split('-');
   const language = parts[0]?.toLowerCase() ?? '';
@@ -38,7 +68,7 @@ function normalizeLocale(candidate: string): string {
   return region ? `${language}-${region}` : language;
 }
 
-export function getSubtitleLanguageLabel(code: string): string {
+export function getSubtitleLanguageLabel(code: string, locale = 'en'): string {
   const trimmed = code.trim();
   if (!trimmed) {
     return code;
@@ -53,7 +83,7 @@ export function getSubtitleLanguageLabel(code: string): string {
   const exact = languageOptionsLookup.get(base)
     || languageOptionsLookup.get(base.toLowerCase());
 
-  const label = exact?.englishName ?? base.toUpperCase();
+  const label = exact ? getLocalizedLanguageName(exact, locale) : base.toUpperCase();
 
   return isOrig ? `${label} (Original audio)` : label;
 }

@@ -97,7 +97,7 @@
       "legendBadge": "Recomendado",
       "legendLabel": "Utiliza sessões iniciadas a partir de um ficheiro de cookies ou importa-as do teu navegador.",
       "file": {
-        "label": "Carregar cookies de um ficheiro cookies.txt",
+        "label": "Carregar cookies de um ficheiro cookies.txt:",
         "hint": "Para exportares os teus cookies para um ficheiro, {link}",
         "hintLink": "consulta o guia."
       },
@@ -185,12 +185,10 @@
           "empty": "Nenhum erro encontrado."
         },
         "warnings": {
-          "count": "Avisos ({count})",
-          "empty": "Nenhum aviso encontrado."
+          "count": "Avisos ({count})"
         },
         "skipped": {
           "count": "Skipped items ({count})",
-          "empty": "No items were skipped by filters.",
           "items": "{count} item | {count} items"
         },
         "all": {
@@ -360,10 +358,6 @@
   },
   "subtitles": {
     "title": "Legendas",
-    "defaults": {
-      "legend": "Predefinições de legendas",
-      "hint": "Utilizadas quando um vídeo tem legendas."
-    },
     "options": {
       "enable": {
         "legend": "Transferência de legendas",
@@ -537,6 +531,7 @@
       "date": {
         "modeLabel": "Match rule",
         "clearMode": "Off",
+        "noPreset": "None",
         "hint": "Pick the date rule, then choose the date.",
         "mode": {
           "exact": "On date",
@@ -571,7 +566,6 @@
       "title": "Choose playlist items",
       "description": "Select what items to download:",
       "selectionSummary": "{count} of {total} item selected | {count} of {total} items selected",
-      "selectionSummaryAll": "All items selected | All {count} items selected",
       "advancedButton": "Advanced",
       "simpleButton": "Reset",
       "advancedTitle": "Advanced playlist selection",
@@ -610,7 +604,6 @@
     }
   },
   "settings": {
-    "title": "Definições",
     "reset": {
       "label": "Repor",
       "confirm": "Clica novamente para repor"
@@ -743,7 +736,7 @@
       },
       "preciseCuts": {
         "label": "Corte preciso:",
-        "hint": "Corta nos fotogramas exatos em vez de perto dos fotogramas-chave. Muito lento.\nAtiva apenas se os cortes normais estiverem errados, distorcidos ou tiverem segmentos pretos/em falta."
+        "hint": "Faz com que as remoções do SponsorBlock e as transferências parciais cortem nos fotogramas exatos. Muito lento.\nAtiva apenas se os cortes normais estiverem errados, distorcidos ou tiverem segmentos pretos/em falta."
       },
       "partialDownload": {
         "legend": "Transferência parcial",
@@ -771,7 +764,7 @@
         "link": "Configurar legendas"
       },
       "keepOriginalStreams": {
-        "label": "Manter streams originais",
+        "label": "Manter streams originais:",
         "hint": "Evita a conversão de contentor e a recodificação, exceto se um passo de pós-processamento selecionado o exigir."
       },
       "postprocess": {
@@ -897,19 +890,15 @@
       "legend": "SponsorBlock",
       "legendLabel": "Remover ou marcar partes de um vídeo.",
       "removeParts": {
-        "label": "Partes a remover",
+        "label": "Partes a remover:",
         "placeholder": "Seleciona 1 ou mais partes para remover do vídeo."
       },
       "markParts": {
-        "label": "Partes a marcar",
+        "label": "Partes a marcar:",
         "placeholder": "Seleciona 1 ou mais partes para marcar com um capítulo."
       },
       "apiUrl": {
-        "label": "URL da API"
-      },
-      "preciseCuts": {
-        "label": "Corte preciso:",
-        "hint": "Faz com que as remoções do SponsorBlock e as transferências parciais cortem nos fotogramas exatos. Muito lento.\nAtiva apenas se os cortes normais estiverem errados, distorcidos ou tiverem segmentos pretos/em falta."
+        "label": "URL da API:"
       },
       "parts": {
         "sponsor": {
@@ -971,23 +960,23 @@
       "legendLabel": "Configura como esta aplicação se integra no sistema.",
       "trayEnabled": {
         "label": {
-          "generic": "Mostrar ícone na área de notificação"
+          "generic": "Mostrar ícone na área de notificação:"
         },
         "hint": {
           "generic": "Mostra um ícone na área de notificação para acesso rápido."
         }
       },
       "minimiseToTray": {
-        "label": "Minimizar para a área de notificação ao fechar",
+        "label": "Minimizar para a área de notificação ao fechar:",
         "hint": "Ao fechar a janela, a aplicação é escondida na área de notificação em vez de sair."
       },
       "autoStart": {
-        "label": "Iniciar ao iniciar sessão",
+        "label": "Iniciar ao iniciar sessão:",
         "hint": "Inicia o Open Video Downloader automaticamente quando iniciares sessão."
       },
       "autoStartMinimised": {
         "label": {
-          "windows": "Iniciar minimizado na área de notificação ao iniciar sessão"
+          "windows": "Iniciar minimizado na área de notificação ao iniciar sessão:"
         },
         "hint": {
           "windows": "Quando a aplicação iniciar com a sessão, ficará na área de notificação sem abrir nenhuma janela.",
@@ -1253,7 +1242,9 @@
     "version": "Versão: {version}",
     "links": {
       "github": "GitHub",
-      "wiki": "Wiki",
+      "guide": "User guide",
+      "privacy": "Privacy",
+      "changelog": "Changelog",
       "reportABug": "Reportar um erro"
     }
   }

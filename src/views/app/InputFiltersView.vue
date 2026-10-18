@@ -37,7 +37,7 @@
                 v-model="selectedDatePreset"
                 class="select w-full"
               >
-                <option :value="null">{{ t('inputFilters.fields.date.clearMode') }}</option>
+                <option :value="null">{{ t('inputFilters.fields.date.noPreset') }}</option>
                 <option
                   v-for="preset in datePresets"
                   :key="preset.value"
@@ -50,21 +50,23 @@
           </div>
           <div class="flex flex-col gap-2">
             <span class="font-semibold">{{ t('inputFilters.fields.date.modeLabel') }}</span>
-            <div class="join w-fit max-w-full flex-wrap">
+            <div role="group" class="tabs tabs-box flex w-fit max-w-full flex-wrap gap-2">
               <button
                 v-for="option in dateModeOptions"
                 :key="option.value"
                 type="button"
-                class="btn join-item"
-                :class="dateFilter.mode === option.value ? 'btn-primary' : 'btn-soft'"
+                class="tab"
+                :class="{ 'tab-active': dateFilter.mode === option.value }"
+                :aria-pressed="dateFilter.mode === option.value"
                 @click="dateFilter.mode = option.value"
               >
                 {{ option.label }}
               </button>
               <button
                 type="button"
-                class="btn join-item"
-                :class="dateFilter.mode === null ? 'btn-primary' : 'btn-soft'"
+                class="tab"
+                :class="{ 'tab-active': dateFilter.mode === null }"
+                :aria-pressed="dateFilter.mode === null"
                 @click="clearDateFilter"
               >
                 {{ t('inputFilters.fields.date.clearMode') }}

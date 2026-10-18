@@ -97,7 +97,7 @@
       "legendBadge": "Recommended",
       "legendLabel": "Use logged in sessions from a cookies file or import from your browser.",
       "file": {
-        "label": "Load cookies from a cookies.txt file",
+        "label": "Load cookies from a cookies.txt file:",
         "hint": "In order to export your cookies to a file {link}",
         "hintLink": "see the guide."
       },
@@ -185,12 +185,10 @@
           "empty": "No errors found."
         },
         "warnings": {
-          "count": "Warnings ({count})",
-          "empty": "No warnings found."
+          "count": "Warnings ({count})"
         },
         "skipped": {
           "count": "Skipped items ({count})",
-          "empty": "No items were skipped by filters.",
           "items": "{count} item | {count} items"
         },
         "all": {
@@ -360,10 +358,6 @@
   },
   "subtitles": {
     "title": "Subtitles",
-    "defaults": {
-      "legend": "Subtitle defaults",
-      "hint": "Used when a video has subtitles."
-    },
     "options": {
       "enable": {
         "legend": "Subtitle downloads",
@@ -411,7 +405,7 @@
   "location": {
     "title": "Download location",
     "downloadDir": {
-      "label": "Download location",
+      "label": "Folder",
       "hint": "Click in the box to select where videos get downloaded to."
     },
     "directory": {
@@ -537,6 +531,7 @@
       "date": {
         "modeLabel": "Match rule",
         "clearMode": "Off",
+        "noPreset": "None",
         "hint": "Pick the date rule, then choose the date.",
         "mode": {
           "exact": "On date",
@@ -571,7 +566,6 @@
       "title": "Choose playlist items",
       "description": "Select what items to download:",
       "selectionSummary": "{count} of {total} item selected | {count} of {total} items selected",
-      "selectionSummaryAll": "All items selected | All {count} items selected",
       "advancedButton": "Advanced",
       "simpleButton": "Reset",
       "advancedTitle": "Advanced playlist selection",
@@ -610,7 +604,6 @@
     }
   },
   "settings": {
-    "title": "Settings",
     "reset": {
       "label": "Reset",
       "confirm": "Click again to reset"
@@ -743,7 +736,7 @@
       },
       "preciseCuts": {
         "label": "Precise cut:",
-        "hint": "Cuts at exact frames instead of nearby keyframes. Very slow.\nEnable only if normal cuts are wrong, garbled, or have black/missing segments."
+        "hint": "Makes SponsorBlock removals and partial downloads cut at exact frames. Very slow.\nEnable only if normal cuts are wrong, garbled, or have black/missing segments."
       },
       "partialDownload": {
         "legend": "Partial download",
@@ -771,7 +764,7 @@
         "link": "Configure subtitles"
       },
       "keepOriginalStreams": {
-        "label": "Keep original streams",
+        "label": "Keep original streams:",
         "hint": "Avoid container conversion and re-encoding unless a selected post-processing step requires it."
       },
       "postprocess": {
@@ -907,10 +900,6 @@
       "apiUrl": {
         "label": "API URL:"
       },
-      "preciseCuts": {
-        "label": "Precise cut:",
-        "hint": "Makes SponsorBlock removals and partial downloads cut at exact frames. Very slow.\nEnable only if normal cuts are wrong, garbled, or have black/missing segments."
-      },
       "parts": {
         "sponsor": {
           "label": "Sponsor",
@@ -971,23 +960,23 @@
       "legendLabel": "Configure how this application integrates with the system.",
       "trayEnabled": {
         "label": {
-          "generic": "Show system tray icon"
+          "generic": "Show system tray icon:"
         },
         "hint": {
           "generic": "Shows an icon in the system tray for quick access."
         }
       },
       "minimiseToTray": {
-        "label": "Minimize to tray on close",
+        "label": "Minimize to tray on close:",
         "hint": "Closing the window hides the app in the system tray instead of quitting."
       },
       "autoStart": {
-        "label": "Start at login",
+        "label": "Start at login:",
         "hint": "Launch Open Video Downloader automatically when you sign in."
       },
       "autoStartMinimised": {
         "label": {
-          "windows": "Start minimized to tray at login"
+          "windows": "Start minimized to tray at login:"
         },
         "hint": {
           "windows": "When the app starts at login, it will start in the system tray without opening a window.",
@@ -1253,7 +1242,9 @@
     "version": "Version: {version}",
     "links": {
       "github": "GitHub",
-      "wiki": "Wiki",
+      "guide": "User guide",
+      "privacy": "Privacy",
+      "changelog": "Changelog",
       "reportABug": "Report a bug"
     }
   }

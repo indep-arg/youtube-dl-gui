@@ -182,7 +182,7 @@ const props = defineProps({
   },
 });
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
 const groupStore = useMediaGroupStore();
 const optionsStore = useMediaOptionsStore();
 const settingsStore = useSettingsStore();
@@ -277,7 +277,7 @@ function isLanguageSelected(source: 'manual' | 'auto', language: string): boolea
 }
 
 function languageLabel(language: string): string {
-  return getSubtitleLanguageLabel(language);
+  return getSubtitleLanguageLabel(language, locale.value);
 }
 
 function languageSelectionLabel(source: 'manual' | 'auto', language: string): string {

@@ -33,6 +33,8 @@ export interface MediaItemsProgress {
   total?: number;
   ready?: number;
   done?: number;
+  /** Items that ended with an error. They are counted in `done` too. */
+  failed?: number;
   downloading?: number;
 }
 

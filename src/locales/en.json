@@ -45,6 +45,8 @@
       "progress": {
         "downloading": "Downloading queue - {done} of {total} completed.",
         "completed": "Download complete – {n} item downloaded. | Download complete – {n} items downloaded.",
+        "failed": "{n} download failed. | {n} downloads failed.",
+        "partial": "Finished: {done} downloaded, {failed} failed.",
         "ready": "Ready to download! {n} item queued. | Ready to download! {n} items queued."
       },
       "nav": {

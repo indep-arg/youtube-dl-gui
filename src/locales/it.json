@@ -45,6 +45,8 @@
       "progress": {
         "downloading": "Coda download - {done} di {total} completati.",
         "completed": "Download completato – {n} elemento scaricato. | Download completato – {n} elementi scaricati.",
+        "failed": "{n} download failed. | {n} downloads failed.",
+        "partial": "Finished: {done} downloaded, {failed} failed.",
         "ready": "Pronto per il download! {n} elemento in coda. | Pronto per il download! {n} elementi in coda."
       },
       "nav": {

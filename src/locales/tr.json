@@ -45,6 +45,8 @@
       "progress": {
         "downloading": "Sıra indiriliyor - {total} taneden {done} tanesi tamamlandı.",
         "completed": "İndirme tamamlandı – {n} içerik indirildi. | İndirme tamamlandı – {n} içerik indirildi.",
+        "failed": "{n} download failed. | {n} downloads failed.",
+        "partial": "Finished: {done} downloaded, {failed} failed.",
         "ready": "İndirmeye hazır! {n} içerik sıraya eklendi. | İndirmeye hazır! {n} içerik sıraya eklendi."
       },
       "nav": {

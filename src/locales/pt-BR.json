@@ -45,6 +45,8 @@
       "progress": {
         "downloading": "Baixando a fila - {done} de {total} completados.",
         "completed": "Download concluído – {n} item baixado. | Download concluído – {n} itens baixados.",
+        "failed": "{n} download failed. | {n} downloads failed.",
+        "partial": "Finished: {done} downloaded, {failed} failed.",
         "ready": "Pronto para baixar! {n} item na fila. | Pronto para baixar! {n} itens na fila."
       },
       "nav": {

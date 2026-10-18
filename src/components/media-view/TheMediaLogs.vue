@@ -97,7 +97,12 @@ const errors = computed((): MediaDiagnostic[] => {
     raw: fatal.details != null ? `\n${fatal.details}` : '',
     component: null,
   }));
-  return [...fatalDiagnostics, ...errorDiagnostics];
+  // The final error of a run is often the same line a diagnostic was made from: show it once.
+  const covered = (fatal: MediaDiagnostic) => errorDiagnostics.some((diagnostic) => {
+    const raw = diagnostic.raw.trim();
+    return raw !== '' && (raw.includes(fatal.message.trim()) || fatal.message.includes(raw));
+  });
+  return [...fatalDiagnostics.filter(fatal => !covered(fatal)), ...errorDiagnostics];
 });
 
 const warnings = computed(() => {

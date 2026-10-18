@@ -45,6 +45,8 @@
       "progress": {
         "downloading": "Скачивание очереди — выполнено {done} из {total}.",
         "completed": "Скачивание завершено — скачан {n} элемент. | Скачивание завершено — скачано {n} элементов.",
+        "failed": "{n} download failed. | {n} downloads failed.",
+        "partial": "Finished: {done} downloaded, {failed} failed.",
         "ready": "Готово к скачиванию! В очереди {n} элемент. | Готово к скачиванию! В очереди {n} элементов."
       },
       "nav": {

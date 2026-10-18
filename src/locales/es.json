@@ -45,6 +45,8 @@
       "progress": {
         "downloading": "Descargando cola: {done} de {total} completados.",
         "completed": "Descarga completa: {n} elemento descargado. | Descarga completa: {n} elementos descargados.",
+        "failed": "{n} descarga falló. | {n} descargas fallaron.",
+        "partial": "Terminado: {done} descargadas, {failed} con error.",
         "ready": "¡Listo para descargar! {n} elemento en cola. | ¡Listo para descargar! {n} elementos en cola."
       },
       "nav": {

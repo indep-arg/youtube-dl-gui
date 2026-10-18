@@ -45,6 +45,8 @@
       "progress": {
         "downloading": "A transferir a fila - {done} de {total} concluídos.",
         "completed": "Transferência concluída – {n} item transferido. | Transferência concluída – {n} itens transferidos.",
+        "failed": "{n} download failed. | {n} downloads failed.",
+        "partial": "Finished: {done} downloaded, {failed} failed.",
         "ready": "Pronto a transferir! {n} item na fila. | Pronto a transferir! {n} itens na fila."
       },
       "nav": {

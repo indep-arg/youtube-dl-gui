@@ -45,6 +45,8 @@
       "progress": {
         "downloading": "正在下載佇列 - 已完成 {done} / {total}。",
         "completed": "下載完成 – 已下載 {n} 個項目。 | 下載完成 – 已下載 {n} 個項目。",
+        "failed": "{n} download failed. | {n} downloads failed.",
+        "partial": "Finished: {done} downloaded, {failed} failed.",
         "ready": "準備就緒！已加入 {n} 個項目至佇列。 | 準備就緒！已加入 {n} 個項目至佇列。"
       },
       "nav": {

@@ -45,6 +45,8 @@
       "progress": {
         "downloading": "Téléchargement de la file d'attente - {done} sur {total} terminé.",
         "completed": "Téléchargement terminé – {n} élément téléchargé. | Téléchargement terminé – {n} éléments téléchargés.",
+        "failed": "{n} download failed. | {n} downloads failed.",
+        "partial": "Finished: {done} downloaded, {failed} failed.",
         "ready": "Prêt à télécharger ! {n} élément en file d'attente. | Prêt à télécharger ! {n} éléments en file d'attente."
       },
       "nav": {

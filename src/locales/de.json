@@ -45,6 +45,8 @@
       "progress": {
         "downloading": "Download-Warteschlange – {done} von {total} abgeschlossen.",
         "completed": "Download abgeschlossen – {n} Element heruntergeladen. | Download abgeschlossen – {n} Elemente heruntergeladen.",
+        "failed": "{n} download failed. | {n} downloads failed.",
+        "partial": "Finished: {done} downloaded, {failed} failed.",
         "ready": "Bereit zum Download! {n} Element in der Warteschlange. | Bereit zum Download! {n} Elemente in der Warteschlange."
       },
       "nav": {

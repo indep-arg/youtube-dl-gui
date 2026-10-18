@@ -45,6 +45,8 @@
       "progress": {
         "downloading": "Wachtrij downloaden – {done} van {total} voltooid.",
         "completed": "Download voltooid – {n} item gedownload. | Download voltooid – {n} items gedownload.",
+        "failed": "{n} download failed. | {n} downloads failed.",
+        "partial": "Finished: {done} downloaded, {failed} failed.",
         "ready": "Klaar om te downloaden! {n} item in de wachtrij. | Klaar om te downloaden! {n} items in de wachtrij."
       },
       "nav": {

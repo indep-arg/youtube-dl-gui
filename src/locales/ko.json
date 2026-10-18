@@ -45,6 +45,8 @@
       "progress": {
         "downloading": "대기열 다운로드 중 - {total}개 중 {done}개 완료.",
         "completed": "다운로드 완료 – {n}개 항목을 다운로드했습니다. | 다운로드 완료 – {n}개 항목을 다운로드했습니다.",
+        "failed": "{n} download failed. | {n} downloads failed.",
+        "partial": "Finished: {done} downloaded, {failed} failed.",
         "ready": "다운로드 준비 완료! {n}개 항목이 대기열에 있습니다. | 다운로드 준비 완료! {n}개 항목이 대기열에 있습니다."
       },
       "nav": {

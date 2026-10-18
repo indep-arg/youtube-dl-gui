@@ -45,6 +45,8 @@
       "progress": {
         "downloading": "Laster ned kø - {done} av {total} fullført.",
         "completed": "Nedlasting fullført – {n} element lastet ned. | Nedlasting fullført – {n} elementer lastet ned.",
+        "failed": "{n} download failed. | {n} downloads failed.",
+        "partial": "Finished: {done} downloaded, {failed} failed.",
         "ready": "Klar til nedlasting! {n} element i kø. | Klar til nedlasting! {n} elementer i kø."
       },
       "nav": {

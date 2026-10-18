@@ -48,6 +48,34 @@ describe('media progress store', () => {
     expect(progress.downloading).toBe(0);
   });
 
+  it('counts failed items apart from the downloaded ones', () => {
+    const groupStore = useMediaGroupStore();
+    const stateStore = useMediaStateStore();
+    const progressStore = useMediaProgressStore();
+
+    for (const id of ['ok', 'bad']) {
+      groupStore.createGroup({
+        id: `g-${id}`,
+        url: id,
+        total: 1,
+        processed: 1,
+        errored: 0,
+        isCombined: false,
+        audioCodecs: [],
+        formats: [],
+        filesize: 0,
+        items: { [id]: { id, url: id, audioCodecs: [], formats: [], filesize: 0 } },
+      });
+    }
+    stateStore.setState('ok', MediaState.done);
+    stateStore.setState('bad', MediaState.error);
+
+    const progress = progressStore.findAllProgress();
+    expect(progress.total).toBe(2);
+    expect(progress.done).toBe(2);
+    expect(progress.failed).toBe(1);
+  });
+
   it('excludes ready items from total when downloading', () => {
     const groupStore = useMediaGroupStore();
     const stateStore = useMediaStateStore();

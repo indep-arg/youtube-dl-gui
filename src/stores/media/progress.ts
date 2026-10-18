@@ -108,6 +108,7 @@ export const useMediaProgressStore = defineStore('media-progress', () => {
       const state = stateStore.getState(id);
       return state === MediaState.done || state === MediaState.error;
     }).length;
+    const failed = itemIds.filter(id => stateStore.getState(id) === MediaState.error).length;
     let downloading = itemIds.filter(id =>
       stateStore.getState(id) === MediaState.downloading
       || stateStore.getState(id) === MediaState.downloadingList
@@ -147,6 +148,7 @@ export const useMediaProgressStore = defineStore('media-progress', () => {
       ready,
       total,
       done,
+      failed,
       downloading,
     };
   }
@@ -158,6 +160,7 @@ export const useMediaProgressStore = defineStore('media-progress', () => {
     const progress: Required<MediaItemsProgress> = {
       total: 0,
       done: 0,
+      failed: 0,
       ready: 0,
       downloading: 0,
     };
@@ -167,6 +170,7 @@ export const useMediaProgressStore = defineStore('media-progress', () => {
       if (groupProgress) {
         progress.ready += groupProgress.ready ?? 0;
         progress.done += groupProgress.done ?? 0;
+        progress.failed += groupProgress.failed ?? 0;
         progress.downloading += groupProgress.downloading ?? 0;
         if ((groupProgress.downloading ?? 0) > 0) {
           hasDownloading = true;

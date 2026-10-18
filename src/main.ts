@@ -16,7 +16,7 @@ import { invoke } from '@tauri-apps/api/core';
 import { strongholdHandlers } from '../tests/utils/mocks/strongholdHandlers';
 import { libraryHandlers } from '../tests/utils/mocks/libraryHandlers';
 import { appHandlers } from '../tests/utils/mocks/appHandlers';
-import { getDefaultLocale, i18n, type Locale } from './i18n';
+import { getDefaultLocale, i18n, resolveLocale, setLocale } from './i18n';
 import { startWindowWatcher } from './tauri/window.ts';
 import { usePreferencesStore } from './stores/preferences.ts';
 import { useMediaStore } from './stores/media/media.ts';
@@ -87,13 +87,9 @@ async function initStores(): Promise<void> {
       applyTheme(settings.appearance.theme);
     }
 
-    const currentLocale: Locale = settings.appearance.language === 'system'
-      ? getDefaultLocale()
-      : settings.appearance.language as Locale;
-
-    i18n.global.locale.value = currentLocale;
-    document.documentElement.setAttribute('lang', currentLocale);
+    await setLocale(resolveLocale(settings.appearance.language));
   } catch (e) {
     console.error(`Unable to load settings: ${e}`);
+    await setLocale(getDefaultLocale());
   }
 }

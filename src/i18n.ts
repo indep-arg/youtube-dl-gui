@@ -1,17 +1,5 @@
 import { createI18n } from 'vue-i18n';
 import en from './locales/en.json';
-import esRaw from './locales/es.json';
-import nlRaw from './locales/nl.json';
-import itRaw from './locales/it.json';
-import frRaw from './locales/fr.json';
-import deRaw from './locales/de.json';
-import nbRaw from './locales/nb.json';
-import ruRaw from './locales/ru.json';
-import trRaw from './locales/tr.json';
-import ptPTRaw from './locales/pt-PT.json';
-import ptBRRaw from './locales/pt-BR.json';
-import zhTWRaw from './locales/zh-TW.json';
-import koRaw from './locales/ko.json';
 import { detectBrowserLanguageCodes } from './helpers/subtitles/languages.ts';
 
 export const availableLocales = {
@@ -33,18 +21,9 @@ export const availableLocales = {
 type MessageSchema = typeof en;
 export type Locale = keyof typeof availableLocales;
 
-const es = esRaw as unknown as MessageSchema;
-const nl = nlRaw as unknown as MessageSchema;
-const it = itRaw as unknown as MessageSchema;
-const fr = frRaw as unknown as MessageSchema;
-const de = deRaw as unknown as MessageSchema;
-const nb = nbRaw as unknown as MessageSchema;
-const ru = ruRaw as unknown as MessageSchema;
-const tr = trRaw as unknown as MessageSchema;
-const ptPT = ptPTRaw as unknown as MessageSchema;
-const ptBR = ptBRRaw as unknown as MessageSchema;
-const zhTW = zhTWRaw as unknown as MessageSchema;
-const ko = koRaw as unknown as MessageSchema;
+// English is always there (it is also the fallback); the other languages are
+// loaded when they are used, so the app does not carry all of them at start.
+const loaders = import.meta.glob<{ default: MessageSchema }>(['./locales/*.json', '!./locales/en.json']);
 
 const localeAliases: Record<string, Locale> = {
   'pt': 'pt-PT',
@@ -82,23 +61,33 @@ export function getDefaultLocale(): Locale {
 }
 
 export const i18n = createI18n<[MessageSchema], Locale, false>({
-  locale: getDefaultLocale(),
+  locale: 'en',
   legacy: false,
   globalInjection: false,
   fallbackLocale: 'en',
-  messages: {
-    en,
-    es,
-    nl,
-    it,
-    fr,
-    de,
-    nb,
-    ru,
-    tr,
-    'pt-PT': ptPT,
-    'pt-BR': ptBR,
-    'zh-TW': zhTW,
-    ko,
-  },
+  messages: { en } as Record<Locale, MessageSchema>,
 });
+
+/** The locale for a language setting, which can also be "system". */
+export function resolveLocale(language: string): Locale {
+  return language === 'system' || !(language in availableLocales)
+    ? getDefaultLocale()
+    : language as Locale;
+}
+
+/** Loads the messages of a language if needed, then switches to it. */
+export async function setLocale(locale: Locale): Promise<void> {
+  const loaded = i18n.global.availableLocales.includes(locale);
+  const loader = loaders[`./locales/${locale}.json`];
+  if (!loaded && loader) {
+    try {
+      const messages = await loader();
+      i18n.global.setLocaleMessage(locale, messages.default);
+    } catch (e) {
+      console.error(`Unable to load the ${locale} translation:`, e);
+      return;
+    }
+  }
+  i18n.global.locale.value = locale;
+  document.documentElement.setAttribute('lang', locale);
+}

@@ -125,7 +125,8 @@ jobs:
           components: llvm-tools-preview
 
       - name: Install cargo-llvm-cov
-        run: cargo install cargo-llvm-cov --locked
+        # Pinned by hand: Dependabot does not update tools installed like this.
+        run: cargo install cargo-llvm-cov --version 0.9.1 --locked
 
       - name: Generate Rust coverage
         run: |

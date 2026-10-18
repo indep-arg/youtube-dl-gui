@@ -87,10 +87,11 @@ jobs:
           toolchain: 1.99.1
           targets: ${{ matrix.platform == 'windows-11-arm' && 'aarch64-pc-windows-msvc' || '' }}
 
+      # Pinned by hand: Dependabot does not update tools installed like this.
       - name: Install cargo-about
         uses: taiki-e/install-action@8cca0918f8471c33515202b73f56ab27f2bed283 # v2.87.29
         with:
-          tool: cargo-about
+          tool: cargo-about@0.9.2
 
       - name: Rust cache
         uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
@@ -132,7 +133,8 @@ jobs:
         if: matrix.platform != 'ubuntu-24.04' && matrix.platform != 'ubuntu-24.04-arm'
         shell: bash
         run: |
-          cargo install tauri-cli
+          # Same version as the tauri crate and @tauri-apps/cli; raise them together.
+          cargo install tauri-cli --version 2.12.3 --locked
 
       - uses: tauri-apps/tauri-action@84b9d35b5fc46c1e45415bdb6144030364f7ebc5 # v0.6.2
         id: tauri

@@ -1044,10 +1044,13 @@ fn live_from_start_is_only_added_for_live_streams() {
 
   assert_eq!(
     build_live_args(true, &from_start),
-    vec!["--live-from-start"]
+    vec!["--wait-for-video", "30-600", "--live-from-start"]
   );
   assert!(build_live_args(false, &from_start).is_empty());
-  assert!(build_live_args(true, &OutputSettings::default()).is_empty());
+  assert_eq!(
+    build_live_args(true, &OutputSettings::default()),
+    vec!["--wait-for-video", "30-600"]
+  );
 }
 
 #[test]

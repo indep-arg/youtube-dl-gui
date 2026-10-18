@@ -279,6 +279,7 @@
           "size": "Размер: ",
           "sizeInfo": "Объём данных, который будет скачан.\nЭто не финальный размер файла.",
           "live": "Live stream: it is recorded until it ends.",
+          "scheduled": "Scheduled live stream: it starts {time} and is recorded from then on.",
           "items": "Элементы: {amount} {details}",
           "failedCount": "({amount} с ошибкой)",
           "skippedCount": "({amount} пропущено)",
@@ -298,6 +299,8 @@
         "recordingSize": "Recording live stream… {size}",
         "recordingTime": "Recording live stream… {size}, {time}",
         "saving": "Saving the recording…",
+        "waiting": "Waiting for the stream to start ({time})…",
+        "waitingUnknown": "Waiting for the stream to start…",
         "category": {
           "video": "видео",
           "audio": "аудио",
@@ -308,6 +311,7 @@
         },
         "status": {
           "initializing": "Инициализация",
+          "waiting": "Waiting",
           "downloading": "Скачивание",
           "merging": "Объединение",
           "remuxing": "Ремультиплексирование",
@@ -360,7 +364,8 @@
         "retryError": "Не удалось повторить скачивание.",
         "stopError": "Could not stop the recording."
       },
-      "live": "LIVE"
+      "live": "LIVE",
+      "scheduled": "SCHEDULED"
     },
     "restored": "Restored {count} link from the last session. | Restored {count} links from the last session."
   },

@@ -23,6 +23,10 @@ pub struct YtdlpInfo {
   #[serde(rename = "_type")]
   pub type_: Option<String>,
   pub is_live: Option<bool>,
+  /// `is_upcoming` for a stream that has not started yet.
+  pub live_status: Option<String>,
+  /// When a scheduled stream starts (Unix time).
+  pub release_timestamp: Option<i64>,
   pub entries: Option<Vec<YtdlpEntry>>,
   pub webpage_url: Option<String>,
   pub filesize: Option<i64>,

@@ -29,7 +29,10 @@
         :track-type="selectedTrackType"
         class="flex gap-4 w-full col-start-1 col-end-3"
     />
-    <p v-if="group.isLive" class="flex items-center col-span-2">
+    <p v-if="group.scheduledAt" class="flex items-center col-span-2">
+      {{ t('media.steps.configure.metadata.scheduled', { time: formatStartTime(group.scheduledAt) }) }}
+    </p>
+    <p v-else-if="group.isLive" class="flex items-center col-span-2">
       {{ t('media.steps.configure.metadata.live') }}
     </p>
     <template v-else>
@@ -61,6 +64,7 @@
 </template>
 
 <script setup lang="ts">
+import { formatStartTime } from '../../../helpers/units';
 import { computed, PropType, ref, watch } from 'vue';
 import { DownloadOptions, EncodingOptions, TrackOptions, TrackType } from '../../../tauri/types/media';
 import { useDuration } from '../../../composables/useDuration';

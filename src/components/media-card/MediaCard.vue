@@ -14,7 +14,7 @@
           v-if="group.isLive"
           class="badge badge-error badge-sm absolute top-2 left-2 font-semibold shadow pointer-events-none"
       >
-        {{ t('media.card.live') }}
+        {{ group.scheduledAt ? t('media.card.scheduled') : t('media.card.live') }}
       </span>
     </div>
     <component

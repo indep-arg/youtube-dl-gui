@@ -40,27 +40,28 @@ pub async fn run_ytdlp_info_fetch(
 ) -> Result<Option<ParsedMedia>, YtdlpInfoFetchError> {
   static RULES_JSON: &str = include_str!("../diagnostic_rules.json");
 
-  let runner = YtdlpRunner::new(app)
-    .with_format_args(
-      &format.unwrap_or(FormatOptions {
-        track_type: TrackType::Both,
-        abr: None,
-        height: None,
-        fps: None,
-        audio_encoding: None,
-        video_encoding: None,
-        audio_track: None,
-        video_track: None,
-      }),
-      None,
-    )
-    .with_input_args(overrides.as_ref())
-    .with_input_filter_args(overrides.as_ref())
-    .with_auth_args(overrides.as_ref())
-    .with_network_args(overrides.as_ref())
-    .with_playlist_item(playlist_item)
-    .with_args(["-J", "--flat-playlist"])
-    .with_url(url);
+  let format = format.unwrap_or(FormatOptions {
+    track_type: TrackType::Both,
+    abr: None,
+    height: None,
+    fps: None,
+    audio_encoding: None,
+    video_encoding: None,
+    audio_track: None,
+    video_track: None,
+  });
+  let runner = |extra_args: &[&str]| {
+    YtdlpRunner::new(app)
+      .with_format_args(&format, None)
+      .with_input_args(overrides.as_ref())
+      .with_input_filter_args(overrides.as_ref())
+      .with_auth_args(overrides.as_ref())
+      .with_network_args(overrides.as_ref())
+      .with_playlist_item(playlist_item)
+      .with_args(["-J", "--flat-playlist"])
+      .with_args(extra_args.iter().copied())
+      .with_url(url)
+  };
 
   let matcher = match DiagnosticMatcher::from_json(RULES_JSON) {
     Ok(m) => m,
@@ -80,7 +81,15 @@ pub async fn run_ytdlp_info_fetch(
 
   let error_parser = YtdlpErrorParser::new(&id, &group_id, matcher);
 
-  let output = match runner.output().await {
+  let output = match runner(&[]).output().await {
+    // A stream that has not started: yt-dlp only says so. Its details can be
+    // fetched anyway, so that it can be queued and recorded when it starts.
+    Ok(o) if !o.status.success() && is_scheduled_stream(&String::from_utf8_lossy(&o.stderr)) => {
+      match runner(&["--ignore-no-formats-error"]).output().await {
+        Ok(retry) if retry.status.success() => retry,
+        _ => o,
+      }
+    }
     Ok(o) => o,
     Err(e) => {
       let _ = app.emit(
@@ -175,5 +184,34 @@ pub async fn run_ytdlp_info_fetch(
       );
       Err(YtdlpInfoFetchError::ParseFailed(e.to_string()))
     }
+  }
+}
+
+/// yt-dlp's error for a live stream or premiere that has not started yet.
+fn is_scheduled_stream(stderr: &str) -> bool {
+  stderr.lines().any(|line| {
+    line.starts_with("ERROR:")
+      && (line.contains("This live event will begin in") || line.contains("Premieres in"))
+  })
+}
+
+#[cfg(test)]
+mod tests {
+  use super::is_scheduled_stream;
+
+  #[test]
+  fn recognises_a_stream_that_has_not_started() {
+    assert!(is_scheduled_stream(
+      "ERROR: [youtube] UleiRdWFG7o: This live event will begin in 46 hours."
+    ));
+    assert!(is_scheduled_stream(
+      "ERROR: [youtube] abc: Premieres in 2 hours"
+    ));
+    assert!(!is_scheduled_stream(
+      "WARNING: [youtube] This live event will begin in 46 hours."
+    ));
+    assert!(!is_scheduled_stream(
+      "ERROR: [youtube] abc: Video unavailable"
+    ));
   }
 }

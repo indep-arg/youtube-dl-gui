@@ -279,6 +279,7 @@
           "size": "Grootte: ",
           "sizeInfo": "De hoeveelheid data die wordt gedownload.\nNiet de uiteindelijke bestandsgrootte.",
           "live": "Live stream: it is recorded until it ends.",
+          "scheduled": "Scheduled live stream: it starts {time} and is recorded from then on.",
           "items": "Items: {amount} {details}",
           "failedCount": "({amount} mislukt)",
           "skippedCount": "({amount} overgeslagen)",
@@ -298,6 +299,8 @@
         "recordingSize": "Recording live stream… {size}",
         "recordingTime": "Recording live stream… {size}, {time}",
         "saving": "Saving the recording…",
+        "waiting": "Waiting for the stream to start ({time})…",
+        "waitingUnknown": "Waiting for the stream to start…",
         "category": {
           "video": "video",
           "audio": "audio",
@@ -308,6 +311,7 @@
         },
         "status": {
           "initializing": "Initialiseren",
+          "waiting": "Waiting",
           "downloading": "Downloaden",
           "merging": "Samenvoegen",
           "remuxing": "Remuxen",
@@ -360,7 +364,8 @@
         "retryError": "Er is een fout opgetreden bij het opnieuw downloaden.",
         "stopError": "Could not stop the recording."
       },
-      "live": "LIVE"
+      "live": "LIVE",
+      "scheduled": "SCHEDULED"
     },
     "restored": "Restored {count} link from the last session. | Restored {count} links from the last session."
   },

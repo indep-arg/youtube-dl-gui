@@ -67,6 +67,8 @@ pub enum ProgressCategory {
 #[serde(rename_all = "camelCase")]
 pub enum ProgressStage {
   Initializing,
+  /// A scheduled live stream that has not started yet.
+  Waiting,
   Downloading,
   Merging,
   Remuxing,

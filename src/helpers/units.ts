@@ -73,3 +73,11 @@ export function formatDuration(secs: number): string {
   const ss = String(s).padStart(2, '0');
   return h > 0 ? `${h}:${mm}:${ss}` : `${m}:${ss}`;
 }
+
+/** When a scheduled stream starts, e.g. "Oct 20, 2026, 6:00 PM", in the language of the app. */
+export function formatStartTime(unixSeconds: number, locale?: string): string {
+  return new Intl.DateTimeFormat(locale ?? document.documentElement.lang ?? undefined, {
+    dateStyle: 'medium',
+    timeStyle: 'short',
+  }).format(new Date(unixSeconds * 1000));
+}

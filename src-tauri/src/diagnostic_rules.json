@@ -227,7 +227,7 @@
       "code": "livestreamNotStarted",
       "appliesTo": "error",
       "patterns": [
-        { "kind": "substr", "value": "This live event will begin in a few moments" }
+        { "kind": "substr", "value": "This live event will begin in" }
       ]
     },
     {

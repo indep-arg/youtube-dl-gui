@@ -53,6 +53,11 @@ impl YtdlpProgressParser {
       return evts;
     }
 
+    if let Some(evt) = self.try_waiting_stage(line) {
+      evts.push(evt);
+      return evts;
+    }
+
     if let Some(evt) = self.try_download_stage(line) {
       evts.push(evt);
       return evts;
@@ -408,6 +413,20 @@ impl YtdlpProgressParser {
     }))
   }
 
+  /// `[wait] Waiting for 00:10:00 - Press Ctrl+C to try now`: yt-dlp waits
+  /// for a scheduled stream to start.
+  fn try_waiting_stage(&mut self, line: &str) -> Option<ProgressEvent> {
+    if !line.starts_with("[wait]") || self.current_stage == ProgressStage::Waiting {
+      return None;
+    }
+    self.current_stage = ProgressStage::Waiting;
+    Some(ProgressEvent::StageChange(MediaProgressStage {
+      id: self.id.clone(),
+      group_id: self.group_id.clone(),
+      stage: ProgressStage::Waiting,
+    }))
+  }
+
   fn try_merging_stage(&mut self, line: &str) -> Option<ProgressEvent> {
     if line.starts_with("[Merger]") && self.current_stage != ProgressStage::Merging {
       self.current_stage = ProgressStage::Merging;
@@ -681,6 +700,33 @@ mod tests {
     assert_eq!(super::parse_ffmpeg_size("N/A"), None);
     assert_eq!(super::parse_ffmpeg_bitrate("174.7kbits/s"), Some(174_700.0));
     assert_eq!(super::parse_ffmpeg_bitrate("N/A"), None);
+  }
+
+  #[test]
+  fn a_scheduled_stream_waits_and_then_records() {
+    let mut parser =
+      YtdlpProgressParser::new("item", "group", ProgressCategory::Video, None).live(true);
+    let stages = |events: Vec<ProgressEvent>| -> Vec<ProgressStage> {
+      events
+        .into_iter()
+        .filter_map(|e| match e {
+          ProgressEvent::StageChange(stage) => Some(stage.stage),
+          _ => None,
+        })
+        .collect()
+    };
+
+    assert_eq!(
+      stages(parser.parse_line("[wait] Waiting for 00:10:00 - Press Ctrl+C to try now")),
+      [ProgressStage::Waiting]
+    );
+    assert!(
+      stages(parser.parse_line("[wait] Remaining time until next attempt: 00:09:59")).is_empty()
+    );
+    assert_eq!(
+      stages(parser.parse_line("[download] Destination: /v/News.mp4")),
+      [ProgressStage::Downloading]
+    );
   }
 
   #[test]

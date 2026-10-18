@@ -88,6 +88,19 @@ test('a live recording shows what it recorded and can be stopped and saved', asy
   await expect(page.getByTestId('history-entry').first()).toContainText('Live Video');
 });
 
+test('a scheduled live stream waits for its start and can be stopped while waiting', async ({ page }) => {
+  await page.goto('/');
+  await addLink(page, 'https://example.com/scheduled');
+  await expect(page.getByText('SCHEDULED', { exact: true })).toBeVisible();
+  await expect(page.getByText(/Scheduled live stream: it starts .*2030/)).toBeVisible();
+  await page.getByRole('button', { name: 'Download', exact: true }).click();
+
+  await expect(page.getByText(/Waiting for the stream to start \(.*2030.*\)…/)).toBeVisible();
+  await page.getByTitle('Stop and save recording').click();
+  // Nothing was recorded yet: it is paused, not saved.
+  await expect(page.getByTitle('Resume download')).toBeVisible();
+});
+
 test.describe('yt-dlp channel', () => {
   test('choosing nightly installs yt-dlp again', async ({ page }) => {
     await page.goto('/settings/system');

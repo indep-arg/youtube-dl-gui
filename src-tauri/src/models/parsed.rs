@@ -83,6 +83,10 @@ pub struct ParsedSingleVideo {
   /// A live stream that is still going on; it has no final size or duration.
   #[serde(default)]
   pub is_live: bool,
+  /// A live stream that has not started: when it is scheduled to start (Unix
+  /// time, if the site says). Such a stream is also `is_live`.
+  #[serde(default, skip_serializing_if = "Option::is_none")]
+  pub scheduled_at: Option<i64>,
   /// See [`PlaylistEntry::playlist_item`].
   #[serde(default, skip_serializing_if = "Option::is_none")]
   pub playlist_item: Option<u64>,

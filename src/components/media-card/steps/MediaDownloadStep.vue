@@ -54,7 +54,7 @@ import { computed, PropType, ref, watch } from 'vue';
 import { useMediaProgressStore } from '../../../stores/media/progress';
 import BaseProgress from '../../base/BaseProgress.vue';
 import { capitalizeFirstLetter } from '../../../helpers/progress';
-import { formatBytes, formatBytesPerSec, formatDuration } from '../../../helpers/units';
+import { formatBytes, formatBytesPerSec, formatDuration, formatStartTime } from '../../../helpers/units';
 import { ProgressCategory, ProgressStage } from '../../../tauri/types/progress';
 import { Group } from '../../../tauri/types/group';
 import { useI18n } from 'vue-i18n';
@@ -120,6 +120,11 @@ watch(rawEta, (newEta) => {
 const liveDisplay = computed(() => {
   const value = progress.value;
   if (value?.stage === ProgressStage.finalizing) return t('media.steps.download.saving');
+  if (value?.stage === ProgressStage.waiting) {
+    return group.scheduledAt
+      ? t('media.steps.download.waiting', { time: formatStartTime(group.scheduledAt) })
+      : t('media.steps.download.waitingUnknown');
+  }
   if (value?.downloadedBytes == null) return t('media.steps.download.recording');
   const size = formatBytes(value.downloadedBytes);
   return value.recordedSecs != null

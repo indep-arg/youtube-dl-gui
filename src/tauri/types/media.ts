@@ -232,8 +232,10 @@ export interface MediaItem {
   playlistIndex?: number;
   /** See {@link EntryItem.playlistItem}. */
   playlistItem?: number;
-  /** A live stream that is still going on. */
+  /** A live stream that is still going on, or that has not started yet. */
   isLive?: boolean;
+  /** A live stream that has not started: when it starts (Unix time, in seconds). */
+  scheduledAt?: number;
 }
 
 export interface EntryItem {

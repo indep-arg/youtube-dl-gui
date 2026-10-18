@@ -82,6 +82,10 @@ A link to a live stream gets a **LIVE** badge. It is recorded until the stream e
 the card shows how much it has recorded. To end it earlier, use **Stop and save recording** (the
 square button): what was recorded so far is saved as a normal video file.
 
+A stream that has not started yet gets a **SCHEDULED** badge and shows when it starts. Download it like
+any other: the app waits and starts recording when the stream begins. Stopping it while it waits just
+pauses it.
+
 To record it from the beginning instead of from now, turn on **Record live streams from the start**
 (in the output settings, or only for that download). YouTube supports it; other sites start recording
 from the moment you start it. On YouTube streams that run all day, the beginning can be several days

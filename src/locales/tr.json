@@ -279,6 +279,7 @@
           "size": "Boyut: ",
           "sizeInfo": "İndirilecek olan verinin boyutu.\nDosyanın nihai boyutu değil.",
           "live": "Live stream: it is recorded until it ends.",
+          "scheduled": "Scheduled live stream: it starts {time} and is recorded from then on.",
           "items": "İçerik: {amount} {details}",
           "failedCount": "({amount} başarısız oldu)",
           "skippedCount": "({amount} atlandı)",
@@ -298,6 +299,8 @@
         "recordingSize": "Recording live stream… {size}",
         "recordingTime": "Recording live stream… {size}, {time}",
         "saving": "Saving the recording…",
+        "waiting": "Waiting for the stream to start ({time})…",
+        "waitingUnknown": "Waiting for the stream to start…",
         "category": {
           "video": "video",
           "audio": "ses",
@@ -308,6 +311,7 @@
         },
         "status": {
           "initializing": "Başlatılıyor",
+          "waiting": "Waiting",
           "downloading": "İndiriliyor",
           "merging": "Birleştiriliyor",
           "remuxing": "Remux yapılıyor",
@@ -360,7 +364,8 @@
         "retryError": "İndirme yeniden denenemedi.",
         "stopError": "Could not stop the recording."
       },
-      "live": "LIVE"
+      "live": "LIVE",
+      "scheduled": "SCHEDULED"
     },
     "restored": "Restored {count} link from the last session. | Restored {count} links from the last session."
   },

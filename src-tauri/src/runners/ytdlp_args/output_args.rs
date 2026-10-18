@@ -157,11 +157,17 @@ fn push_common_output_flags(
 
 /// Extra arguments for a live stream; nothing for other videos.
 pub fn build_live_args(is_live: bool, output_settings: &OutputSettings) -> Vec<String> {
-  if is_live && output_settings.live_from_start {
-    vec!["--live-from-start".into()]
-  } else {
-    Vec::new()
+  if !is_live {
+    return Vec::new();
   }
+  // A scheduled stream: wait until it starts, checking again at most every ten
+  // minutes (yt-dlp waits until the announced time when it knows it). It does
+  // nothing for a stream that is already on.
+  let mut args = vec!["--wait-for-video".into(), "30-600".into()];
+  if output_settings.live_from_start {
+    args.push("--live-from-start".into());
+  }
+  args
 }
 
 fn audio_format_arg(format: AudioFormat) -> &'static str {

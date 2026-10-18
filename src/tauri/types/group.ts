@@ -36,4 +36,5 @@ export type Group = {
   fromShortcut?: boolean;
   skipPlaylistSelection?: boolean;
   isLive?: boolean;
+  scheduledAt?: number;
 };

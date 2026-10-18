@@ -22,6 +22,8 @@ pub(super) fn base_info(formats: Vec<YtdlpFormat>) -> YtdlpInfo {
     automatic_captions: None,
     type_: Some("video".into()),
     is_live: Some(false),
+    live_status: None,
+    release_timestamp: None,
     entries: None,
     webpage_url: Some("https://example.com".into()),
     filesize: None,

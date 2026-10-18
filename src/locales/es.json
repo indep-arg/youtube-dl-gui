@@ -279,6 +279,7 @@
           "size": "Tamaño: ",
           "sizeInfo": "La cantidad de datos que se descargarán.\nNo es el tamaño final del archivo.",
           "live": "Directo: se graba hasta que termine.",
+          "scheduled": "Directo programado: empieza el {time} y se graba desde entonces.",
           "items": "Elementos: {amount} {details}",
           "failedCount": "({amount} fallidos)",
           "skippedCount": "({amount} omitidos)",
@@ -298,6 +299,8 @@
         "recordingSize": "Grabando directo… {size}",
         "recordingTime": "Grabando directo… {size}, {time}",
         "saving": "Guardando la grabación…",
+        "waiting": "Esperando a que empiece el directo ({time})…",
+        "waitingUnknown": "Esperando a que empiece el directo…",
         "category": {
           "video": "video",
           "audio": "audio",
@@ -308,6 +311,7 @@
         },
         "status": {
           "initializing": "Inicializando",
+          "waiting": "Esperando",
           "downloading": "Descargando",
           "merging": "Combinando",
           "remuxing": "Remuxeando",
@@ -360,7 +364,8 @@
         "retryError": "No se pudo reintentar la descarga.",
         "stopError": "No se pudo detener la grabación."
       },
-      "live": "EN DIRECTO"
+      "live": "EN DIRECTO",
+      "scheduled": "PROGRAMADO"
     },
     "restored": "Se recuperó {count} enlace de la sesión anterior. | Se recuperaron {count} enlaces de la sesión anterior."
   },

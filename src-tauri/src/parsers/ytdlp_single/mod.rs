@@ -54,6 +54,9 @@ pub fn parse_single(info: YtdlpInfo, id: String) -> ParsedMedia {
     loss_pct,
   );
 
+  // A scheduled stream is recorded like a live one once it starts.
+  let is_upcoming = info.live_status.as_deref() == Some("is_upcoming");
+
   ParsedMedia::Single(ParsedSingleVideo {
     id,
     url: info.webpage_url,
@@ -70,7 +73,8 @@ pub fn parse_single(info: YtdlpInfo, id: String) -> ParsedMedia {
     extractor: info.extractor_key,
     comments: i64_to_u64(info.comment_count),
     filesize: i64_to_u64(info.filesize.or(info.filesize_approx)),
-    is_live: info.is_live.unwrap_or(false),
+    is_live: info.is_live.unwrap_or(false) || is_upcoming,
+    scheduled_at: info.release_timestamp.filter(|_| is_upcoming),
     video_codecs,
     audio_codecs,
     video_tracks,

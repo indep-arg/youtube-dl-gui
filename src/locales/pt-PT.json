@@ -279,6 +279,7 @@
           "size": "Tamanho: ",
           "sizeInfo": "Quantidade de dados que será transferida.\nNão é o tamanho final do ficheiro.",
           "live": "Live stream: it is recorded until it ends.",
+          "scheduled": "Scheduled live stream: it starts {time} and is recorded from then on.",
           "items": "Itens: {amount} {details}",
           "failedCount": "({amount} com falha)",
           "skippedCount": "({amount} skipped)",
@@ -298,6 +299,8 @@
         "recordingSize": "Recording live stream… {size}",
         "recordingTime": "Recording live stream… {size}, {time}",
         "saving": "Saving the recording…",
+        "waiting": "Waiting for the stream to start ({time})…",
+        "waitingUnknown": "Waiting for the stream to start…",
         "category": {
           "video": "vídeo",
           "audio": "áudio",
@@ -308,6 +311,7 @@
         },
         "status": {
           "initializing": "A inicializar",
+          "waiting": "Waiting",
           "downloading": "A transferir",
           "merging": "A combinar",
           "remuxing": "A remultiplexar",
@@ -360,7 +364,8 @@
         "retryError": "Não foi possível voltar a tentar a transferência.",
         "stopError": "Could not stop the recording."
       },
-      "live": "LIVE"
+      "live": "LIVE",
+      "scheduled": "SCHEDULED"
     },
     "restored": "Restored {count} link from the last session. | Restored {count} links from the last session."
   },

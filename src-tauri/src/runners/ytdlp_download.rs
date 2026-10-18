@@ -315,7 +315,11 @@ fn store_log_line(
       line
     }
   });
-  if line.is_empty() || unnumbered.starts_with("RAW") || line.starts_with("frame=") {
+  if line.is_empty()
+    || unnumbered.starts_with("RAW")
+    || line.starts_with("frame=")
+    || line.starts_with("[wait] Remaining time")
+  {
     return;
   }
   let mut store = log_state.write();

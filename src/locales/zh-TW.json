@@ -279,6 +279,7 @@
           "size": "大小: ",
           "sizeInfo": "即將下載的資料大小。\n非檔案最終大小。",
           "live": "Live stream: it is recorded until it ends.",
+          "scheduled": "Scheduled live stream: it starts {time} and is recorded from then on.",
           "items": "項目: {amount} {details}",
           "failedCount": "({amount} 失敗)",
           "skippedCount": "({amount} 個已略過)",
@@ -298,6 +299,8 @@
         "recordingSize": "Recording live stream… {size}",
         "recordingTime": "Recording live stream… {size}, {time}",
         "saving": "Saving the recording…",
+        "waiting": "Waiting for the stream to start ({time})…",
+        "waitingUnknown": "Waiting for the stream to start…",
         "category": {
           "video": "影片",
           "audio": "音訊",
@@ -308,6 +311,7 @@
         },
         "status": {
           "initializing": "正在初始化",
+          "waiting": "Waiting",
           "downloading": "正在下載",
           "merging": "正在合併",
           "remuxing": "正在重封裝",
@@ -360,7 +364,8 @@
         "retryError": "無法重試下載。",
         "stopError": "Could not stop the recording."
       },
-      "live": "LIVE"
+      "live": "LIVE",
+      "scheduled": "SCHEDULED"
     },
     "restored": "Restored {count} link from the last session. | Restored {count} links from the last session."
   },

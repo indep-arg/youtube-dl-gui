@@ -279,6 +279,7 @@
           "size": "Size: ",
           "sizeInfo": "The amount of data that will be downloaded.\nNot the final size of the file.",
           "live": "Live stream: it is recorded until it ends.",
+          "scheduled": "Scheduled live stream: it starts {time} and is recorded from then on.",
           "items": "Items: {amount} {details}",
           "failedCount": "({amount} failed)",
           "skippedCount": "({amount} skipped)",
@@ -298,6 +299,8 @@
         "recordingSize": "Recording live stream… {size}",
         "recordingTime": "Recording live stream… {size}, {time}",
         "saving": "Saving the recording…",
+        "waiting": "Waiting for the stream to start ({time})…",
+        "waitingUnknown": "Waiting for the stream to start…",
         "category": {
           "video": "video",
           "audio": "audio",
@@ -308,6 +311,7 @@
         },
         "status": {
           "initializing": "Initializing",
+          "waiting": "Waiting",
           "downloading": "Downloading",
           "merging": "Merging",
           "remuxing": "Remuxing",
@@ -360,7 +364,8 @@
         "retryError": "Could not retry download.",
         "stopError": "Could not stop the recording."
       },
-      "live": "LIVE"
+      "live": "LIVE",
+      "scheduled": "SCHEDULED"
     },
     "restored": "Restored {count} link from the last session. | Restored {count} links from the last session."
   },

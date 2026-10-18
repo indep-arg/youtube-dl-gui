@@ -48,6 +48,8 @@ export enum ProgressCategory {
 
 export enum ProgressStage {
   initializing = 'initializing',
+  /** A scheduled live stream that has not started yet. */
+  waiting = 'waiting',
   downloading = 'downloading',
   merging = 'merging',
   remuxing = 'remuxing',

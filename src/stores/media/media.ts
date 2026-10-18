@@ -413,6 +413,11 @@ export const useMediaStore = defineStore('media', () => {
 
   /** Stops a live recording and saves what was recorded so far. */
   async function stopLiveGroup(groupId: string) {
+    // Nothing recorded yet, e.g. still waiting for a scheduled stream: there is nothing to save.
+    if (progressStore.findDownloadProgress(groupId)?.downloadedBytes == null) {
+      await pauseGroup(groupId);
+      return;
+    }
     await invoke('group_stop', { groupId });
   }
 

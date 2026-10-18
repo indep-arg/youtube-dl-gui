@@ -29,6 +29,17 @@ export const mediaHandlers: Record<string, IPCHandler> = {
       void emitSiteChanged(groupId, id);
       return groupId;
     }
+    if (url.includes('scheduled')) {
+      void emit<MediaAddPayload>('media_add', {
+        groupId,
+        total: 1,
+        item: {
+          id, url, title: 'Scheduled Stream', audioCodecs: [], formats: [], filesize: 0, isLeader: true,
+          isLive: true, scheduledAt: Date.UTC(2030, 0, 15, 18, 0) / 1000,
+        },
+      });
+      return groupId;
+    }
     if (url.includes('live')) {
       void emit<MediaAddPayload>('media_add', {
         groupId,
@@ -55,6 +66,8 @@ export const mediaHandlers: Record<string, IPCHandler> = {
         void finishDownload(groupId, item.id);
       } else if (item.url.includes('live')) {
         void startRecording(groupId, item.id);
+      } else if (item.url.includes('scheduled')) {
+        void emit('media_progress_stage', { groupId, id: item.id, stage: 'waiting' });
       }
     }
     return null;

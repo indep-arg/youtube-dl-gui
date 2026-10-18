@@ -279,6 +279,7 @@
           "size": "크기: ",
           "sizeInfo": "다운로드될 데이터의 양입니다.\n최종 파일 크기가 아닙니다.",
           "live": "Live stream: it is recorded until it ends.",
+          "scheduled": "Scheduled live stream: it starts {time} and is recorded from then on.",
           "items": "항목: {amount}개 {details}",
           "failedCount": "(실패 {amount}개)",
           "skippedCount": "(건너뜀 {amount}개)",
@@ -298,6 +299,8 @@
         "recordingSize": "Recording live stream… {size}",
         "recordingTime": "Recording live stream… {size}, {time}",
         "saving": "Saving the recording…",
+        "waiting": "Waiting for the stream to start ({time})…",
+        "waitingUnknown": "Waiting for the stream to start…",
         "category": {
           "video": "영상",
           "audio": "오디오",
@@ -308,6 +311,7 @@
         },
         "status": {
           "initializing": "초기화 중",
+          "waiting": "Waiting",
           "downloading": "다운로드 중",
           "merging": "병합 중",
           "remuxing": "리먹싱 중",
@@ -360,7 +364,8 @@
         "retryError": "다운로드를 재시도할 수 없습니다.",
         "stopError": "Could not stop the recording."
       },
-      "live": "LIVE"
+      "live": "LIVE",
+      "scheduled": "SCHEDULED"
     },
     "restored": "Restored {count} link from the last session. | Restored {count} links from the last session."
   },

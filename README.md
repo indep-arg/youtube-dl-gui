@@ -71,6 +71,19 @@ download it. It works with YouTube and hundreds of other sites, and it uses
 - **Private.** No tracking, no accounts and no error reports. Only your downloads and update checks leave your computer. [More details](./docs/PRIVACY.md).
 - **Light and dark theme.** It follows your system.
 
+## What's different from the original
+
+This fork started from the original app and keeps going on its own:
+
+- **New features:** record live streams, a history of your downloads, a queue that survives closing the app,
+  settings for each website, speed and retry limits, and settings you can export and import.
+- **Bug fixes:** ffmpeg no longer crashes on some Linux systems such as Fedora, and many layout problems
+  are gone, like the white strip on Linux, text cut off in longer languages and unreadable text in the light theme.
+- **Its own updates:** new versions and tools are published and signed from this repository.
+- **Fewer platforms:** only Windows and Linux. There are no macOS builds.
+
+Every change is listed in the [changelog](./CHANGELOG.md).
+
 ## Download
 
 Get the latest version from the [Releases page](https://github.com/indep-arg/youtube-dl-gui/releases/latest)
@@ -82,7 +95,6 @@ and install it as usual. The first time you open the app it downloads the extra 
 | **Linux**             | `Open.Video.Downloader_x.x.x_amd64.AppImage`  | `.deb` for Debian and Ubuntu, `.rpm` for Fedora                |
 
 On a computer with an ARM processor, use the files with `arm64` or `aarch64` in the name instead of `x64` or `amd64`.
-There are no macOS builds.
 
 ## Help
 

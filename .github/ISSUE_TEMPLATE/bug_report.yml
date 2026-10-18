@@ -25,6 +25,12 @@ body:
       description: Shown in Settings > About, for example 2026.10.0.
     validations:
       required: true
+  - type: textarea
+    id: diagnostics
+    attributes:
+      label: Diagnostic information
+      description: In the app, open Settings > About, press "Copy diagnostic information" and paste it here.
+      render: text
   - type: dropdown
     id: os
     attributes:

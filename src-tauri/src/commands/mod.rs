@@ -1,6 +1,7 @@
 pub mod app_ready;
 pub mod binaries;
 pub mod config;
+pub mod diagnostics;
 pub mod group;
 pub mod library;
 pub mod logging;
@@ -15,6 +16,7 @@ pub mod updater;
 pub use app_ready::*;
 pub use binaries::*;
 pub use config::*;
+pub use diagnostics::*;
 pub use group::*;
 pub use library::*;
 pub use logging::*;

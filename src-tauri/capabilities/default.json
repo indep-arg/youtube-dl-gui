@@ -27,6 +27,7 @@
       ]
     },
     "clipboard-manager:allow-read-text",
+    "clipboard-manager:allow-write-text",
     "core:window:allow-set-progress-bar",
     "core:window:allow-set-badge-count",
     "core:window:allow-request-user-attention",

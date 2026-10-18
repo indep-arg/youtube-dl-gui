@@ -1,5 +1,6 @@
 const allowedCommands: Set<string> = new Set([
     'app_ready',
+    'app_diagnostics',
     'media_info',
     'media_playlist_expand',
     'media_size',
@@ -42,6 +43,7 @@ const allowedCommands: Set<string> = new Set([
     'plugin:opener|open_path',
     'plugin:opener|reveal_item_in_dir',
     'plugin:clipboard-manager|read_text',
+    'plugin:clipboard-manager|write_text',
     'plugin:dialog|open',
     'plugin:webview|internal_toggle_devtools',
     'plugin:window|set_badge_count',

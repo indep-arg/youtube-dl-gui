@@ -685,7 +685,7 @@ async fn remove_archive(archive: &Path, keep: bool) -> std::io::Result<()> {
 
 /// Whether `path` starts like a program of this system: ELF on Linux, PE (`MZ`) on
 /// Windows. Scripts (`#!`) count too.
-async fn is_program(path: &Path) -> bool {
+pub(crate) async fn is_program(path: &Path) -> bool {
   use tokio::io::AsyncReadExt;
   let Ok(mut file) = fs::File::open(path).await else {
     return false;

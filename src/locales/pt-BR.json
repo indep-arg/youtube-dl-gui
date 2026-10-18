@@ -1247,6 +1247,13 @@
       "privacy": "Privacy",
       "changelog": "Changelog",
       "reportABug": "Relatar um erro"
+    },
+    "diagnostics": {
+      "title": "Diagnostic information",
+      "hint": "Your app version, system and the state of the tools, to paste into a bug report. It contains no links, files or account data.",
+      "copy": "Copy diagnostic information",
+      "copied": "Diagnostic information copied.",
+      "failed": "Could not collect the diagnostic information."
     }
   }
 }

@@ -4,6 +4,7 @@
 
 mod binaries;
 mod commands;
+mod diagnostics;
 mod i18n;
 mod logging;
 mod menu;
@@ -159,6 +160,7 @@ pub fn run() {
     })
     .invoke_handler(tauri::generate_handler![
       app_ready,
+      app_diagnostics,
       media_size,
       media_info,
       media_playlist_expand,

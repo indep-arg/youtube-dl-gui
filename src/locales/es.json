@@ -1247,6 +1247,13 @@
       "privacy": "Privacidad",
       "changelog": "Historial de cambios",
       "reportABug": "Reportar un error (bug)"
+    },
+    "diagnostics": {
+      "title": "Información de diagnóstico",
+      "hint": "La versión de la app, el sistema y el estado de las herramientas, para pegar en un reporte de error. No incluye enlaces, archivos ni datos de cuentas.",
+      "copy": "Copiar información de diagnóstico",
+      "copied": "Información de diagnóstico copiada.",
+      "failed": "No se pudo reunir la información de diagnóstico."
     }
   }
 }

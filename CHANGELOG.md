@@ -18,6 +18,34 @@ Releases are tagged `app-vYEAR.MONTH.N` and the version is kept equal in
 The number does not say whether a release breaks anything. Breaking changes are listed in
 this file under **Breaking changes**.
 
+## 2026.10.4
+
+### New
+
+- Choose between the stable and the nightly builds of yt-dlp (**Settings > System**). Nightly builds get
+  fixes for sites sooner. When a download fails in a way that usually means the site changed, the card
+  offers to try them.
+- Stop a live recording and keep what was recorded so far, as a normal video file. While it records, the
+  card shows how much it has recorded.
+- Live streams that have not started yet can be queued: they show when they start, and the app waits and
+  records them from then on.
+- A button in **Settings > About** copies information about the app, the system and the tools, to paste
+  into a bug report. It contains no paths or personal data.
+
+### Changes
+
+- Tools whose file is not a program are installed again. This repairs ffmpeg on Linux for those who used
+  versions `2026.10.0` or `2026.10.1`.
+- yt-dlp is replaced as a whole when it updates, and the old copy is kept if that fails, instead of new
+  files being copied over the old ones.
+- The chat of a live stream is no longer downloaded as a subtitle.
+- The IP address that some sites put in their links is hidden in the logs.
+- When a download fails, the bottom bar says so instead of "Download complete", and an error is shown once
+  in the logs instead of twice.
+- Help texts, links and badges are easier to read, and every control has a name for screen readers.
+- Clicking the label of the thumbnail file option no longer changes the cover image option.
+- Each language is loaded only when it is used, so the app has less to load when it starts.
+
 ## 2026.10.3
 
 ### Changes

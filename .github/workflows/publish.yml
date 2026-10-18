@@ -151,7 +151,7 @@ jobs:
           releaseBody: 'See the assets to download this version and install. If you have an existing install, it will auto-update on launch.'
           releaseDraft: true
           prerelease: false
-          includeUpdaterJson: true
+          uploadUpdaterJson: true
           updaterJsonPreferNsis: true
           # TEMPORARY WORKAROUND:
           # This option is needed to use the possibly overriden branch of tauri-cli, to fix appimages.

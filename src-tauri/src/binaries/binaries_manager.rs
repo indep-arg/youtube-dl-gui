@@ -181,9 +181,11 @@ impl BinariesManager {
 
       let version_ok = meta.versions.get(name).is_some_and(|v| *v == info.version);
       let canonical = self.canonical_path(name)?;
-      let exists = tokio::fs::metadata(&canonical).await.is_ok();
+      // A file that is there but is not a program (e.g. an archive that an older
+      // version could not unpack) is installed again.
+      let usable = is_program(&canonical).await;
 
-      if !version_ok || !exists {
+      if !version_ok || !usable {
         plan.push((name.as_str(), info));
       }
     }
@@ -367,9 +369,9 @@ impl BinariesManager {
       }
     };
 
-    if tokio::fs::metadata(&canonical).await.is_err() {
+    if !is_program(&canonical).await {
       let err = format!(
-        "canonical binary missing after install: {}",
+        "installed file is missing or not a program: {}",
         canonical.display()
       );
       return self.fail_stage(name, &info.version, "post_install_check", err);
@@ -681,6 +683,31 @@ async fn remove_archive(archive: &Path, keep: bool) -> std::io::Result<()> {
   }
 }
 
+/// Whether `path` starts like a program of this system: ELF on Linux, PE (`MZ`) on
+/// Windows. Scripts (`#!`) count too.
+async fn is_program(path: &Path) -> bool {
+  use tokio::io::AsyncReadExt;
+  let Ok(mut file) = fs::File::open(path).await else {
+    return false;
+  };
+  let mut magic = [0u8; 4];
+  if file.read_exact(&mut magic).await.is_err() {
+    return false;
+  }
+  looks_like_program(&magic)
+}
+
+fn looks_like_program(magic: &[u8; 4]) -> bool {
+  if magic.starts_with(b"#!") {
+    return true;
+  }
+  if cfg!(windows) {
+    magic.starts_with(b"MZ")
+  } else {
+    magic == b"\x7fELF"
+  }
+}
+
 /// The SHA-256 of a file, or `None` when it cannot be read (e.g. it does not exist).
 async fn file_sha256(path: &Path) -> Option<String> {
   use tokio::io::AsyncReadExt;
@@ -699,7 +726,7 @@ async fn file_sha256(path: &Path) -> Option<String> {
 
 #[cfg(test)]
 mod tests {
-  use super::{BinariesManager, FileInfo};
+  use super::{BinariesManager, FileInfo, is_program, looks_like_program};
   use std::collections::HashMap;
 
   fn file(url: &str) -> FileInfo {
@@ -709,6 +736,40 @@ mod tests {
       entry: None,
       bundle: None,
     }
+  }
+
+  #[test]
+  fn an_archive_is_not_a_program() {
+    // The start of an .xz archive, installed as ffmpeg by versions that could not unpack it.
+    assert!(!looks_like_program(&[0xfd, b'7', b'z', b'X']));
+    assert!(!looks_like_program(&[0, 0, 0, 0]));
+    assert!(looks_like_program(b"#!/b"));
+  }
+
+  #[cfg(not(windows))]
+  #[test]
+  fn an_elf_file_is_a_program() {
+    assert!(looks_like_program(b"\x7fELF"));
+    assert!(!looks_like_program(b"MZ\x90\0"));
+  }
+
+  #[cfg(windows)]
+  #[test]
+  fn a_pe_file_is_a_program() {
+    assert!(looks_like_program(b"MZ\x90\0"));
+    assert!(!looks_like_program(b"\x7fELF"));
+  }
+
+  #[tokio::test]
+  async fn a_missing_or_short_file_is_not_a_program() {
+    let dir = std::env::temp_dir().join(format!("ovd-program-{}", uuid::Uuid::new_v4()));
+    std::fs::create_dir_all(&dir).unwrap();
+    assert!(!is_program(&dir.join("nothing")).await);
+    std::fs::write(dir.join("short"), b"ab").unwrap();
+    assert!(!is_program(&dir.join("short")).await);
+    std::fs::write(dir.join("archive"), [0xfd, b'7', b'z', b'X', b'Z', 0]).unwrap();
+    assert!(!is_program(&dir.join("archive")).await);
+    std::fs::remove_dir_all(dir).unwrap();
   }
 
   #[test]

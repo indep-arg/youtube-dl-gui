@@ -6,80 +6,27 @@
 > [jely2002/youtube-dl-gui](https://github.com/jely2002/youtube-dl-gui) by Jelle Glebbeek and contributors.
 > It is not affiliated with or endorsed by the original author. See [Credits](#credits-and-fork-notice).
 
-Open Video Downloader is a simple, cross-platform desktop application that lets you download videos, audio, subtitles and metadata from hundreds of supported websites, not just YouTube.  
-It provides an easy-to-use interface around [yt-dlp](https://github.com/yt-dlp/yt-dlp) so you don’t have to touch the command line.
+Open Video Downloader is a simple desktop application for Windows and Linux that lets you download videos, audio,
+subtitles and metadata from hundreds of websites, not just YouTube. It puts an easy interface around
+[yt-dlp](https://github.com/yt-dlp/yt-dlp), so you don’t have to touch the command line.
 
-<p align="left">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="./docs/images/queue-dark.png">
-    <img src="./docs/images/queue-light.png" alt="Videos waiting in the queue, ready to download" width="560">
-  </picture>
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="./docs/images/downloading-dark.png">
-    <img src="./docs/images/downloading-light.png" alt="Three downloads in progress" width="560">
-  </picture>
-</p>
-
-## Features
-
-- **Private:** no telemetry and no error reports, which the original had. See [Privacy](#privacy).
-- **Cross-platform:** works on Windows and Linux.
-- **Audio or video downloads:** grab full videos or extract only the audio track.
-- **Subtitles and metadata:** automatically saves available captions and video information.
-- **Quality control:** choose your preferred resolution, frame rate, and output format like MP4 or MKV.
-- **Playlists:** download entire playlists in one go.
-- **Custom output:** set your download location and control filenames using presets or custom templates.
-- **Smart queueing:** OVD balances multiple downloads automatically so your computer doesn’t slow down.
-- **Live streams:** record a live stream, from the start if the site allows it.
-- **History and saved queue:** see what you downloaded, open its folder or download it again. Links that were still in the queue come back when you reopen the app.
-- **Settings per site:** pick a folder and video or audio for each website.
-- **Speed and retries:** limit the download speed, choose how many times to retry and how many parts download at once.
-- **Extra files:** also save the info file and description, or split a video into its chapters.
-- **Export and import settings:** move your settings to another computer with one file.
-- **Authentication:** supports browser cookie files, basic auth and video passwords.
-- **Automatic updates:** both the app and yt-dlp are kept up to date automatically.
-- **Light and dark mode:** adapts to your system theme with clear progress and error handling.
-- **Shortcuts:** queue and download videos using shortcuts, stay up-to-date on progress with notifications.
-
-## Privacy
-
-The original app sent error reports to an outside service. This fork took that out, so there is no
-telemetry, no account and nothing that tracks what you download. The only things that leave your
-computer are the downloads you ask for and the checks for updates on GitHub.
-
-Updates are signed, and the tools it downloads (yt-dlp, ffmpeg) are checked before they are used.
-More in [docs/PRIVACY.md](./docs/PRIVACY.md).
-
-## Download
-
-The latest versions for **Windows** and **Linux** are available on the  
-[GitHub Releases page](https://github.com/indep-arg/youtube-dl-gui/releases).
-
-macOS builds are not provided in this fork.
-
-Download the installer or archive for your platform and follow the normal installation steps.  
-No command-line setup is required.
-
-#### What file do I download?
-| Your Computer                         | Download                                           |
-|---------------------------------------|----------------------------------------------------|
-| **Windows (x64)**                     | `Open.Video.Downloader_x.x.x_x64-setup.exe`        |
-| **Windows (ARM64)**                   | `Open.Video.Downloader_x.x.x_arm64-setup.exe`      |
-| **Windows, no install (x64)**         | `Open.Video.Downloader_x.x.x_x64-portable.zip`     |
-| **Windows, no install (ARM64)**       | `Open.Video.Downloader_x.x.x_arm64-portable.zip`   |
-| **Linux generic (x64)**               | `Open.Video.Downloader_x.x.x_amd64.AppImage`       |
-| **Linux generic (aarch64)**           | `Open.Video.Downloader_x.x.x_aarch64.AppImage`     |
-| **Linux Debian/Ubuntu (x64)**         | `Open.Video.Downloader_x.x.x_amd64.deb`            |
-| **Linux Debian/Ubuntu (aarch64)**     | `Open.Video.Downloader_x.x.x_arm64.deb`            |
-| **Linux Fedora/RHEL (x64)**           | `Open.Video.Downloader-x.x.x-1.x86_64.rpm`         |
-| **Linux Fedora/RHEL (aarch64)**       | `Open.Video.Downloader-x.x.x-1.aarch64.rpm`        |
-
-The first time you open the app it downloads the tools it needs (yt-dlp, ffmpeg and a few more),
-checks that they are the right files, and keeps them up to date by itself.
-
-#### A look around
+## Screenshots
 
 <table>
+  <tr>
+    <td width="50%">
+      <picture>
+        <source media="(prefers-color-scheme: dark)" srcset="./docs/images/queue-dark.png">
+        <img src="./docs/images/queue-light.png" alt="Videos waiting in the queue, ready to download">
+      </picture>
+    </td>
+    <td width="50%">
+      <picture>
+        <source media="(prefers-color-scheme: dark)" srcset="./docs/images/downloading-dark.png">
+        <img src="./docs/images/downloading-light.png" alt="Three downloads in progress">
+      </picture>
+    </td>
+  </tr>
   <tr>
     <td width="50%">
       <picture>
@@ -96,24 +43,74 @@ checks that they are the right files, and keeps them up to date by itself.
   </tr>
 </table>
 
+## Features
+
+- **Private:** no telemetry and no error reports, which the original had. See [Privacy](#privacy).
+- **Video or audio:** pick the resolution, frame rate and format (MP4, MKV…), or keep only the audio track.
+- **Subtitles and metadata:** save the available captions and video information, the info file and the description, or split a video into its chapters.
+- **Playlists and live streams:** download a whole playlist in one go, or record a live stream, from the start if the site allows it.
+- **Smart queue:** downloads are balanced so your computer doesn’t slow down, and links that were still waiting come back when you reopen the app.
+- **History:** see what you downloaded, open its folder or download it again.
+- **Your own rules:** choose folders and file names with presets or templates, and set a folder and video or audio for each website.
+- **Speed and retries:** limit the download speed, choose how many times to retry and how many parts download at once.
+- **Sign in:** browser cookie files, basic authentication and video passwords.
+- **Shortcuts and notifications:** add and download videos with keyboard shortcuts and follow the progress from notifications.
+- **Settings in a file:** export your settings and import them on another computer.
+- **Always up to date:** the app and its tools (yt-dlp, ffmpeg) update by themselves.
+- **Light and dark mode:** follows your system theme.
+
+## Privacy
+
+The original app sent error reports to an outside service. This fork took that out, so there is no
+telemetry, no account and nothing that tracks what you download. The only things that leave your
+computer are the downloads you ask for and the checks for updates on GitHub.
+
+Updates are signed, and the tools it downloads (yt-dlp, ffmpeg) are checked before they are used.
+More in [docs/PRIVACY.md](./docs/PRIVACY.md).
+
+## Download
+
+Get the latest version for **Windows** or **Linux** from the
+[GitHub Releases page](https://github.com/indep-arg/youtube-dl-gui/releases), then install it as usual.
+No command-line setup is needed. There are no macOS builds in this fork.
+
+### Which file do I download?
+
+| Your computer                       | File                                             |
+|-------------------------------------|--------------------------------------------------|
+| **Windows (x64)**                   | `Open.Video.Downloader_x.x.x_x64-setup.exe`      |
+| **Windows (ARM64)**                 | `Open.Video.Downloader_x.x.x_arm64-setup.exe`    |
+| **Windows, no install (x64)**       | `Open.Video.Downloader_x.x.x_x64-portable.zip`   |
+| **Windows, no install (ARM64)**     | `Open.Video.Downloader_x.x.x_arm64-portable.zip` |
+| **Linux, any distribution (x64)**   | `Open.Video.Downloader_x.x.x_amd64.AppImage`     |
+| **Linux, any distribution (ARM64)** | `Open.Video.Downloader_x.x.x_aarch64.AppImage`   |
+| **Debian / Ubuntu (x64)**           | `Open.Video.Downloader_x.x.x_amd64.deb`          |
+| **Debian / Ubuntu (ARM64)**         | `Open.Video.Downloader_x.x.x_arm64.deb`          |
+| **Fedora / RHEL (x64)**             | `Open.Video.Downloader-x.x.x-1.x86_64.rpm`       |
+| **Fedora / RHEL (ARM64)**           | `Open.Video.Downloader-x.x.x-1.aarch64.rpm`      |
+
+The first time you open the app it downloads the tools it needs (yt-dlp, ffmpeg and a few more),
+checks that they are the right files, and keeps them up to date.
+
 ## Documentation
 
 - [User guide](./docs/GUIDE.md): installing, using the app and what to do when something goes wrong.
-- [Privacy](./docs/PRIVACY.md).
-- [Changelog](./CHANGELOG.md) and [contributing](./CONTRIBUTING.md).
-- [Translating](./docs/TRANSLATING.md).
+- [Privacy](./docs/PRIVACY.md)
+- [Changelog](./CHANGELOG.md)
+- [Contributing](./CONTRIBUTING.md)
+- [Translating](./docs/TRANSLATING.md)
 
 ## Contributing
 
-Developers are welcome to contribute.  
-You’ll need Node.js (v24+) and Rust installed.
+Developers are welcome to contribute. You’ll need Node.js (v24+) and Rust installed.
 
-```
+```sh
 npm install
 npm run tauri dev
 ```
 
 For more details, see [CONTRIBUTING.md](./CONTRIBUTING.md).
+It is built with Vue 3 and a Rust backend powered by [Tauri](https://tauri.app/).
 
 ## License and disclaimer
 
@@ -122,14 +119,16 @@ Open Video Downloader is distributed under the [AGPL-3.0 license](./LICENSE).
 ### Credits and fork notice
 
 This project is a fork of [youtube-dl-gui / Open Video Downloader](https://github.com/jely2002/youtube-dl-gui),
-created by **Jelle Glebbeek ([jely2002](https://github.com/jely2002))** and contributors, who hold the copyright on the original code.
-All original copyright and license notices are preserved, as required by the AGPL-3.0.
+created by **Jelle Glebbeek ([jely2002](https://github.com/jely2002))** and contributors, who hold the copyright
+on the original code. All original copyright and license notices are preserved, as required by the AGPL-3.0.
 
-Changes made in this fork are also released under the AGPL-3.0-or-later, and are
-recorded in the git history of this repository. The fork is maintained by [indep-arg](https://github.com/indep-arg).
+Changes made in this fork are also released under the AGPL-3.0-or-later, and are recorded in the git history of
+this repository. The fork is maintained by [indep-arg](https://github.com/indep-arg).
 Documentation such as the [wiki](https://github.com/jely2002/youtube-dl-gui/wiki) is still provided by the original project.
 
-#### Use this application responsibly
-The maintainers of Open Video Downloader cannot be held liable for misuse of this application, as stated in the AGPL-3.0 license (section 16).  
-We do not condone the use of this software to violate local laws or platform terms of service (including the DMCA).  
-Users are personally responsible for ensuring they use this software fairly and within legal boundaries.
+### Use this application responsibly
+
+The maintainers of Open Video Downloader cannot be held liable for misuse of this application, as stated in the
+AGPL-3.0 license (section 16). We do not condone the use of this software to violate local laws or platform terms
+of service (including the DMCA). Users are personally responsible for ensuring they use this software fairly and
+within legal boundaries.

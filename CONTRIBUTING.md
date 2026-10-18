@@ -13,9 +13,9 @@ We follow a lightweight **Gitflow** style workflow:
 - **`main`** — active development (think of it as nightly).
 - **`release`** — stable branch used for tagged releases.
 - Feature branches follow the format:
-    - `feature/my-new-thing`
-    - `bugfix/fixed-a-crash`
-    - `chore/update-deps`, etc.
+  - `feature/my-new-thing`
+  - `bugfix/fixed-a-crash`
+  - `chore/update-deps`, etc.
 
 When a release is ready, we bump versions on `main` and merge into `release` to trigger the build and publishing pipeline.
 
@@ -24,7 +24,7 @@ When a release is ready, we bump versions on `main` and merge into `release` to 
 We use **Conventional Commits**.  
 Keep messages clear, descriptive, and scoped when possible:
 
-```
+```text
 feat(dispatcher): improve fairness algorithm
 fix(header): handle invalid URL input gracefully
 ```
@@ -37,7 +37,7 @@ You’ll need **Node.js (v24+)** and **Rust (latest stable)** installed.
 
 Clone, install dependencies, and run the app:
 
-```
+```sh
 npm install
 npm run tauri dev
 ```

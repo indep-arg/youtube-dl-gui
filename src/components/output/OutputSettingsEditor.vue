@@ -150,7 +150,7 @@
     </div>
 
     <div class="mb-4 flex flex-col gap-1">
-      <label class="font-semibold" :for="fieldId('add-thumbnail')">
+      <label class="font-semibold" :for="fieldId('save-thumbnail')">
         {{ t('settings.output.saveThumbnail.label') }}
       </label>
       <input

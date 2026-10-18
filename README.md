@@ -24,6 +24,10 @@ Open Video Downloader is a simple desktop app for Windows and Linux. Paste a lin
 download it. It works with YouTube and hundreds of other sites, and it uses
 [yt-dlp](https://github.com/yt-dlp/yt-dlp) behind the scenes, so you never have to touch a terminal.
 
+<p align="center">
+  <img src="./ytdlgui_demo.gif" alt="Open Video Downloader adding and downloading a playlist" width="800">
+</p>
+
 ## Screenshots
 
 <table>

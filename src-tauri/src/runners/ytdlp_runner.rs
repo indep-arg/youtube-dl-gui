@@ -9,8 +9,10 @@ use crate::runners::ytdlp_args::{
   build_output_args, build_performance_args,
 };
 use crate::runners::ytdlp_process::{
-  PlatformProcess, configure_command, kill_platform_process, platform_process_from_child,
+  PlatformProcess, configure_command, forget_running, kill_platform_process,
+  platform_process_from_child, track_running,
 };
+use crate::scheduling::group_state::{RunReceiver, is_running};
 use crate::state::config_models::{
   AuthSettings, Config, NetworkSettings, OutputSettings, SponsorBlockSettings, SubtitleSettings,
 };
@@ -57,6 +59,8 @@ pub struct YtdlpRunner<'a> {
   cfg: Arc<Config>,
   prefs: Arc<Preferences>,
   args: Vec<String>,
+  /// Passwords and headers: written to a private config file, not the command line.
+  secret_args: Vec<String>,
   bin_dir: PathBuf,
 }
 
@@ -75,6 +79,7 @@ impl<'a> YtdlpRunner<'a> {
       cfg,
       prefs,
       args,
+      secret_args: Vec::new(),
       bin_dir,
     }
   }
@@ -140,7 +145,7 @@ impl<'a> YtdlpRunner<'a> {
       effective_auth_secrets = secrets;
     }
     let effective_auth_secrets = resolve_with_patch(&effective_auth_secrets, auth_overrides);
-    self.apply_auth_secrets(effective_auth_secrets);
+    self.secret_args = auth_secret_args(effective_auth_secrets);
 
     self
   }
@@ -284,31 +289,68 @@ impl<'a> YtdlpRunner<'a> {
     self
   }
 
-  pub async fn output(self) -> Result<YtdlpOutput, String> {
-    log_run_summary(&self.args);
-    tracing::debug!("Running command: yt-dlp {}", self.args.join(" "));
-    let mut command = self.build_command();
+  /// Runs yt-dlp to the end and collects its output. Returns `None`, after
+  /// killing it, when the run of its group ends first.
+  pub async fn output_until_ended(
+    self,
+    run: &mut RunReceiver,
+  ) -> Result<Option<YtdlpOutput>, String> {
+    if !is_running(run) {
+      return Ok(None);
+    }
+    let (mut command, _secrets) = self.build_command()?;
+    command
+      .stdin(Stdio::null())
+      .stdout(Stdio::piped())
+      .stderr(Stdio::piped());
 
     configure_command(&mut command).map_err(|e| format!("yt-dlp spawn setup failed: {e}"))?;
 
-    tauri::async_runtime::spawn_blocking(move || {
-      let output = command
-        .output()
-        .map_err(|e| format!("yt-dlp failed to run: {e}"))?;
-      Ok(YtdlpOutput {
-        status: output.status,
-        stdout: output.stdout,
-        stderr: output.stderr,
-      })
-    })
-    .await
-    .map_err(|e| format!("yt-dlp task failed: {e}"))?
+    let mut child = command
+      .spawn()
+      .map_err(|e| format!("yt-dlp failed to run: {e}"))?;
+    // Kept until yt-dlp exits: on Windows, dropping it kills the process.
+    let platform = match platform_process_from_child(&child) {
+      Ok(platform) => platform,
+      Err(err) => {
+        let _ = child.kill();
+        return Err(err);
+      }
+    };
+
+    track_running(&child);
+    let pid = child.id();
+    let mut finished = tauri::async_runtime::spawn_blocking(move || {
+      let output = child.wait_with_output();
+      forget_running(pid);
+      output
+    });
+    loop {
+      tokio::select! {
+        output = &mut finished => {
+          let output = output
+            .map_err(|e| format!("yt-dlp task failed: {e}"))?
+            .map_err(|e| format!("yt-dlp failed to run: {e}"))?;
+          return Ok(Some(YtdlpOutput {
+            status: output.status,
+            stdout: output.stdout,
+            stderr: output.stderr,
+          }));
+        }
+        changed = run.changed() => {
+          let running = changed.is_ok() && run.borrow().is_running();
+          if !running {
+            kill_platform_process(&platform);
+            let _ = finished.await;
+            return Ok(None);
+          }
+        }
+      }
+    }
   }
 
   pub fn spawn(self) -> Result<(UnboundedReceiver<YtdlpCommandEvent>, YtdlpChild), String> {
-    log_run_summary(&self.args);
-    tracing::debug!("Running command: yt-dlp {}", self.args.join(" "));
-    let mut command = self.build_command();
+    let (mut command, secrets) = self.build_command()?;
     command
       .stdin(Stdio::piped())
       .stdout(Stdio::piped())
@@ -340,8 +382,12 @@ impl<'a> YtdlpRunner<'a> {
     }
 
     let wait_tx = tx.clone();
+    track_running(&raw_child);
     thread::spawn(move || {
       let status = raw_child.wait();
+      forget_running(raw_child.id());
+      // yt-dlp has read its config by now: the file with the secrets can go.
+      drop(secrets);
       match status {
         Ok(status) => {
           let payload = TerminatedPayload {
@@ -360,37 +406,97 @@ impl<'a> YtdlpRunner<'a> {
     Ok((rx, child))
   }
 
-  fn build_command(&self) -> Command {
+  /// The command to run, and the config file with the secrets, which must be
+  /// kept until yt-dlp exits.
+  fn build_command(&self) -> Result<(Command, Option<SecretConfig>), String> {
     let separator = if cfg!(windows) { ';' } else { ':' };
     let path_env = std::env::var("PATH").unwrap_or_default();
     let new_path = format!("{}{}{}", self.bin_dir.display(), separator, path_env);
+    let mut args = self.args.clone();
+    let secrets = if self.secret_args.is_empty() {
+      None
+    } else {
+      let config = SecretConfig::write(&self.secret_args)
+        .map_err(|e| format!("could not write the yt-dlp credentials: {e}"))?;
+      args.push("--config-locations".into());
+      args.push(config.path.to_string_lossy().into_owned());
+      Some(config)
+    };
+    log_run_summary(&args);
+    tracing::debug!("Running command: yt-dlp {}", args.join(" "));
     let mut command = Command::new("yt-dlp");
-    command.args(&self.args).env("PATH", new_path);
-    command
+    command.args(&args).env("PATH", new_path);
+    Ok((command, secrets))
   }
+}
 
-  fn apply_auth_secrets(&mut self, s: AuthSecrets) {
-    if let Some(u) = s.username {
-      self.args.push("--username".into());
-      self.args.push(u);
-    }
-    if let Some(p) = s.password {
-      self.args.push("--password".into());
-      self.args.push(p);
-    }
-    if let Some(vp) = s.video_password {
-      self.args.push("--video-password".into());
-      self.args.push(vp);
-    }
-    if let Some(token) = s.bearer_token {
-      self.args.push("--add-header".into());
-      self.args.push(format!("Authorization:Bearer {token}"));
-    }
-    for h in s.headers {
-      self.args.push("--add-header".into());
-      self.args.push(h);
-    }
+/// The options that carry secrets. Given on the command line, other users of
+/// the computer could read them in the list of processes.
+fn auth_secret_args(s: AuthSecrets) -> Vec<String> {
+  let mut args = Vec::new();
+  if let Some(u) = s.username {
+    args.push("--username".into());
+    args.push(u);
   }
+  if let Some(p) = s.password {
+    args.push("--password".into());
+    args.push(p);
+  }
+  if let Some(vp) = s.video_password {
+    args.push("--video-password".into());
+    args.push(vp);
+  }
+  if let Some(token) = s.bearer_token {
+    args.push("--add-header".into());
+    args.push(format!("Authorization:Bearer {token}"));
+  }
+  for h in s.headers {
+    args.push("--add-header".into());
+    args.push(h);
+  }
+  args
+}
+
+/// A yt-dlp config file only the user can read, removed when dropped.
+struct SecretConfig {
+  path: PathBuf,
+}
+
+impl SecretConfig {
+  fn write(args: &[String]) -> std::io::Result<Self> {
+    use std::io::Write;
+
+    let path = std::env::temp_dir().join(format!("ovd-auth-{}.conf", uuid::Uuid::new_v4()));
+    let mut options = std::fs::OpenOptions::new();
+    options.write(true).create_new(true);
+    #[cfg(unix)]
+    {
+      use std::os::unix::fs::OpenOptionsExt;
+      options.mode(0o600);
+    }
+    let mut file = options.open(&path)?;
+    let config = Self { path };
+    // yt-dlp reads config files in the system encoding unless told otherwise.
+    let mut contents = String::from("# coding: utf-8\n");
+    for arg in args {
+      contents.push_str(&quote_config_arg(arg));
+      contents.push('\n');
+    }
+    file.write_all(contents.as_bytes())?;
+    Ok(config)
+  }
+}
+
+impl Drop for SecretConfig {
+  fn drop(&mut self) {
+    let _ = std::fs::remove_file(&self.path);
+  }
+}
+
+/// Quotes an argument for a yt-dlp config file, which is split like a shell
+/// command line: inside single quotes only a single quote needs care.
+fn quote_config_arg(arg: &str) -> String {
+  format!("'{}'", arg.replace('\'', r#"'"'"'"#))
 }
 
 /// Presence-only summary of a yt-dlp invocation, safe to log at any
@@ -421,7 +527,7 @@ fn summarize_args_for_log(args: &[String]) -> RunLogSummary {
     has_auth: args.iter().any(|arg| {
       matches!(
         arg.as_str(),
-        "--username" | "--password" | "--video-password" | "--add-header"
+        "--username" | "--password" | "--video-password" | "--add-header" | "--config-locations"
       ) || arg.starts_with("--username=")
         || arg.starts_with("--password=")
         || arg.starts_with("--video-password=")
@@ -904,11 +1010,12 @@ fn subtitle_language_bases(languages: &[String]) -> Vec<String> {
 #[cfg(test)]
 mod tests {
   use super::{
-    build_network_args, build_sponsorblock_args, build_subtitle_args, normalize_extractor_args,
-    summarize_args_for_log,
+    SecretConfig, auth_secret_args, build_network_args, build_sponsorblock_args,
+    build_subtitle_args, normalize_extractor_args, summarize_args_for_log,
   };
   use crate::models::SubtitleInventory;
   use crate::state::config_models::{NetworkSettings, SponsorBlockSettings, SubtitleSettings};
+  use crate::stronghold::stronghold_state::AuthSecrets;
 
   fn inventory(manual: &[&str], automatic: &[&str]) -> SubtitleInventory {
     SubtitleInventory {
@@ -1235,6 +1342,36 @@ mod tests {
       build_sponsorblock_args(&settings, false),
       vec!["--sponsorblock-mark", "sponsor"]
     );
+  }
+
+  #[test]
+  fn secrets_are_kept_out_of_the_command_line() {
+    let args = auth_secret_args(AuthSecrets {
+      username: Some("me".into()),
+      password: Some("p4ss".into()),
+      ..Default::default()
+    });
+    assert_eq!(args, ["--username", "me", "--password", "p4ss"]);
+  }
+
+  #[test]
+  fn the_secret_config_is_private_quoted_and_removed() {
+    let config =
+      SecretConfig::write(&["--password".to_string(), "it's #1 $HOME \\".to_string()]).unwrap();
+    let path = config.path.clone();
+    let contents = std::fs::read_to_string(&path).unwrap();
+    assert_eq!(
+      contents,
+      "# coding: utf-8\n'--password'\n'it'\"'\"'s #1 $HOME \\'\n"
+    );
+    #[cfg(unix)]
+    {
+      use std::os::unix::fs::PermissionsExt;
+      let mode = std::fs::metadata(&path).unwrap().permissions().mode();
+      assert_eq!(mode & 0o777, 0o600);
+    }
+    drop(config);
+    assert!(!path.exists());
   }
 
   #[test]

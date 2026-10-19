@@ -15,7 +15,7 @@ export type Theme = 'light' | 'dark' | 'system';
 type LocaleOption = Locale | 'system';
 type ExpandedOptions = 'none' | 'encodings' | 'tracks';
 
-export interface AppearanceSettings {
+interface AppearanceSettings {
   theme: Theme;
   language: LocaleOption;
   expandedOptions: ExpandedOptions;
@@ -34,7 +34,7 @@ export interface NetworkSettings {
   extractorArgs: string;
 }
 
-export interface VideoOutputSettings {
+interface VideoOutputSettings {
   policy: TranscodePolicy;
   container: VideoContainer;
   postprocessPreset: VideoPostprocessPreset;
@@ -42,14 +42,14 @@ export interface VideoOutputSettings {
   postprocessArgs: string;
 }
 
-export interface AudioOutputSettings {
+interface AudioOutputSettings {
   policy: TranscodePolicy;
   format: AudioFormat;
   postprocessPreset: AudioPostprocessPreset;
   postprocessArgs: string;
 }
 
-export interface InputSettings {
+interface InputSettings {
   autoFillClipboard: boolean;
   preferVideoInMixedLinks: boolean;
   globalShortcuts: boolean;
@@ -122,7 +122,7 @@ export interface OutputSettings {
   liveFromStart: boolean;
 }
 
-export interface PerformanceSettings {
+interface PerformanceSettings {
   maxConcurrency: number;
   splitPlaylistThreshold: number;
   autoLoadSize: boolean;
@@ -140,13 +140,13 @@ export interface SubtitleSettings {
   embedSubtitles: boolean;
 }
 
-export interface SponsorBlockSettings {
+interface SponsorBlockSettings {
   apiUrl: string | null;
   removeParts: string[];
   markParts: string[];
 }
 
-export interface UpdateSettings {
+interface UpdateSettings {
   updateBinaries: boolean;
   updateApp: boolean;
   ytDlpChannel: YtDlpChannel;
@@ -160,7 +160,7 @@ export enum CloseBehavior {
   Hide = 'hide',
 }
 
-export interface SystemSettings {
+interface SystemSettings {
   trayEnabled: boolean;
   autoStartEnabled: boolean;
   autoStartMinimised: boolean;
@@ -173,7 +173,7 @@ export enum NotificationBehavior {
   Never = 'never',
 }
 
-export interface NotificationSettings {
+interface NotificationSettings {
   notificationBehavior: NotificationBehavior;
   disabledNotifications: NotificationKind[];
 }

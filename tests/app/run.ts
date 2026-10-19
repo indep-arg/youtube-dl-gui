@@ -302,6 +302,54 @@ const tests: TestCase[] = [
     },
   },
   {
+    name: 'pause-and-resume',
+    async run(ctx) {
+      ctx.seedTools();
+      // Slow enough to pause it halfway.
+      ctx.writeConfig({ performance: { rateLimitKib: 16 } });
+      const s = await ctx.start();
+      await homeReady(s);
+      await s.addLink(ctx.media.url('clip'));
+      await waitForCard(s, 'clip');
+      await s.click('article [title="Download individually"]');
+      await s.waitForSelector('article [title="Pause download"]', 30_000);
+      await new Promise(r => setTimeout(r, 3_000));
+      await s.click('article [title="Pause download"]');
+      // Resumed at once: the paused run must not carry on next to the new one.
+      await s.waitForSelector('article [title="Resume download"]', 10_000);
+      await s.click('article [title="Resume download"]');
+      await s.waitForText('Download complete — 100%', 180_000);
+      const files = ctx.downloaded('mp4');
+      check(files.length === 1, `expected one mp4, found ${readdirSync(ctx.downloads).join(', ')}`);
+      const info = probe(join(ctx.bin, 'ffprobe'), files[0]);
+      check(Math.abs(info.duration - 6) < 0.5, `duration ${info.duration}`);
+    },
+  },
+  {
+    name: 'live-logs',
+    async run(ctx) {
+      ctx.seedTools();
+      ctx.writeConfig({ performance: { rateLimitKib: 32 } });
+      const s = await ctx.start();
+      await homeReady(s);
+      await s.addLink(ctx.media.url('clip'));
+      await waitForCard(s, 'clip');
+      await s.click('article [title="Download individually"]');
+      await s.waitForSelector('article [title="Pause download"]', 30_000);
+      // Watch the log while the download writes to it.
+      await s.click('article [title="Show metadata"]');
+      await s.waitFor('the metadata page', async () => (await s.route()).startsWith('/group/'), 10_000);
+      await s.go(`${(await s.route()).replace(/\/$/, '')}/logs`);
+      await s.waitForText('[download] Destination:', 30_000);
+      await s.waitForText('Download complete', 180_000);
+      await s.waitForText('[Metadata]', 10_000);
+      const lines = await s.exec<string[]>(`return [...document.querySelectorAll('[role=log] > div')].map(l => l.innerText);`);
+      check(lines.length >= 3, `only ${lines.length} log lines`);
+      const glued = lines.filter(line => (line.match(/\[(download|info|generic)\]/g) ?? []).length > 1);
+      check(glued.length === 0, `lines run together: ${glued[0]}`);
+    },
+  },
+  {
     name: 'error-card',
     async run(ctx) {
       ctx.seedTools();

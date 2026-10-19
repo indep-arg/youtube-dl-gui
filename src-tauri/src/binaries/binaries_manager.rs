@@ -1,5 +1,6 @@
 use std::collections::{HashMap, HashSet};
 use std::path::{Path, PathBuf};
+use std::time::{Duration, Instant};
 
 use crate::SharedConfig;
 use crate::binaries::binaries_extractor::{
@@ -157,6 +158,18 @@ struct ToolComplete {
   tool: String,
 }
 
+/// How often a download reports its progress.
+const PROGRESS_INTERVAL: Duration = Duration::from_millis(100);
+
+/// A stalled connection fails instead of keeping the install screen waiting forever.
+fn http_client() -> reqwest::Client {
+  reqwest::Client::builder()
+    .connect_timeout(Duration::from_secs(30))
+    .read_timeout(Duration::from_secs(60))
+    .build()
+    .unwrap_or_else(|_| reqwest::Client::new())
+}
+
 pub struct BinariesManager {
   app: AppHandle<Wry>,
   client: reqwest::Client,
@@ -168,7 +181,7 @@ impl BinariesManager {
     let paths_manager = app.state::<PathsManager>();
     Self {
       app: app.clone(),
-      client: reqwest::Client::new(),
+      client: http_client(),
       bin_dir: paths_manager.bin_dir().clone(),
     }
   }
@@ -476,13 +489,21 @@ impl BinariesManager {
   }
 
   async fn fetch_manifest(&self) -> Result<Manifest, AnyError> {
-    let manifest_bytes = self.client.get(MANIFEST_URL).send().await?.bytes().await?;
+    let manifest_bytes = self
+      .client
+      .get(MANIFEST_URL)
+      .send()
+      .await?
+      .error_for_status()?
+      .bytes()
+      .await?;
 
     let sig_b64 = self
       .client
       .get(MANIFEST_SIG_URL)
       .send()
       .await?
+      .error_for_status()?
       .bytes()
       .await?;
     let sig_raw = base64::engine::general_purpose::STANDARD.decode(sig_b64)?;
@@ -551,7 +572,7 @@ impl BinariesManager {
       return Ok(());
     }
 
-    let mut res = self.client.get(url).send().await?;
+    let mut res = self.client.get(url).send().await?.error_for_status()?;
 
     let tmp = dest.with_extension("tmp");
     let mut file = fs::File::create(&tmp).await?;
@@ -559,11 +580,18 @@ impl BinariesManager {
 
     let total = res.content_length().unwrap_or(0);
     let mut received: u64 = 0;
+    let mut last_report: Option<Instant> = None;
 
     while let Some(chunk) = res.chunk().await? {
       received += chunk.len() as u64;
       hasher.update(&chunk);
       file.write_all(&chunk).await?;
+      // A report per chunk is thousands of events for ffmpeg: a few per second are enough.
+      let finished = total > 0 && received >= total;
+      if !finished && last_report.is_some_and(|at| at.elapsed() < PROGRESS_INTERVAL) {
+        continue;
+      }
+      last_report = Some(Instant::now());
       let _ = self.app.emit(
         "binary_download_progress",
         ToolProgress {
@@ -938,6 +966,10 @@ mod tests {
   #[test]
   fn a_failed_replacement_puts_the_old_bundle_back() {
     use std::os::unix::fs::PermissionsExt;
+    // Root can write to read-only folders, so the failure cannot be simulated.
+    if unsafe { libc::geteuid() } == 0 {
+      return;
+    }
     let dir = temp_dir();
     let bin = dir.join("bin");
     let bundle = dir.join("bundle");

@@ -78,6 +78,27 @@ describe('queue store', () => {
     expect(useMediaOptionsStore().getOverrides(group.id)?.output?.addMetadata).toBe(false);
   });
 
+  it('fetches a restored link with its saved settings', async () => {
+    const fetched: unknown[] = [];
+    installTauriMock({
+      ...mediaHandlers,
+      ...libraryHandlers,
+      notify: () => null,
+      media_info: (cmd, args) => {
+        fetched.push((args as { overrides?: unknown }).overrides);
+        return mediaHandlers.media_info(cmd, args);
+      },
+    });
+    globalThis.__E2E_LIBRARY__ = {
+      history: [],
+      queue: [{ url: 'https://example.com/private', overrides: { auth: { cookieFile: '/cookies.txt' } }, options: null }],
+    };
+
+    await useQueueStore().restore();
+
+    expect(fetched).toEqual([{ auth: { cookieFile: '/cookies.txt' } }]);
+  });
+
   it('does not bring anything back when keeping the queue is turned off', async () => {
     globalThis.__E2E_LIBRARY__ = { history: [], queue: [{ url: 'https://example.com/x', overrides: null, options: null }] };
     useSettingsStore().settings.input.restoreQueue = false;

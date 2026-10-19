@@ -67,6 +67,8 @@ export const useMediaProgressStore = defineStore('media-progress', () => {
   function processMediaCompletePayload(payload: MediaProgressCompletePayload) {
     stateStore.setState(payload.id, MediaState.done);
     const group = groupStore.findGroupById(payload.groupId);
+    // The group was removed while its last download was finishing.
+    if (!group) return;
     if (group.isCombined) {
       const items = Object.values(group.items);
       const allItemsAreTerminal = !items.some((item) => {

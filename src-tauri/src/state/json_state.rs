@@ -19,7 +19,8 @@ pub trait JsonBackedState:
   }
 
   fn before_initialized(_app: &AppHandle<Wry>, _value: &mut Self) {}
-  fn on_updated(_app: &AppHandle<Wry>, _new_value: &Self) {}
+  /// Called once the new value is the current one.
+  fn on_updated(_app: &AppHandle<Wry>, _old_value: &Self, _new_value: &Self) {}
 }
 
 pub fn json_merge(base: &mut Value, patch: &Value) {

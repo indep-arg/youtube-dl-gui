@@ -103,6 +103,38 @@ pub fn platform_process_from_child(child: &std::process::Child) -> Result<Platfo
   }
 }
 
+/// Process groups of yt-dlp that are still running. On Windows the job object
+/// kills them when the app exits; elsewhere they would be left running.
+#[cfg(unix)]
+static RUNNING: std::sync::LazyLock<std::sync::Mutex<std::collections::HashSet<i32>>> =
+  std::sync::LazyLock::new(Default::default);
+
+/// Remembers a child until [`forget_running`], to kill it if the app exits first.
+pub fn track_running(child: &std::process::Child) {
+  #[cfg(unix)]
+  RUNNING.lock().unwrap().insert(child.id() as i32);
+  #[cfg(not(unix))]
+  let _ = child;
+}
+
+/// Called once the child has exited, so its id is never signalled again.
+pub fn forget_running(pid: u32) {
+  #[cfg(unix)]
+  RUNNING.lock().unwrap().remove(&(pid as i32));
+  #[cfg(not(unix))]
+  let _ = pid;
+}
+
+/// Stops every yt-dlp that is still running, with the processes it started.
+pub fn kill_all_running() {
+  #[cfg(unix)]
+  for pgid in RUNNING.lock().unwrap().drain() {
+    unsafe {
+      libc::killpg(pgid, libc::SIGTERM);
+    }
+  }
+}
+
 pub fn kill_platform_process(platform: &PlatformProcess) {
   #[cfg(unix)]
   {
@@ -157,4 +189,37 @@ fn create_job_for_child(child: &std::process::Child) -> io::Result<JobHandle> {
   Ok(JobHandle {
     handle: handle as isize,
   })
+}
+
+#[cfg(all(test, unix))]
+mod tests {
+  use super::*;
+  use std::time::{Duration, Instant};
+
+  #[test]
+  fn exiting_kills_the_processes_that_still_run() {
+    let mut command = Command::new("sh");
+    // A child of the child, like ffmpeg started by yt-dlp.
+    command.args(["-c", "sleep 30 & wait"]);
+    configure_command(&mut command).unwrap();
+    let mut child = command.spawn().unwrap();
+    track_running(&child);
+
+    let started = Instant::now();
+    kill_all_running();
+    let status = child.wait().unwrap();
+    assert!(!status.success());
+    assert!(started.elapsed() < Duration::from_secs(5));
+  }
+
+  #[test]
+  fn a_finished_process_is_not_signalled() {
+    let mut command = Command::new("true");
+    configure_command(&mut command).unwrap();
+    let mut child = command.spawn().unwrap();
+    track_running(&child);
+    child.wait().unwrap();
+    forget_running(child.id());
+    assert!(!RUNNING.lock().unwrap().contains(&(child.id() as i32)));
+  }
 }

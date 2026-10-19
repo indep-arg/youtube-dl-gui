@@ -5,19 +5,18 @@ use crate::models::{
   MediaDestination, MediaDiagnosticPayload, MediaFatalPayload, MediaProgressComplete,
   MediaProgressStage, ProgressEvent, ProgressStage,
 };
-use crate::parsers::ytdlp_error::{DiagnosticMatcher, YtdlpErrorParser};
+use crate::parsers::ytdlp_error::{YtdlpErrorParser, shipped_matcher};
 use crate::parsers::ytdlp_progress::{YtdlpProgressParser, progress_category_for_track_type};
 use crate::paths::PathsManager;
 use crate::runners::live_recording::{destination_from_line, save_recording, wait_until_written};
 use crate::runners::ytdlp_runner::{YtdlpChild, YtdlpCommandEvent, YtdlpRunner};
 use crate::scheduling::download_pipeline::DownloadEntry;
-use crate::scheduling::group_state::{is_stop_requested, subscribe_group};
+use crate::scheduling::group_state::{RunReceiver, RunState, is_running};
 use std::fmt;
 use std::path::PathBuf;
 use std::time::Duration;
 use tauri::{AppHandle, Emitter, Manager, State};
 use tokio::sync::mpsc::UnboundedReceiver;
-use tokio::sync::watch;
 
 #[derive(Debug)]
 pub enum YtdlpDownloadError {
@@ -47,6 +46,7 @@ impl std::error::Error for YtdlpDownloadError {}
 pub async fn run_ytdlp_download(
   app: AppHandle,
   entry: DownloadEntry,
+  mut run: RunReceiver,
 ) -> Result<(), YtdlpDownloadError> {
   let runner = YtdlpRunner::new(&app)
     .with_progress_args()
@@ -81,8 +81,7 @@ pub async fn run_ytdlp_download(
     )
     .with_url(&entry.url);
 
-  static RULES_JSON: &str = include_str!("../diagnostic_rules.json");
-  let matcher = match DiagnosticMatcher::from_json(RULES_JSON) {
+  let matcher = match shipped_matcher() {
     Ok(matcher) => matcher,
     Err(err) => {
       emit_internal_fatal(
@@ -123,7 +122,6 @@ pub async fn run_ytdlp_download(
       return Err(YtdlpDownloadError::SpawnFailed(err));
     }
   };
-  let mut cancel_rx = subscribe_group(&entry.group_id);
   // The files a live recording writes to, to save them if it is stopped.
   let mut destinations: Vec<PathBuf> = Vec::new();
 
@@ -134,8 +132,9 @@ pub async fn run_ytdlp_download(
           break;
         };
 
-        if is_cancelled_now(&cancel_rx) {
-          return stop_download(&app, &entry, &child, &mut rx, &destinations).await;
+        if !is_running(&run) {
+          let state = *run.borrow();
+          return stop_download(&app, &entry, &child, &mut rx, &destinations, state).await;
         }
 
         let log_state = app.state::<LogStoreState>();
@@ -191,9 +190,11 @@ pub async fn run_ytdlp_download(
           }
         }
       }
-      _ = cancel_rx.changed() => {
-        if is_cancelled_now(&cancel_rx) {
-          return stop_download(&app, &entry, &child, &mut rx, &destinations).await;
+      // An error means the run was replaced or forgotten: it has ended too.
+      changed = run.changed() => {
+        let state = *run.borrow();
+        if changed.is_err() || !state.is_running() {
+          return stop_download(&app, &entry, &child, &mut rx, &destinations, state).await;
         }
       }
     }
@@ -215,9 +216,10 @@ async fn stop_download(
   child: &YtdlpChild,
   rx: &mut UnboundedReceiver<YtdlpCommandEvent>,
   destinations: &[PathBuf],
+  state: RunState,
 ) -> Result<(), YtdlpDownloadError> {
   let _ = child.kill_tree();
-  if !(entry.is_live && is_stop_requested(&entry.group_id)) {
+  if !(entry.is_live && state == RunState::Stopped) {
     tracing::info!("Cancelled processing for group_id {}", entry.group_id);
     return Ok(());
   }
@@ -294,10 +296,6 @@ fn emit_internal_fatal(
     "media_fatal",
     MediaFatalPayload::internal(entry.group_id.clone(), entry.id.clone(), message, details),
   );
-}
-
-fn is_cancelled_now(cancel_rx: &watch::Receiver<bool>) -> bool {
-  !*cancel_rx.borrow()
 }
 
 fn store_log_line(

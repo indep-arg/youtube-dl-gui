@@ -43,13 +43,19 @@
       {{ t('media.view.logs.all.title') }}
     </h2>
     <div class="text-sm flex flex-col gap-2">
-      <pre
+      <div
           v-if="hasLog"
           role="log"
           aria-live="off"
           class="max-h-64 overflow-y-auto bg-base-300 border border-base-200 rounded-box py-3 px-4 font-mono whitespace-pre-wrap text-xs leading-6"
-          v-html="linkifiedGroupLog"
-      />
+      >
+        <!-- One element per line: a new or repeated line only updates its own element. -->
+        <div
+            v-for="(line, index) in groupLog.lines.value"
+            :key="groupLog.start.value + index"
+            v-html="linkifyLine(line)"
+        />
+      </div>
       <div v-else class="alert alert-info alert-soft">
         <information-circle-icon class="h-5 w-5"/>
         <span class="text-base-content">{{ t('media.view.logs.all.empty') }}</span>
@@ -81,11 +87,19 @@ const diagnosticsStore = useMediaDiagnosticsStore();
 const groupLog = useGroupLog(groupId);
 const { linkify } = useLinkify();
 
-const linkifiedGroupLog = computed(() => {
-  return linkify(groupLog.logText.value).trim();
-});
+// Lines rarely change once written, so each one is linkified once.
+const linkified = new Map<string, string>();
+const linkifyLine = (line: string): string => {
+  let html = linkified.get(line);
+  if (html === undefined) {
+    html = linkify(line);
+    if (linkified.size > 10_000) linkified.clear();
+    linkified.set(line, html);
+  }
+  return html;
+};
 
-const hasLog = computed(() => groupLog.logText.value.length > 0);
+const hasLog = computed(() => groupLog.lines.value.length > 0);
 
 const errors = computed((): MediaDiagnostic[] => {
   const diagnostics = diagnosticsStore.findDiagnosticsByGroupId(groupId.value);

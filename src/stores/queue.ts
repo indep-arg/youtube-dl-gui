@@ -76,9 +76,10 @@ export const useQueueStore = defineStore('queue', () => {
     const mediaStore = useMediaStore();
     for (const link of library.queue) {
       if (!link.url) continue;
-      const groupId = await mediaStore.dispatchMediaInfoFetch(link.url);
-      if (link.overrides) optionsStore.setOverrides(groupId, link.overrides as DownloadOverrides);
-      if (link.options) optionsStore.setOptions(groupId, link.options as DownloadOptions);
+      await mediaStore.dispatchMediaInfoFetch(link.url, false, false, {
+        overrides: (link.overrides ?? undefined) as DownloadOverrides | undefined,
+        options: (link.options ?? undefined) as DownloadOptions | undefined,
+      });
     }
     return library.queue.length;
   }

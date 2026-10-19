@@ -7,10 +7,9 @@ use crate::{
   models::{ParsedMedia, ParsedPlaylist},
   scheduling::concurrency::DynamicSemaphore,
   scheduling::dispatcher::{DispatchEntry, DispatchRequest, GenericDispatcher},
+  scheduling::group_state::{FETCH_GROUPS, RunReceiver},
 };
-use std::collections::HashMap;
-use std::sync::LazyLock;
-use std::sync::{Arc, Mutex};
+use std::sync::Arc;
 use tauri::{AppHandle, Emitter};
 use tokio::sync::mpsc::UnboundedSender;
 use uuid::Uuid;
@@ -66,9 +65,6 @@ impl DispatchEntry for FetchEntry {
   fn set_numbering(&mut self, _autonumber: u64, _group_autonumber: Option<u64>) {}
 }
 
-static GROUP_COUNTERS: LazyLock<Mutex<HashMap<String, usize>>> =
-  LazyLock::new(|| Mutex::new(HashMap::new()));
-
 pub fn setup_fetch_dispatcher(
   app: &AppHandle,
   sem: Arc<DynamicSemaphore>,
@@ -76,9 +72,13 @@ pub fn setup_fetch_dispatcher(
   GenericDispatcher::start(
     app.clone(),
     sem,
+    &FETCH_GROUPS,
     expand_fetch_request,
-    |tx: UnboundedSender<DispatchRequest<FetchRequest>>, app: AppHandle, entry: FetchEntry| async move {
-      handle_fetch_entry(tx, app, entry).await;
+    |tx: UnboundedSender<DispatchRequest<FetchRequest>>,
+     app: AppHandle,
+     entry: FetchEntry,
+     run: RunReceiver| async move {
+      handle_fetch_entry(tx, app, entry, run).await;
     },
   )
 }
@@ -107,10 +107,6 @@ fn expand_fetch_request(req: FetchRequest) -> Vec<FetchEntry> {
       overrides,
     } => {
       let total = entries.len();
-      GROUP_COUNTERS
-        .lock()
-        .unwrap()
-        .insert(group_id.clone(), total);
       entries
         .into_iter()
         .map(|e| FetchEntry {
@@ -168,7 +164,9 @@ async fn handle_fetch_entry(
   tx: UnboundedSender<DispatchRequest<FetchRequest>>,
   app: AppHandle,
   entry: FetchEntry,
+  run: RunReceiver,
 ) {
+  let result = run_ytdlp_info_fetch(&app, &entry, run).await;
   let FetchEntry {
     group_id,
     id,
@@ -176,19 +174,8 @@ async fn handle_fetch_entry(
     playlist_item,
     total,
     format,
-    overrides,
-  } = entry.clone();
-
-  let result = run_ytdlp_info_fetch(
-    &app,
-    id.clone(),
-    group_id.clone(),
-    &url,
-    format.clone(),
-    overrides.clone(),
-    playlist_item,
-  )
-  .await;
+    ..
+  } = entry;
 
   let result = match result {
     Ok(v) => v,
@@ -224,12 +211,9 @@ async fn handle_fetch_entry(
         };
         let _ = app.emit("media_add", payload);
       }
-
-      finish_entry(&tx, &group_id);
     }
     Some(ParsedMedia::Playlist(pl)) if is_empty_playlist(&pl) => {
       report_empty_playlist(&app, &group_id, &id);
-      finish_entry(&tx, &group_id);
     }
     Some(ParsedMedia::Playlist(pl)) => {
       if let Some(format) = format {
@@ -249,20 +233,6 @@ async fn handle_fetch_entry(
     }
     None => {
       // Do nothing if no parsed result is returned. The events have already been sent.
-    }
-  }
-}
-
-/// Marks one entry of the group as fetched; the last one cleans the group up.
-fn finish_entry(tx: &UnboundedSender<DispatchRequest<FetchRequest>>, group_id: &str) {
-  let mut counters = GROUP_COUNTERS.lock().unwrap();
-  if let Some(cnt) = counters.get_mut(group_id) {
-    *cnt -= 1;
-    if *cnt == 0 {
-      counters.remove(group_id);
-      let _ = tx.send(DispatchRequest::Cleanup {
-        group_id: group_id.to_string(),
-      });
     }
   }
 }

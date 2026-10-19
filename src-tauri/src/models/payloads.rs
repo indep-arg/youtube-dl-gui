@@ -96,7 +96,19 @@ impl MediaFatalPayload {
 #[serde(rename_all = "camelCase")]
 pub struct AppendLogPayload {
   pub group_id: String,
+  /// Position of the line in the log of the group. A line that was already
+  /// sent comes again with the same index when it is repeated: `(x2)`, `(x3)`…
+  pub index: usize,
   pub line: String,
+}
+
+/// The log of a group when a viewer subscribes to it.
+#[derive(Clone, Debug, Default, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct LogSnapshot {
+  /// Index of the first line: older lines may have been dropped.
+  pub start: usize,
+  pub lines: Vec<String>,
 }
 
 #[derive(Clone, Debug, Serialize)]

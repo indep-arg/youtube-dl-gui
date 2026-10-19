@@ -9,7 +9,7 @@ interface BundleInfo {
   rename_entry_to?: string;
 }
 
-export interface ToolSourceFile {
+interface ToolSourceFile {
   url: string;
   sha256?: string;
   /**

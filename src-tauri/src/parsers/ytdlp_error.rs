@@ -2,6 +2,7 @@ use crate::logging::redact::hide_addresses;
 use crate::models::error::{AppliesTo, DiagnosticEvent, DiagnosticLevel, PatternKind, RulesFile};
 use regex::Regex;
 use std::borrow::Cow;
+use std::sync::LazyLock;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 const INPUT_FILTER_SKIPPED_CODE: &str = "input_filter_skipped";
@@ -17,6 +18,13 @@ struct LoadedRule {
   component_lower: Option<String>,
   applies_to: AppliesTo,
   patterns: Vec<LoadedPattern>,
+}
+
+/// The rules shipped with the app, read and compiled once for every run.
+pub fn shipped_matcher() -> Result<&'static DiagnosticMatcher, &'static str> {
+  static MATCHER: LazyLock<Result<DiagnosticMatcher, String>> =
+    LazyLock::new(|| DiagnosticMatcher::from_json(include_str!("../diagnostic_rules.json")));
+  MATCHER.as_ref().map_err(String::as_str)
 }
 
 pub struct DiagnosticMatcher {
@@ -111,11 +119,11 @@ impl DiagnosticMatcher {
 pub struct YtdlpErrorParser {
   id: String,
   group_id: String,
-  matcher: DiagnosticMatcher,
+  matcher: &'static DiagnosticMatcher,
 }
 
 impl YtdlpErrorParser {
-  pub fn new(id: &str, group_id: &str, matcher: DiagnosticMatcher) -> Self {
+  pub fn new(id: &str, group_id: &str, matcher: &'static DiagnosticMatcher) -> Self {
     Self {
       id: id.into(),
       group_id: group_id.into(),
@@ -273,13 +281,20 @@ fn is_probable_id(s: &str) -> bool {
 
 #[cfg(test)]
 mod tests {
+  #[test]
+  fn the_shipped_rules_compile() {
+    assert!(super::shipped_matcher().is_ok());
+  }
+
   use super::*;
 
   fn parser() -> YtdlpErrorParser {
     YtdlpErrorParser::new(
       "item-id",
       "group-id",
-      DiagnosticMatcher::from_json(r#"{"rules":[],"fallbackCode":"unknown"}"#).unwrap(),
+      Box::leak(Box::new(
+        DiagnosticMatcher::from_json(r#"{"rules":[],"fallbackCode":"unknown"}"#).unwrap(),
+      )),
     )
   }
 

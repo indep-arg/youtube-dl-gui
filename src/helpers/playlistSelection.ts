@@ -1,12 +1,12 @@
 import type { EntryItem } from '../tauri/types/media.ts';
 
-export interface PlaylistSelectionSingleRow {
+interface PlaylistSelectionSingleRow {
   id: string;
   type: 'single';
   index: number | null;
 }
 
-export interface PlaylistSelectionRangeRow {
+interface PlaylistSelectionRangeRow {
   id: string;
   type: 'range';
   start: number | null;

@@ -1,6 +1,10 @@
 use regex::{Captures, Regex};
 use serde::Deserialize;
 use std::collections::HashMap;
+use std::sync::LazyLock;
+
+static FIELD: LazyLock<Regex> =
+  LazyLock::new(|| Regex::new(r"%\(([^)]+)\)([0-9.]*[sd])").expect("invalid regex"));
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct TemplateContext {
@@ -14,9 +18,7 @@ impl TemplateContext {
   }
 
   pub fn render_template(&self, template: &str) -> String {
-    let re = Regex::new(r"%\(([^)]+)\)([0-9.]*[sd])").expect("invalid regex");
-
-    let replaced = re.replace_all(template, |caps: &Captures| {
+    let replaced = FIELD.replace_all(template, |caps: &Captures| {
       let whole = caps.get(0).unwrap().as_str();
       let expr = caps.get(1).unwrap().as_str();
       let fmt = caps.get(2).unwrap().as_str();

@@ -3,7 +3,7 @@ use crate::models::PlaylistEntry;
 use crate::models::download::DownloadOverrides;
 use crate::scheduling::dispatcher::DispatchRequest;
 use crate::scheduling::fetch_pipeline::FetchRequest;
-use crate::scheduling::group_state::ensure_group_running;
+use crate::scheduling::group_state::FETCH_GROUPS;
 use tauri::State;
 
 #[tauri::command]
@@ -13,7 +13,7 @@ pub fn media_playlist_expand(
   overrides: Option<DownloadOverrides>,
   pipeline: State<'_, FetchSender>,
 ) -> Result<String, String> {
-  ensure_group_running(&group_id);
+  FETCH_GROUPS.start(&group_id);
 
   pipeline
     .0

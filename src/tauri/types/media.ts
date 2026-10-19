@@ -56,7 +56,7 @@ export type DownloadOptions = {
   videoTrackIds?: string[];
 };
 
-export type MediaCodecInfo = {
+type MediaCodecInfo = {
   id: string;
   label: string;
 };
@@ -120,7 +120,7 @@ export type PartialDownload = {
   section?: Section;
 };
 
-export type AuthOverrides = {
+type AuthOverrides = {
   cookieFile?: string;
   cookieBrowser?: string;
   username?: string;
@@ -130,7 +130,7 @@ export type AuthOverrides = {
   headers?: string[];
 };
 
-export type NetworkOverrides = {
+type NetworkOverrides = {
   enableProxy?: boolean;
   proxy?: string;
   noCheckCertificates?: boolean;
@@ -148,17 +148,17 @@ export type SubtitleOverrides = {
   embedSubtitles?: boolean;
 };
 
-export type SponsorBlockOverrides = {
+type SponsorBlockOverrides = {
   apiUrl?: string;
   removeParts?: string[];
   markParts?: string[];
 };
 
-export type InputOverrides = {
+type InputOverrides = {
   preferVideoInMixedLinks?: boolean;
 };
 
-export enum PlaylistMode {
+enum PlaylistMode {
   singleVideo = 'singleVideo',
   playlist = 'playlist',
 }
@@ -185,7 +185,7 @@ export type TrackOptions = {
   video?: string;
 };
 
-export type SubtitleInventory = {
+type SubtitleInventory = {
   manualLanguages: string[];
   autoLanguages: string[];
 };

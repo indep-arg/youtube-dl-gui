@@ -1,7 +1,7 @@
 use crate::models::DownloadItem;
 use crate::scheduling::dispatcher::DispatchRequest;
 use crate::scheduling::download_pipeline::{DownloadRequest, DownloadSender};
-use crate::scheduling::group_state::ensure_group_running;
+use crate::scheduling::group_state::DOWNLOAD_GROUPS;
 use tauri::State;
 
 #[tauri::command]
@@ -10,7 +10,7 @@ pub fn media_download(
   items: Vec<DownloadItem>,
   pipeline: State<'_, DownloadSender>,
 ) -> String {
-  ensure_group_running(&group_id);
+  DOWNLOAD_GROUPS.start(&group_id);
 
   pipeline
     .0

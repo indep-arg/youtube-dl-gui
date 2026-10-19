@@ -22,6 +22,6 @@ export const appHandlers: Record<string, IPCHandler> = {
     return null;
   },
   // The backend returns what is logged so far (a string, maybe empty).
-  'logging_subscribe': () => '',
+  'logging_subscribe': () => ({ start: 0, lines: [] }),
   'logging_unsubscribe': () => null,
 };

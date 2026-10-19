@@ -58,7 +58,6 @@ pub struct FetchLimiter(pub Arc<DynamicSemaphore>);
 pub fn run() {
   let app = tauri::Builder::default()
     .plugin(tauri_plugin_notification::init())
-    .plugin(tauri_plugin_autostart::Builder::new().build())
     .plugin(tauri_plugin_updater::Builder::new().build())
     .plugin(tauri_plugin_store::Builder::new().build())
     .plugin(tauri_plugin_dialog::init())
@@ -198,7 +197,11 @@ pub fn run() {
     .build(tauri::generate_context!())
     .expect("error while running tauri application");
 
-  app.run(|_, _| {});
+  app.run(|_, event| {
+    if let tauri::RunEvent::Exit = event {
+      runners::ytdlp_process::kill_all_running();
+    }
+  });
 }
 
 fn create_main_window(app: &AppHandle, paths: &PathsManager) -> tauri::Result<()> {

@@ -200,6 +200,8 @@ export const useMediaStore = defineStore('media', () => {
     url: string,
     fromShortcut: boolean = false,
     skipPlaylistSelection: boolean = false,
+    /** Settings saved with a link of the queue: they apply to fetching it too, e.g. cookies. */
+    restored?: { overrides?: DownloadOverrides; options?: DownloadOptions },
   ) {
     const id = uuidv4();
     const groupId = uuidv4();
@@ -241,6 +243,8 @@ export const useMediaStore = defineStore('media', () => {
       optionsStore.setOverrides(groupId, { inputFilters: inputFiltersOverride });
     }
     applySitePreset(groupId, url);
+    if (restored?.overrides) optionsStore.setOverrides(groupId, restored.overrides);
+    if (restored?.options) optionsStore.setOptions(groupId, restored.options);
 
     await invoke('media_info', {
       url,

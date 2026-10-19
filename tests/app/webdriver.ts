@@ -151,14 +151,17 @@ export class Session {
     );
   }
 
-  /** Clicks the first element matching `selector`, or the one whose text is `text` among them. */
+  /**
+   * Clicks the first element matching `selector`, or the one whose text is `text` among them.
+   * Waits for it to appear: right after `go()` the new page may not be shown yet.
+   */
   async click(selector: string, text?: string): Promise<void> {
-    await this.exec(`
+    await this.waitFor(`something to click: ${selector} ${text ?? ''}`, () => this.exec<boolean>(`
       const all = [...document.querySelectorAll(arguments[0])];
       const el = arguments[1] === null ? all[0] : all.find(e => e.innerText.trim() === arguments[1]);
-      if (!el) throw new Error('nothing to click: ' + arguments[0] + ' ' + (arguments[1] || ''));
+      if (!el) return false;
       el.click();
-      return true;`, selector, text ?? null);
+      return true;`, selector, text ?? null), 10_000);
   }
 
   go(path: string): Promise<unknown> {

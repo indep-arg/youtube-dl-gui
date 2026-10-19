@@ -1,6 +1,6 @@
 import { TrackType } from './media.ts';
 
-export interface PathPreferences {
+interface PathPreferences {
   audioDownloadDir: string | null;
   videoDownloadDir: string | null;
   videoDirectoryTemplate: string | null;
@@ -14,7 +14,7 @@ const defaultPathPreferences: PathPreferences = {
   audioDirectoryTemplate: null,
 };
 
-export interface RecentPreferences {
+interface RecentPreferences {
   recent: Record<string, string[]>;
 }
 
@@ -22,7 +22,7 @@ const defaultRecentPreferences: RecentPreferences = {
   recent: {},
 };
 
-export interface FormatPreferences {
+interface FormatPreferences {
   trackType: TrackType;
 }
 

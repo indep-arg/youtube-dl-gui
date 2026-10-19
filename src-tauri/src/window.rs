@@ -254,9 +254,8 @@ pub fn track_main_window(app: &AppHandle<Wry>) {
         }
       }
       WindowEvent::CloseRequested { .. } => {
-        tauri::async_runtime::spawn(async move {
-          debouncer.flush_now().await;
-        });
+        // Waits for the save: when the app exits, a task started here might never run.
+        tauri::async_runtime::block_on(debouncer.flush_now());
       }
       #[cfg(target_os = "linux")]
       // Workaround for Wayland environments on Linux:

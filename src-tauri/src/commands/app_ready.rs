@@ -11,5 +11,9 @@ pub fn app_ready(app: AppHandle, cfg_handle: State<'_, SharedConfig>) {
     return;
   }
 
-  app.get_webview_window("main").unwrap().show().unwrap();
+  if let Some(window) = app.get_webview_window("main")
+    && let Err(e) = window.show()
+  {
+    tracing::warn!("Failed to show the main window: {e}");
+  }
 }

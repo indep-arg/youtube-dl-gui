@@ -12,7 +12,6 @@ export function startWindowWatcher(): void {
 
   const previousActiveDownloadCount = ref(0);
   const attentionCooldownUntilMs = ref(0);
-  const aggregateProgress = computed(() => progressStore.findAllProgress());
 
   function clampPercent0to100(value: number): number {
     return Math.max(0, Math.min(100, value));
@@ -43,9 +42,27 @@ export function startWindowWatcher(): void {
     return undefined;
   }
 
+  // The last values sent to the window: each one is a call to the system.
+  let lastBadge: number | undefined | null = null;
+  let lastProgressBar: string | null = null;
+
   async function setDockOrTaskbarBadge(activeDownloadCount: number): Promise<void> {
+    const badge = activeDownloadCount > 0 ? activeDownloadCount : undefined;
+    if (badge === lastBadge) return;
+    lastBadge = badge;
     try {
-      await windowHandle.setBadgeCount(activeDownloadCount > 0 ? activeDownloadCount : undefined);
+      await windowHandle.setBadgeCount(badge);
+    } catch {
+      // ignore (some platforms may not support this)
+    }
+  }
+
+  async function applyProgressBar(state: { status: ProgressBarStatus; progress?: number }): Promise<void> {
+    const key = `${state.status}:${state.progress ?? ''}`;
+    if (key === lastProgressBar) return;
+    lastProgressBar = key;
+    try {
+      await windowHandle.setProgressBar(state);
     } catch {
       // ignore (some platforms may not support this)
     }
@@ -55,39 +72,27 @@ export function startWindowWatcher(): void {
     activeDownloadCount: number;
     doneCount: number;
     totalCount: number;
+    singleItemPercent?: number;
   }): Promise<void> {
-    const { activeDownloadCount, doneCount, totalCount } = params;
+    const { activeDownloadCount, doneCount, totalCount, singleItemPercent } = params;
 
-    try {
-      if (activeDownloadCount <= 0) {
-        await windowHandle.setProgressBar({ status: ProgressBarStatus.None });
-        return;
-      }
-
-      if (activeDownloadCount === 1) {
-        const singleItemPercent = findActiveItemPercentIfSingleDownloading();
-        if (typeof singleItemPercent === 'number') {
-          await windowHandle.setProgressBar({
-            status: ProgressBarStatus.Normal,
-            progress: singleItemPercent,
-          });
-          return;
-        }
-      }
-
-      const aggregatePercent = computeAggregatePercent(doneCount, totalCount);
-      if (typeof aggregatePercent === 'number') {
-        await windowHandle.setProgressBar({
-          status: ProgressBarStatus.Normal,
-          progress: aggregatePercent,
-        });
-        return;
-      }
-
-      await windowHandle.setProgressBar({ status: ProgressBarStatus.Indeterminate });
-    } catch {
-      // ignore (some platforms may not support this)
+    if (activeDownloadCount <= 0) {
+      await applyProgressBar({ status: ProgressBarStatus.None });
+      return;
     }
+
+    if (activeDownloadCount === 1 && typeof singleItemPercent === 'number') {
+      await applyProgressBar({ status: ProgressBarStatus.Normal, progress: singleItemPercent });
+      return;
+    }
+
+    const aggregatePercent = computeAggregatePercent(doneCount, totalCount);
+    if (typeof aggregatePercent === 'number') {
+      await applyProgressBar({ status: ProgressBarStatus.Normal, progress: aggregatePercent });
+      return;
+    }
+
+    await applyProgressBar({ status: ProgressBarStatus.Indeterminate });
   }
 
   async function maybeRequestUserAttention(params: {
@@ -116,11 +121,21 @@ export function startWindowWatcher(): void {
     }
   }
 
-  async function syncWindowState(): Promise<void> {
-    const activeDownloadCount = aggregateProgress.value.downloading ?? 0;
-    const doneCount = aggregateProgress.value.done ?? 0;
-    const totalCount = aggregateProgress.value.total ?? 0;
-    const readyCount = aggregateProgress.value.ready ?? 0;
+  /** What the window shows: badge, taskbar progress and the end-of-queue alert. */
+  const windowState = computed(() => {
+    const aggregate = progressStore.findAllProgress();
+    const activeDownloadCount = aggregate.downloading ?? 0;
+    return {
+      activeDownloadCount,
+      doneCount: aggregate.done ?? 0,
+      totalCount: aggregate.total ?? 0,
+      readyCount: aggregate.ready ?? 0,
+      singleItemPercent: activeDownloadCount === 1 ? findActiveItemPercentIfSingleDownloading() : undefined,
+    };
+  });
+
+  async function syncWindowState(state: typeof windowState.value): Promise<void> {
+    const { activeDownloadCount, doneCount, totalCount, readyCount, singleItemPercent } = state;
 
     await setDockOrTaskbarBadge(activeDownloadCount + readyCount);
 
@@ -128,6 +143,7 @@ export function startWindowWatcher(): void {
       activeDownloadCount,
       doneCount,
       totalCount,
+      singleItemPercent,
     });
 
     await maybeRequestUserAttention({
@@ -138,14 +154,13 @@ export function startWindowWatcher(): void {
     previousActiveDownloadCount.value = activeDownloadCount;
   }
 
+  // Progress changes many times a second, but what the window shows rarely does.
   watch(
-    () => ({
-      aggregate: aggregateProgress.value,
-      perItem: progressStore.progress,
-    }),
-    () => {
-      void syncWindowState();
+    windowState,
+    (state, previous) => {
+      if (previous && JSON.stringify(state) === JSON.stringify(previous)) return;
+      void syncWindowState(state);
     },
-    { immediate: true, deep: true },
+    { immediate: true },
   );
 }

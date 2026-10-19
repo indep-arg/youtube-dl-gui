@@ -1,6 +1,7 @@
 {
   "$schema": "https://unpkg.com/knip@5/schema.json",
   "ignore": [
+    "src-tauri/target/**",
     "src/tauri/types/diagnostics.ts"
   ],
   "ignoreUnresolved": [
@@ -11,10 +12,5 @@
     "src/tauri/types/progress.ts": [
       "enumMembers"
     ]
-  },
-  "ignoreBinaries": [
-    "pgrep",
-    "wl-paste",
-    "wl-copy"
-  ]
+  }
 }

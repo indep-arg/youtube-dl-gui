@@ -18,6 +18,25 @@ Releases are tagged `app-vYEAR.MONTH.N` and the version is kept equal in
 The number does not say whether a release breaks anything. Breaking changes are listed in
 this file under **Breaking changes**.
 
+## 2026.10.6
+
+### Changes
+
+- Pausing, resuming and cancelling are more reliable: resuming no longer runs the work that was queued
+  before the pause a second time, cancelling also stops a link that is still loading, and a playlist no
+  longer loses its download or gets stuck using a processor core with no way to cancel it.
+- Fixed a crash that could close the app when a long error message was shortened.
+- On Linux, yt-dlp no longer keeps running after the app is closed.
+- Passwords and login headers reach yt-dlp through a private temporary file instead of the command line,
+  where other programs on the computer could read them.
+- Logs: a line that repeats is shown once with a count, live lines no longer run together or get lost,
+  and a long log keeps its latest lines.
+- Turning on the tray icon or the global shortcuts works right away.
+- Links restored from the last session are loaded with the settings they had, such as cookies.
+- The window position is saved when the app closes.
+- Downloads of tools and app updates stop with an error instead of hanging when the connection stalls.
+- The Linux AppImage is built with the same version of Tauri as the rest of the app.
+
 ## 2026.10.5
 
 ### Changes

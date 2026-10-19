@@ -7,6 +7,11 @@ revision of pkgforge-dev/Anylinux-AppImages (786f526), which takes its helper
 libraries from the Anylinux-sharun release instead of ANYLINUX_LIB_SOURCE, and
 sharun.rs passes `&data` to write_and_make_executable, which takes a slice in 2.12.3.
 
+The bundler also sets DEPLOY_GSTREAMER from `bundleMediaFramework` and turns off
+DEPLOY_DATADIR, and hides GITHUB_REPOSITORY when there is no update information:
+otherwise quick-sharun bundles GStreamer and unrelated /usr/share folders (274 MiB
+instead of 112 MiB) and embeds an update pattern that does not match the release.
+
 diff --git a/crates/tauri-bundler/src/bundle/linux/appimage/mod.rs b/crates/tauri-bundler/src/bundle/linux/appimage/mod.rs
 index 47d440fe..cc027a1e 100644
 --- a/crates/tauri-bundler/src/bundle/linux/appimage/mod.rs
@@ -34,10 +39,10 @@ index 47d440fe..cc027a1e 100644
  fn write_and_make_executable(path: &Path, data: &[u8]) -> std::io::Result<()> {
 diff --git a/crates/tauri-bundler/src/bundle/linux/appimage/sharun.rs b/crates/tauri-bundler/src/bundle/linux/appimage/sharun.rs
 new file mode 100644
-index 00000000..ae7eda4d
+index 00000000..296b9dea
 --- /dev/null
 +++ b/crates/tauri-bundler/src/bundle/linux/appimage/sharun.rs
-@@ -0,0 +1,310 @@
+@@ -0,0 +1,329 @@
 +// Copyright 2019-2024 Tauri Programme within The Commons Conservancy
 +// SPDX-License-Identifier: Apache-2.0
 +// SPDX-License-Identifier: MIT
@@ -308,8 +313,23 @@ index 00000000..ae7eda4d
 +    .env("OUTNAME", &appimage_filename)
 +    .env("OUTPUT_APPIMAGE", "1");
 +
-+  if settings.appimage().bundle_media_framework {
-+    cmd.env("DEPLOY_GSTREAMER", "1");
++  // quick-sharun deploys GStreamer and its plugins as soon as WebKitGTK links
++  // it, which more than doubles the AppImage. Like the linuxdeploy bundler,
++  // only ship them when `bundleMediaFramework` asks for them.
++  cmd.env(
++    "DEPLOY_GSTREAMER",
++    if settings.appimage().bundle_media_framework {
++      "1"
++    } else {
++      "0"
++    },
++  );
++
++  // It also copies every /usr/share folder whose name it finds in the
++  // binaries, which on a CI runner pulls in unrelated data. The data a Tauri
++  // app needs comes from its own resources and the post-deployment hooks.
++  if std::env::var_os("DEPLOY_DATADIR").is_none() {
++    cmd.env("DEPLOY_DATADIR", "0");
 +  }
 +
 +  if let Some(upinfo) = std::env::var("UPINFO")
@@ -317,6 +337,10 @@ index 00000000..ae7eda4d
 +    .or_else(|| settings.appimage().update_information.clone())
 +  {
 +    cmd.env("UPINFO", upinfo);
++  } else {
++    // Without update information it guesses one from GITHUB_REPOSITORY on
++    // CI, with an asset pattern that may not match the release. Ship none.
++    cmd.env_remove("GITHUB_REPOSITORY");
 +  }
 +
 +  // Streams the tooling's output instead of capturing it: this runs for

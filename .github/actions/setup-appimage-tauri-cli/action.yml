@@ -1,0 +1,42 @@
+name: 'Set up the AppImage tauri-cli'
+description: 'Install tauri-cli with the new AppImage format and select it for the build'
+# TEMPORARY WORKAROUND:
+# The "truly portable" AppImage format is not in a tauri-cli release yet
+# (https://github.com/tauri-apps/tauri/pull/12491), so tauri-cli is built from the
+# same revision as the official release with that pull request applied on top.
+# See .github/patches/tauri-appimage.patch, and remove this action once the
+# format ships in a release.
+#
+# The built CLI is cached. Its key covers this file and the patch, so changing
+# the revision below or the patch builds it again.
+runs:
+  using: composite
+  steps:
+    - name: Restore patched tauri-cli
+      id: cache
+      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: ${{ runner.temp }}/tauri-cli-appimage
+        key: tauri-cli-appimage-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('.github/actions/setup-appimage-tauri-cli/action.yml', '.github/patches/tauri-appimage.patch') }}
+
+    - name: Build patched tauri-cli
+      if: steps.cache.outputs.cache-hit != 'true'
+      shell: bash
+      env:
+        # @tauri-apps/cli-v2.12.3, the same version as @tauri-apps/cli in package.json.
+        TAURI_REV: 59b63ab500da9859f12d8888c3298bc29bba0b92
+      run: |
+        TAURI_SRC="$RUNNER_TEMP/tauri-src"
+        git init -q "$TAURI_SRC"
+        git -C "$TAURI_SRC" fetch -q --depth 1 https://github.com/tauri-apps/tauri "$TAURI_REV"
+        git -C "$TAURI_SRC" checkout -q FETCH_HEAD
+        git -C "$TAURI_SRC" apply "$GITHUB_WORKSPACE/.github/patches/tauri-appimage.patch"
+        cargo install tauri-cli --path "$TAURI_SRC/crates/tauri-cli" --locked --root "$RUNNER_TEMP/tauri-cli-appimage"
+
+    # Called by its path rather than through `cargo tauri`, because cargo looks in
+    # ~/.cargo/bin first, where the Rust cache may restore an older tauri-cli.
+    - name: Use patched tauri-cli
+      shell: bash
+      run: |
+        echo "TAURI_BUNDLER_NEW_APPIMAGE_FORMAT=true" >> "$GITHUB_ENV"
+        echo "TAURI_CMD=$RUNNER_TEMP/tauri-cli-appimage/bin/cargo-tauri" >> "$GITHUB_ENV"

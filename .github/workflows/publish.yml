@@ -58,22 +58,12 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      - name: install dependencies (ubuntu only)
-        if: matrix.platform == 'ubuntu-24.04' || matrix.platform == 'ubuntu-24.04-arm'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-            libwebkit2gtk-4.1-dev \
-            build-essential \
-            curl \
-            wget \
-            file \
-            libssl-dev \
-            libgtk-3-dev \
-            libayatana-appindicator3-dev \
-            librsvg2-dev \
-            patchelf \
-            xdg-utils
+      # patchelf and xvfb are used by the AppImage tooling, see setup-appimage-tauri-cli.
+      - name: Install system dependencies (ubuntu only)
+        if: startsWith(matrix.platform, 'ubuntu')
+        uses: ./.github/actions/install-tauri-deps
+        with:
+          extra-packages: patchelf xvfb
 
       - name: setup node
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
@@ -101,40 +91,10 @@ jobs:
       - name: Install frontend dependencies
         run: npm ci
 
-      # TEMPORARY WORKAROUND:
-      # Use a custom tauri-cli branch to enable the new "truly portable" AppImage format.
-      # This relies on TAURI_BUNDLER_NEW_APPIMAGE_FORMAT=true and can be removed once
-      # https://github.com/tauri-apps/tauri/pull/12491 is merged and released upstream.
-      #
-      # Pin to the last revision before the quick-sharun migration, which started
-      # delegating bundling to a mutable external script downloaded at build time.
-      #
-      # That revision predates https://github.com/tauri-apps/tauri/pull/15596, so the
-      # .DirIcon symlink is patched to be relative (see .github/patches/).
-      #
-      # The same patch raises the AppImage tools that revision downloads (uruntime and
-      # sharun, which put the runtime inside every AppImage) to their latest versions.
-      # Check for newer ones from time to time, and try them with the Preview build.
-      - name: Override tauri-cli (ubuntu only)
-        if: matrix.platform == 'ubuntu-24.04' || matrix.platform == 'ubuntu-24.04-arm'
-        shell: bash
-        run: |
-          TAURI_SRC="$RUNNER_TEMP/tauri-src"
-          git init -q "$TAURI_SRC"
-          git -C "$TAURI_SRC" fetch -q --depth 1 https://github.com/tauri-apps/tauri b5573c1db2bb6118594b586a6aa51aeb37aa7d84
-          git -C "$TAURI_SRC" checkout -q FETCH_HEAD
-          git -C "$TAURI_SRC" apply "$GITHUB_WORKSPACE/.github/patches/tauri-appimage.patch"
-          cargo install tauri-cli --path "$TAURI_SRC/crates/tauri-cli" --locked --force
-          echo "TAURI_BUNDLER_NEW_APPIMAGE_FORMAT=true" >> $GITHUB_ENV
-
-      # TEMPORARY WORKAROUND:
-      # Because we use "cargo tauri" in that tauri build step, we always have to install tauri cli here.
-      - name: Install tauri-cli
-        if: matrix.platform != 'ubuntu-24.04' && matrix.platform != 'ubuntu-24.04-arm'
-        shell: bash
-        run: |
-          # Same version as the tauri crate and @tauri-apps/cli; raise them together.
-          cargo install tauri-cli --version 2.12.3 --locked
+      # Windows uses the tauri-cli from package.json through npm.
+      - name: Set up the AppImage tauri-cli (ubuntu only)
+        if: startsWith(matrix.platform, 'ubuntu')
+        uses: ./.github/actions/setup-appimage-tauri-cli
 
       - uses: tauri-apps/tauri-action@1deb371b0cd8bd54025b384f1cd735e725c4060f # v1.0.0
         id: tauri
@@ -142,9 +102,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
-          # TEMPORARY WORKAROUND:
-          # This environment variable is needed to enable the new appimage features.
-          TAURI_BUNDLER_NEW_APPIMAGE_FORMAT: "true"
         with:
           tagName: app-v__VERSION__
           releaseName: 'Open Video Downloader v__VERSION__'
@@ -153,9 +110,8 @@ jobs:
           prerelease: false
           uploadUpdaterJson: true
           updaterJsonPreferNsis: true
-          # TEMPORARY WORKAROUND:
-          # This option is needed to use the possibly overriden branch of tauri-cli, to fix appimages.
-          tauriScript: 'cargo tauri'
+          # The patched tauri-cli on ubuntu. Empty on Windows, where the action runs `npm run tauri`.
+          tauriScript: ${{ env.TAURI_CMD }}
           args: ${{ matrix.args }}
 
       - name: Bundle Portable Version (Windows only)

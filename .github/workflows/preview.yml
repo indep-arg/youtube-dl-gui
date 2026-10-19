@@ -30,22 +30,12 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
+      # patchelf and xvfb are used by the AppImage tooling, see setup-appimage-tauri-cli.
       - name: Install system dependencies (ubuntu only)
         if: matrix.platform == 'ubuntu-24.04'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-            libwebkit2gtk-4.1-dev \
-            build-essential \
-            curl \
-            wget \
-            file \
-            libssl-dev \
-            libgtk-3-dev \
-            libayatana-appindicator3-dev \
-            librsvg2-dev \
-            patchelf \
-            xdg-utils
+        uses: ./.github/actions/install-tauri-deps
+        with:
+          extra-packages: patchelf xvfb
 
       - name: Setup node
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
@@ -73,18 +63,9 @@ jobs:
         run: npm ci
 
       # Same patched tauri-cli as publish.yml, so the AppImage matches the official format.
-      - name: Install patched tauri-cli (ubuntu only)
+      - name: Set up the AppImage tauri-cli (ubuntu only)
         if: matrix.platform == 'ubuntu-24.04'
-        shell: bash
-        run: |
-          TAURI_SRC="$RUNNER_TEMP/tauri-src"
-          git init -q "$TAURI_SRC"
-          git -C "$TAURI_SRC" fetch -q --depth 1 https://github.com/tauri-apps/tauri b5573c1db2bb6118594b586a6aa51aeb37aa7d84
-          git -C "$TAURI_SRC" checkout -q FETCH_HEAD
-          git -C "$TAURI_SRC" apply "$GITHUB_WORKSPACE/.github/patches/tauri-appimage.patch"
-          cargo install tauri-cli --path "$TAURI_SRC/crates/tauri-cli" --locked --force
-          echo "TAURI_BUNDLER_NEW_APPIMAGE_FORMAT=true" >> $GITHUB_ENV
-          echo "TAURI_CMD=cargo tauri" >> $GITHUB_ENV
+        uses: ./.github/actions/setup-appimage-tauri-cli
 
       - name: Use npm tauri-cli (windows only)
         if: matrix.platform == 'windows-latest'

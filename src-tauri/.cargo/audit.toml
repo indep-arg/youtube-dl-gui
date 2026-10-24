@@ -5,9 +5,14 @@
 #   zip 8.6.0 comes from libsodium-sys-stable, a build dependency of the vault
 # The app's own zip is 9.x, where these are fixed, and it does not call ZipArchive::extract.
 # Remove these lines once the updater plugin moves to zip 9 or later.
+#
+# crypto-bigint 0.5.5 (RUSTSEC-2026-0387, timing leaks) comes from k256 inside iota-crypto,
+# a dependency of tauri-plugin-stronghold. The vault does not sign with secp256k1.
+# Remove the line once iota-crypto moves to crypto-bigint 0.7.6 or later.
 [advisories]
 ignore = [
   "RUSTSEC-2026-0367",
   "RUSTSEC-2026-0368",
   "RUSTSEC-2026-0369",
+  "RUSTSEC-2026-0387",
 ]

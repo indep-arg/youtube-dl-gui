@@ -16,9 +16,8 @@
 
 </div>
 
-> **This is an independent fork.** It is maintained by [indep-arg](https://github.com/indep-arg) and is based on
-> [jely2002/youtube-dl-gui](https://github.com/jely2002/youtube-dl-gui) by Jelle Glebbeek and contributors.
-> It is not affiliated with or endorsed by the original author. See [Credits](#credits).
+> **This is an independent fork**, maintained by [indep-arg](https://github.com/indep-arg). It is not affiliated
+> with or endorsed by the original project. See [Credits](#credits).
 
 Open Video Downloader is a simple desktop app for Windows and Linux. Paste a link, pick what you want and
 download it. It works with YouTube and hundreds of other sites, and it uses

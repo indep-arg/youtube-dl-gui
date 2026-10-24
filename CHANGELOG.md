@@ -1,6 +1,5 @@
 # Changelog
 
-This is an independent fork of [jely2002/youtube-dl-gui](https://github.com/jely2002/youtube-dl-gui).
 Versions of this fork do not follow the numbering of the original project.
 
 ## Versioning

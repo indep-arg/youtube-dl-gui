@@ -27,39 +27,6 @@ download it. It works with YouTube and hundreds of other sites, and it uses
   <img src="./ytdlgui_demo.gif" alt="Open Video Downloader adding and downloading a playlist" width="800">
 </p>
 
-## Screenshots
-
-<table>
-  <tr>
-    <td width="50%">
-      <picture>
-        <source media="(prefers-color-scheme: dark)" srcset="./docs/images/queue-dark.png">
-        <img src="./docs/images/queue-light.png" alt="Videos waiting in the queue, ready to download">
-      </picture>
-    </td>
-    <td width="50%">
-      <picture>
-        <source media="(prefers-color-scheme: dark)" srcset="./docs/images/downloading-dark.png">
-        <img src="./docs/images/downloading-light.png" alt="Three downloads in progress">
-      </picture>
-    </td>
-  </tr>
-  <tr>
-    <td width="50%">
-      <picture>
-        <source media="(prefers-color-scheme: dark)" srcset="./docs/images/history-dark.png">
-        <img src="./docs/images/history-light.png" alt="The download history">
-      </picture>
-    </td>
-    <td width="50%">
-      <picture>
-        <source media="(prefers-color-scheme: dark)" srcset="./docs/images/settings-dark.png">
-        <img src="./docs/images/settings-light.png" alt="The settings for speed, retries and parts">
-      </picture>
-    </td>
-  </tr>
-</table>
-
 ## Features
 
 - **Video or audio.** Choose the quality and format, or keep only the sound.

@@ -16,6 +16,7 @@ export const availableLocales = {
   'pt-BR': true,
   'zh-TW': true,
   'ko': true,
+  'uk': true,
 } as const;
 
 type MessageSchema = typeof en;

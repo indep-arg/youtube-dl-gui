@@ -18,7 +18,7 @@ This is the guide of the [indep-arg fork](../README.md#credits-and-fork-notice).
 - A queue that balances several downloads at once, and that is kept when you close the app.
 - Live streams, recorded until they end, or from the beginning on sites that allow it.
 - A history of finished downloads, and presets that set the type and folder for each site.
-- Windows and Linux (x64 and ARM64). Light and dark themes, and 13 languages.
+- Windows and Linux (x64 and ARM64). Light and dark themes, and 14 languages.
 
 ## Installing
 

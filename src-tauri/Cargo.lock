@@ -3160,6 +3160,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "lzma-rust2"
+version = "0.23.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f1c46f3fcd2e888afdb01a07efc071cb21300e07c68d32c3e8b01b5c8cb1fcaa"
+dependencies = [
+ "sha2 0.11.1",
+]
+
+[[package]]
 name = "mac-notification-sys"
 version = "0.6.15"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3702,7 +3711,7 @@ dependencies = [
  "include_dir",
  "indexmap 2.14.2",
  "libc",
- "lzma-rust2",
+ "lzma-rust2 0.23.0",
  "notify-rust",
  "rand 0.10.3",
  "regex",
@@ -7738,7 +7747,7 @@ dependencies = [
  "getrandom 0.4.3",
  "hmac 0.13.0",
  "indexmap 2.14.2",
- "lzma-rust2",
+ "lzma-rust2 0.22.0",
  "memchr",
  "nix 0.31.3",
  "pbkdf2 0.13.0",

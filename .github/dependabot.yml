@@ -3,9 +3,16 @@
 version: 2
 updates:
   - package-ecosystem: github-actions
-    directory: /
+    # Workflows plus the composite actions in .github/actions/*
+    directories:
+      - /
+      - /.github/actions/*
     schedule:
       interval: monthly
+    cooldown:
+      default-days: 7
+    commit-message:
+      prefix: "ci"
     groups:
       actions:
         patterns: ["*"]
@@ -14,6 +21,11 @@ updates:
     directory: /
     schedule:
       interval: monthly
+    cooldown:
+      default-days: 7
+    commit-message:
+      prefix: "chore(deps)"
+      prefix-development: "chore(deps-dev)"
     groups:
       # Keep the JavaScript side of Tauri together; it must match the Rust crate
       # (see the cargo entry below), so merge both updates at the same time.
@@ -37,6 +49,10 @@ updates:
     directory: /src-tauri
     schedule:
       interval: monthly
+    cooldown:
+      default-days: 7
+    commit-message:
+      prefix: "chore(deps)"
     groups:
       tauri:
         patterns: ["tauri", "tauri-*"]

@@ -1,6 +1,6 @@
 # Translating
 
-The app has 13 languages. Texts live in JSON files.
+The app has 14 languages. Texts live in JSON files.
 
 Every language file has exactly the same keys as `en.json`, in the same order and with the same
 structure. A text that is not translated yet keeps the English text, so the files can be compared

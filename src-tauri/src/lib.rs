@@ -63,6 +63,8 @@ pub fn run() {
     .plugin(tauri_plugin_dialog::init())
     .plugin(tauri_plugin_clipboard_manager::init())
     .plugin(tauri_plugin_keyring::init())
+    // Opens target="_blank" links in the browser. The opener plugin's own link handler passes a URL
+    // object, which the isolation pattern cannot clone, so it never reaches the backend.
     .plugin(tauri_plugin_shell::init())
     .plugin(tauri_plugin_opener::init())
     .plugin(tauri_plugin_global_shortcut::Builder::new().build())

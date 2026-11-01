@@ -148,7 +148,7 @@ class Context {
     writeFileSync(join(this.appData, 'config.store.json'), JSON.stringify({ config }));
   }
 
-  async start(): Promise<Session> {
+  async start(extraEnv: Record<string, string> = {}): Promise<Session> {
     await this.driver.start({
       tauriDriver: env.tauriDriver,
       webkitDriver: env.webkitDriver,
@@ -158,6 +158,7 @@ class Context {
         XDG_CONFIG_HOME: this.config,
         LANG: 'en_US.UTF-8',
         LANGUAGE: 'en',
+        ...extraEnv,
       },
     });
     this.session = new Session(this.driver.port);
@@ -442,6 +443,27 @@ const tests: TestCase[] = [
       if (canPaste) {
         check(copied.trimEnd() === text.trimEnd(), 'the clipboard does not hold the report');
       }
+    },
+  },
+  {
+    name: 'open-links',
+    async run(ctx) {
+      ctx.seedTools();
+      // Links open through the shell plugin (see lib.rs), which runs xdg-open. This one writes them to a
+      // file instead of starting the browser.
+      const fakeBin = join(ctx.dir, 'fake-bin');
+      const opened = join(ctx.dir, 'opened.txt');
+      mkdirSync(fakeBin);
+      writeFileSync(join(fakeBin, 'xdg-open'), `#!/bin/sh\necho "$@" >> '${opened}'\n`, { mode: 0o755 });
+      const s = await ctx.start({ PATH: `${fakeBin}${delimiter}${process.env.PATH}` });
+      await homeReady(s);
+      await s.go('/settings/about');
+      await s.click('a[href$="/docs/GUIDE.md"]');
+      const read = () => (existsSync(opened) ? readFileSync(opened, 'utf8').trim().split('\n') : []);
+      await s.waitFor('the guide link to open', async () => read().some(l => l.endsWith('/docs/GUIDE.md')), 10_000);
+      await new Promise(r => setTimeout(r, 1_000));
+      check(read().length === 1, `the link was opened ${read().length} times`);
+      check(await s.route() === '/settings/about', 'the app window left the page');
     },
   },
   {

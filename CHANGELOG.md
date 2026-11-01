@@ -17,6 +17,16 @@ Releases are tagged `app-vYEAR.MONTH.N` and the version is kept equal in
 The number does not say whether a release breaks anything. Breaking changes are listed in
 this file under **Breaking changes**.
 
+## 2026.10.8
+
+### New
+
+- Ukrainian translation.
+
+### Changes
+
+- Updated the libraries the app is built on.
+
 ## 2026.10.7
 
 ### Changes

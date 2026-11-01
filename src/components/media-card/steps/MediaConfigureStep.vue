@@ -14,7 +14,6 @@
     <media-encoding-options
         v-if="expandedOptionsType === 'encodings'"
         v-model="selectedEncodings"
-        :default-value="optionsStore.getGlobalEncodings()"
         :audio-options="audioCodecOptions"
         :video-options="videoCodecOptions"
         :track-type="selectedTrackType"
@@ -23,7 +22,6 @@
     <media-track-options
         v-if="expandedOptionsType === 'tracks'"
         v-model="selectedTracks"
-        :default-value="optionsStore.getGlobalTracks()"
         :audio-options="audioTrackOptions"
         :video-options="videoTrackOptions"
         :track-type="selectedTrackType"
@@ -216,26 +214,6 @@ watch(selectedOptions, () => {
     loadSize();
   } else {
     isSizeLoading.value = false;
-  }
-});
-
-watch(selectedEncodings, () => {
-  const globalEncodings = optionsStore.getGlobalEncodings();
-  if (!selectedEncodings.value && globalEncodings) {
-    optionsStore.applyEncodingsToGroup(
-      group,
-      globalEncodings,
-    );
-  }
-});
-
-watch(selectedTracks, () => {
-  const globalTracks = optionsStore.getGlobalTracks();
-  if (!selectedTracks.value && globalTracks) {
-    optionsStore.applyTracksToGroup(
-      group,
-      globalTracks,
-    );
   }
 });
 

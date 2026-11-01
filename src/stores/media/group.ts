@@ -27,12 +27,6 @@ export const useMediaGroupStore = defineStore('media-group', () => {
 
   const findGroupById = (id: string) => groups.value[id];
 
-  const findItemInGroup = (groupId: string, itemId: string) =>
-    groups.value[groupId]?.items[itemId];
-
-  const findGroupByItemId = (itemId: string) =>
-    Object.values(groups.value).find(g => itemId in g.items);
-
   const findGroupLeader = (groupId: string) => {
     const group = groups.value[groupId];
     if (!group) return;
@@ -209,8 +203,6 @@ export const useMediaGroupStore = defineStore('media-group', () => {
     orderedGroups,
     countGroups,
     findGroupById,
-    findItemInGroup,
-    findGroupByItemId,
     findGroupLeader,
     createGroup,
     prependGroups,

@@ -22,7 +22,6 @@
           <p class="label mb-3">{{ t('media.preferences.hints.encodings') }}</p>
           <media-encoding-options
             v-model="selectedEncodings"
-            :default-value="optionsStore.getGlobalEncodings()"
             :audio-options="audioCodecOptions"
             :video-options="videoCodecOptions"
             :track-type="selectedTrackType"
@@ -35,7 +34,6 @@
           <p class="label mb-3">{{ t('media.preferences.hints.tracks') }}</p>
           <media-track-options
             v-model="selectedTracks"
-            :default-value="optionsStore.getGlobalTracks()"
             :audio-options="audioTrackOptions"
             :video-options="videoTrackOptions"
             :track-type="selectedTrackType"
@@ -119,28 +117,6 @@ watch(selectedOptions, () => {
     optionsStore.applyOptionsToGroup(
       group.value,
       globalOptions,
-    );
-  }
-});
-
-watch(selectedEncodings, () => {
-  if (!group.value) return;
-  const globalEncodings = optionsStore.getGlobalEncodings();
-  if (!selectedEncodings.value && globalEncodings) {
-    optionsStore.applyEncodingsToGroup(
-      group.value,
-      globalEncodings,
-    );
-  }
-});
-
-watch(selectedTracks, () => {
-  if (!group.value) return;
-  const globalTracks = optionsStore.getGlobalTracks();
-  if (!selectedTracks.value && globalTracks) {
-    optionsStore.applyTracksToGroup(
-      group.value,
-      globalTracks,
     );
   }
 });

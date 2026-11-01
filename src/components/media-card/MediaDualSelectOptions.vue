@@ -77,10 +77,6 @@ const props = defineProps({
     type: Array as PropType<SelectOption[]>,
     default: () => [],
   },
-  defaultValue: {
-    type: Object as PropType<DualSelectValue | undefined>,
-    default: undefined,
-  },
   modelValue: {
     type: Object as PropType<DualSelectValue | undefined>,
     default: undefined,
@@ -114,7 +110,6 @@ defineOptions({
 const {
   audioOptions,
   videoOptions,
-  defaultValue,
   modelValue,
   localeKey,
   trackType,
@@ -193,13 +188,6 @@ function syncFromModel(model: DualSelectValue | undefined) {
 
   if (hasDefaulted.value) return;
   hasDefaulted.value = true;
-
-  const fromDefault = defaultValue?.value;
-  if (fromDefault) {
-    selectedAudio.value = fromDefault.audio ?? '';
-    selectedVideo.value = fromDefault.video ?? '';
-    return;
-  }
 
   if (autoSelect.value) {
     ensureValidSelections();

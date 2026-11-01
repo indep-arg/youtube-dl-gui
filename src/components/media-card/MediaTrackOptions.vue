@@ -2,7 +2,6 @@
   <media-dual-select-options
     :audio-options="audioOptions"
     :video-options="videoOptions"
-    :default-value="defaultValue"
     :model-value="modelValue"
     :track-type="trackType"
     :locale-key="localeKey"
@@ -27,10 +26,6 @@ defineProps({
   videoOptions: {
     type: Array as PropType<SelectOption[]>,
     default: () => [],
-  },
-  defaultValue: {
-    type: Object as PropType<TrackOptions | undefined>,
-    default: undefined,
   },
   modelValue: {
     type: Object as PropType<TrackOptions | undefined>,

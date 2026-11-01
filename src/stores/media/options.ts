@@ -10,8 +10,6 @@ export const useMediaOptionsStore = defineStore('media-options', () => {
   const groupTracks = ref<Record<string, TrackOptions>>({});
   const groupOverrides = ref<Record<string, DownloadOverrides>>({});
   const globalOptions = ref<DownloadOptions>();
-  const globalEncodings = ref<EncodingOptions>();
-  const globalTracks = ref<TrackOptions>();
 
   const groupStore = useMediaGroupStore();
 
@@ -44,11 +42,9 @@ export const useMediaOptionsStore = defineStore('media-options', () => {
 
   const setEncodings = (groupId: string, encodings: EncodingOptions) => setGroupValue(groupEncodings, groupId, encodings);
   const getEncodings = (groupId: string): EncodingOptions | undefined => getGroupValue(groupEncodings, groupId);
-  const getGlobalEncodings = (): EncodingOptions | undefined => globalEncodings.value;
 
   const setTracks = (groupId: string, tracks: TrackOptions) => setGroupValue(groupTracks, groupId, tracks);
   const getTracks = (groupId: string): TrackOptions | undefined => getGroupValue(groupTracks, groupId);
-  const getGlobalTracks = (): TrackOptions | undefined => globalTracks.value;
 
   const setOverrides = (groupId: string, overrides: DownloadOverrides) => {
     const clonedOverrides = structuredClone(toRaw(overrides));
@@ -74,36 +70,10 @@ export const useMediaOptionsStore = defineStore('media-options', () => {
     setOptions(group.id, options);
   }
 
-  function applyEncodingsToGroup(
-    group: Group,
-    encodings: EncodingOptions,
-  ) {
-    setEncodings(group.id, encodings);
-  }
-
-  function applyTracksToGroup(
-    group: Group,
-    tracks: TrackOptions,
-  ) {
-    setTracks(group.id, tracks);
-  }
-
   function applyGlobalOptions(
     options: DownloadOptions,
   ) {
     applyGlobalValue(globalOptions, groupOptions, options);
-  }
-
-  function applyGlobalEncodings(
-    encodings: EncodingOptions,
-  ) {
-    applyGlobalValue(globalEncodings, groupEncodings, encodings);
-  }
-
-  function applyGlobalTracks(
-    tracks: TrackOptions,
-  ) {
-    applyGlobalValue(globalTracks, groupTracks, tracks);
   }
 
   return {
@@ -112,17 +82,13 @@ export const useMediaOptionsStore = defineStore('media-options', () => {
     groupTracks,
     groupOverrides,
     globalOptions,
-    globalEncodings,
-    globalTracks,
     setOptions,
     getOptions,
     getGlobalOptions,
     setEncodings,
     getEncodings,
-    getGlobalEncodings,
     setTracks,
     getTracks,
-    getGlobalTracks,
     setOverrides,
     getOverrides,
     removeOptions,
@@ -130,10 +96,6 @@ export const useMediaOptionsStore = defineStore('media-options', () => {
     removeTracks,
     removeOverrides,
     applyGlobalOptions,
-    applyGlobalEncodings,
-    applyGlobalTracks,
     applyOptionsToGroup,
-    applyEncodingsToGroup,
-    applyTracksToGroup,
   };
 });

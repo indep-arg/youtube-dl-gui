@@ -1,13 +1,13 @@
 import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
-import { nextTick } from 'vue';
+import { nextTick, reactive } from 'vue';
 import SettingsNetwork from '../../src/components/settings/SettingsNetwork.vue';
 import { i18n } from '../../src/i18n';
 import { defaultSettings } from '../../src/tauri/types/config';
 
 describe('network settings', () => {
   it('binds the shared network editor to the settings model', async () => {
-    const settings = structuredClone(defaultSettings);
+    const settings = reactive(structuredClone(defaultSettings));
     const wrapper = mount(SettingsNetwork, {
       props: {
         modelValue: settings,

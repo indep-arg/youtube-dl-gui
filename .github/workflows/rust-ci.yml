@@ -184,7 +184,9 @@ jobs:
 
       # The test executable has no application manifest, so Windows loads the old
       # common controls and the program cannot start (STATUS_ENTRYPOINT_NOT_FOUND).
-      # A manifest file next to the executable fixes that.
+      # A manifest file next to the executable fixes that. Cargo is asked where the
+      # executables are, because the folder inside target/ depends on the Cargo
+      # version (Rust 1.100 moved them out of target/debug/deps).
       - name: Add the manifest the test executables need
         shell: pwsh
         run: |
@@ -198,11 +200,17 @@ jobs:
             '  </dependency>',
             '</assembly>'
           )
-          $tests = Get-ChildItem src-tauri/target/debug/deps -Filter 'open_video_downloader_lib-*.exe'
+          # Already built by the previous step, so this only prints the artifacts.
+          $messages = cargo test --manifest-path=src-tauri/Cargo.toml --all-features --all-targets --locked --no-run --message-format=json
+          if ($LASTEXITCODE -ne 0) { Write-Error "cargo test --no-run failed"; exit 1 }
+          $tests = $messages |
+            ForEach-Object { $_ | ConvertFrom-Json } |
+            Where-Object { $_.reason -eq 'compiler-artifact' -and $_.executable -and $_.target.name -eq 'open_video_downloader_lib' } |
+            ForEach-Object { $_.executable }
           if (-not $tests) { Write-Error "No test executable found"; exit 1 }
           foreach ($test in $tests) {
-            Set-Content -Path "$($test.FullName).manifest" -Value ($lines -join "`n") -Encoding UTF8
-            "Manifest added to $($test.Name)"
+            Set-Content -Path "$test.manifest" -Value ($lines -join "`n") -Encoding UTF8
+            "Manifest added to $test"
           }
 
       - name: Run tests

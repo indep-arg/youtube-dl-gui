@@ -3766,7 +3766,7 @@ dependencies = [
 
 [[package]]
 name = "open-video-downloader"
-version = "2026.10.8"
+version = "2026.11.0"
 dependencies = [
  "arc-swap",
  "base64 0.23.1",

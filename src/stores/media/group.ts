@@ -22,8 +22,7 @@ export const useMediaGroupStore = defineStore('media-group', () => {
   const orderedGroups = computed(() =>
     groupOrder.value
       .map(id => groups.value[id])
-      .filter((group): group is Group => !!group),
-  );
+      .filter((group): group is Group => !!group));
 
   const findGroupById = (id: string) => groups.value[id];
 

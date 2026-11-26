@@ -161,8 +161,15 @@ test.describe('history', () => {
     await page.addInitScript(() => {
       (globalThis as unknown as { __E2E_LIBRARY__: unknown }).__E2E_LIBRARY__ = {
         history: [{
-          id: 'h1', url: 'https://example.com/old', title: 'Old video', thumbnail: null, uploader: null,
-          path: null, items: 1, finishedAt: Date.now(), isLive: false,
+          id: 'h1',
+          url: 'https://example.com/old',
+          title: 'Old video',
+          thumbnail: null,
+          uploader: null,
+          path: null,
+          items: 1,
+          finishedAt: Date.now(),
+          isLive: false,
         }],
         queue: [],
       };

@@ -64,6 +64,5 @@ const chapterItems = computed(() =>
       rangeLabel: `${formatDuration(chapter.startTime)} - ${formatDuration(safeEndTime)}`,
       durationLabel: formatDuration(Math.max(safeEndTime - chapter.startTime, 0)),
     };
-  }),
-);
+  }));
 </script>

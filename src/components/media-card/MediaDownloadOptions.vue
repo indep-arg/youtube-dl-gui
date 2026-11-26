@@ -163,8 +163,7 @@ const formatsByTrackType = computed<Record<TrackType, MediaFormat[]>>(() => {
 });
 
 const filteredFormats = computed<MediaFormat[]>(() =>
-  formatsByTrackType.value[selectedTrackType.value],
-);
+  formatsByTrackType.value[selectedTrackType.value]);
 
 const formatOptions = computed<SelectOption[]>(() => {
   const options: SelectOption[] = filteredFormats.value.map(format => ({
@@ -175,8 +174,7 @@ const formatOptions = computed<SelectOption[]>(() => {
 });
 
 const selectedFormat = computed<MediaFormat | undefined>(() =>
-  formatByKey.value.get(selectedFormatId.value),
-);
+  formatByKey.value.get(selectedFormatId.value));
 
 watch(() => modelValue?.value, (val) => {
   syncFromModel(val);

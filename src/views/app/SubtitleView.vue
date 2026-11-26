@@ -199,8 +199,7 @@ const languageSelection = computed({
 });
 
 const orderedFormats = computed(() =>
-  sanitizeSubtitleFormats(subtitleSettings.value.formatPreference),
-);
+  sanitizeSubtitleFormats(subtitleSettings.value.formatPreference));
 
 const primaryFormat = computed({
   get: () => orderedFormats.value[0] ?? getPrimarySubtitleFormat(subtitleSettings.value),
@@ -252,8 +251,7 @@ function matchesQuery(option: LocalizedLanguageOption): boolean {
 }
 
 const filteredLanguageOptions = computed(() =>
-  localizedLanguageOptions.value.filter(option => matchesQuery(option) || isLanguageSelected(option.code)),
-);
+  localizedLanguageOptions.value.filter(option => matchesQuery(option) || isLanguageSelected(option.code)));
 
 const selectedLanguageBadges = computed(() => {
   if (isAllSelected.value) {

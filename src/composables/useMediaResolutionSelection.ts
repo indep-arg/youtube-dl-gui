@@ -25,11 +25,9 @@ export function useMediaResolutionSelection(params: UseMediaResolutionSelectionP
       toValue(params.formats),
       toValue(params.selectedOptions),
       toValue(params.approximate) ?? false,
-    ),
-  );
+    ));
   const selectedTrackIds = computed(() =>
-    selectedFormat.value?.id === 'best' ? undefined : selectedFormat.value,
-  );
+    selectedFormat.value?.id === 'best' ? undefined : selectedFormat.value);
   const selectedAudioCodecSource = computed(() => {
     const options = toValue(params.selectedOptions);
     if (options?.trackType !== TrackType.audio) {
@@ -42,14 +40,12 @@ export function useMediaResolutionSelection(params: UseMediaResolutionSelectionP
   });
 
   const audioCodecOptions = computed(() =>
-    buildCodecOptions(selectedAudioCodecSource.value),
-  );
+    buildCodecOptions(selectedAudioCodecSource.value));
 
   const videoCodecOptions = computed(() =>
     buildCodecOptions(
       selectedFormat.value?.videoCodecs ?? toValue(params.videoCodecs),
-    ),
-  );
+    ));
 
   const audioTrackOptions = computed(() =>
     buildTrackOptions(
@@ -59,8 +55,7 @@ export function useMediaResolutionSelection(params: UseMediaResolutionSelectionP
       toValue(params.unavailableTrackSuffix),
       toValue(params.availableTrackPrefix),
       true,
-    ),
-  );
+    ));
 
   const videoTrackOptions = computed(() =>
     buildTrackOptions(
@@ -69,8 +64,7 @@ export function useMediaResolutionSelection(params: UseMediaResolutionSelectionP
       buildTrackResolutionLabels(toValue(params.formats), 'videoTrackIds'),
       toValue(params.unavailableTrackSuffix),
       toValue(params.availableTrackPrefix),
-    ),
-  );
+    ));
 
   return {
     selectedFormat,

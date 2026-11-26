@@ -14,10 +14,24 @@ export function makeClips(ffmpeg: string, dir: string): void {
     const file = join(dir, `${name}.mp4`);
     if (existsSync(file)) continue;
     execFileSync(ffmpeg, [
-      '-v', 'error', '-y',
-      '-f', 'lavfi', '-i', `testsrc=size=320x240:rate=25:duration=6`,
-      '-f', 'lavfi', '-i', `sine=frequency=${440 + index * 220}:duration=6`,
-      '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-shortest',
+      '-v',
+      'error',
+      '-y',
+      '-f',
+      'lavfi',
+      '-i',
+      `testsrc=size=320x240:rate=25:duration=6`,
+      '-f',
+      'lavfi',
+      '-i',
+      `sine=frequency=${440 + index * 220}:duration=6`,
+      '-c:v',
+      'libx264',
+      '-pix_fmt',
+      'yuv420p',
+      '-c:a',
+      'aac',
+      '-shortest',
       file,
     ]);
   }
@@ -87,7 +101,13 @@ interface ProbeResult {
 
 export function probe(ffprobe: string, file: string): ProbeResult {
   const out = execFileSync(ffprobe, [
-    '-v', 'error', '-show_entries', 'format=duration:stream=codec_type,codec_name', '-of', 'json', file,
+    '-v',
+    'error',
+    '-show_entries',
+    'format=duration:stream=codec_type,codec_name',
+    '-of',
+    'json',
+    file,
   ]).toString();
   const json = JSON.parse(out) as { format: { duration: string }; streams: { codec_type: string; codec_name: string }[] };
   return {
@@ -109,11 +129,35 @@ interface LiveStream {
 export async function startLiveStream(ffmpeg: string, dir: string): Promise<LiveStream> {
   mkdirSync(dir, { recursive: true });
   const encoder = spawn(ffmpeg, [
-    '-v', 'error', '-re',
-    '-f', 'lavfi', '-i', 'testsrc=size=320x240:rate=25',
-    '-f', 'lavfi', '-i', 'sine=frequency=440',
-    '-c:v', 'libx264', '-preset', 'ultrafast', '-g', '25', '-pix_fmt', 'yuv420p', '-c:a', 'aac',
-    '-f', 'hls', '-hls_time', '1', '-hls_list_size', '6', '-hls_flags', 'delete_segments',
+    '-v',
+    'error',
+    '-re',
+    '-f',
+    'lavfi',
+    '-i',
+    'testsrc=size=320x240:rate=25',
+    '-f',
+    'lavfi',
+    '-i',
+    'sine=frequency=440',
+    '-c:v',
+    'libx264',
+    '-preset',
+    'ultrafast',
+    '-g',
+    '25',
+    '-pix_fmt',
+    'yuv420p',
+    '-c:a',
+    'aac',
+    '-f',
+    'hls',
+    '-hls_time',
+    '1',
+    '-hls_list_size',
+    '6',
+    '-hls_flags',
+    'delete_segments',
     join(dir, 'live.m3u8'),
   ], { stdio: 'ignore' });
   const server = await serveMedia(dir);

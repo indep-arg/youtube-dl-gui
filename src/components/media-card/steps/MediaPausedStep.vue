@@ -67,8 +67,7 @@ const isIndeterminate = computed(() => {
 });
 
 const percent = computed(() =>
-  progress.value?.percentage ?? 0,
-);
+  progress.value?.percentage ?? 0);
 
 const rawEta = computed(() => progress.value?.etaSecs ?? 0);
 const displayEta = ref(rawEta.value);
@@ -82,6 +81,5 @@ watch(rawEta, (newEta) => {
 });
 
 const etaDisplay = computed(() =>
-  progress.value?.etaSecs != null ? formatDuration(progress.value.etaSecs) : '-',
-);
+  progress.value?.etaSecs != null ? formatDuration(progress.value.etaSecs) : '-');
 </script>

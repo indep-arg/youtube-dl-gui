@@ -6,7 +6,16 @@
 //   node tests/app/run.ts --only name,…   run some tests
 import { execFileSync } from 'node:child_process';
 import {
-  copyFileSync, cpSync, existsSync, linkSync, lstatSync, mkdirSync, readFileSync, readdirSync, rmSync, unlinkSync,
+  copyFileSync,
+  cpSync,
+  existsSync,
+  linkSync,
+  lstatSync,
+  mkdirSync,
+  readFileSync,
+  readdirSync,
+  rmSync,
+  unlinkSync,
   writeFileSync,
 } from 'node:fs';
 import { homedir } from 'node:os';
@@ -252,8 +261,7 @@ const tests: TestCase[] = [
       const s = await ctx.start();
       await homeReady(s);
       await s.waitForText('Your queue is empty');
-      for (const path of ['/', '/settings', '/settings/app', '/settings/network', '/settings/system', '/settings/about',
-        '/location', '/authentication', '/subtitles', '/input-filters', '/history']) {
+      for (const path of ['/', '/settings', '/settings/app', '/settings/network', '/settings/system', '/settings/about', '/location', '/authentication', '/subtitles', '/input-filters', '/history']) {
         await s.go(path);
         await s.waitFor(`route ${path}`, async () => (await s.route()) === path);
         await new Promise(r => setTimeout(r, 400));
@@ -608,7 +616,11 @@ const tests: TestCase[] = [
       let upcoming = '';
       try {
         upcoming = execFileSync(join(ctx.bin, 'yt-dlp'), [
-          '--flat-playlist', '--playlist-end', '15', '--print', '%(live_status)s %(id)s',
+          '--flat-playlist',
+          '--playlist-end',
+          '15',
+          '--print',
+          '%(live_status)s %(id)s',
           'https://www.youtube.com/@NASA/streams',
         ], { timeout: 90_000, env: { ...process.env, PATH: `${ctx.bin}${delimiter}${process.env.PATH}` } })
           .toString().split('\n').find(l => l.startsWith('is_upcoming '))?.split(' ')[1] ?? '';

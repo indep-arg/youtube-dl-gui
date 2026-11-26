@@ -69,8 +69,7 @@ const test = testBase.extend<Options & Fixtures>({
       const mcr = MCR(coverageOptions);
       await mcr.add(coverageList);
     }
-  },
-  {
+  }, {
     scope: 'test',
     auto: true,
   }],

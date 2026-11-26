@@ -56,6 +56,5 @@ const percent = computed(() => {
 const speedDisplay = computed(() =>
   progress.value?.speedBps != null
     ? formatBytesPerSec(progress.value.speedBps)
-    : '-',
-);
+    : '-');
 </script>

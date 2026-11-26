@@ -13,6 +13,13 @@ DEPLOY_DATADIR, and hides GITHUB_REPOSITORY when there is no update information:
 otherwise quick-sharun bundles GStreamer and unrelated /usr/share folders (274 MiB
 instead of 112 MiB) and embeds an update pattern that does not match the release.
 
+diff --git a/crates/tauri-bundler/Cargo.toml b/crates/tauri-bundler/Cargo.toml
+--- a/crates/tauri-bundler/Cargo.toml
++++ b/crates/tauri-bundler/Cargo.toml
+@@ -64,1 +64,2 @@
++which = "8"
+ rpm = { version = "0.30", features = ["bzip2-compression"] }
+
 diff --git a/crates/tauri-bundler/src/bundle/linux/appimage/mod.rs b/crates/tauri-bundler/src/bundle/linux/appimage/mod.rs
 index 47d440fe..cc027a1e 100644
 --- a/crates/tauri-bundler/src/bundle/linux/appimage/mod.rs

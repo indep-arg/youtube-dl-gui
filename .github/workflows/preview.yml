@@ -50,7 +50,7 @@ jobs:
 
       # Pinned by hand: Dependabot does not update tools installed like this.
       - name: Install cargo-about
-        uses: taiki-e/install-action@1e29709c0ec63babbe8f266397a465f29a825f91 # v2.87.31
+        uses: taiki-e/install-action@893d6ee8d714b6c7dfe2bcd94e5759e9a7958a7e # v2.90.10
         with:
           tool: cargo-about@0.9.3
 

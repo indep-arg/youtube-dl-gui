@@ -97,14 +97,12 @@ const categoryDisplay = computed(() => {
 });
 
 const percent = computed(() =>
-  progress.value?.percentage ?? 0,
-);
+  progress.value?.percentage ?? 0);
 
 const speedDisplay = computed(() =>
   progress.value?.speedBps != null
     ? formatBytesPerSec(progress.value.speedBps)
-    : '-',
-);
+    : '-');
 
 const rawEta = computed(() => progress.value?.etaSecs ?? 0);
 const displayEta = ref(rawEta.value);
@@ -133,6 +131,5 @@ const liveDisplay = computed(() => {
 });
 
 const etaDisplay = computed(() =>
-  progress.value?.etaSecs != null ? formatDuration(progress.value.etaSecs) : '-',
-);
+  progress.value?.etaSecs != null ? formatDuration(progress.value.etaSecs) : '-');
 </script>

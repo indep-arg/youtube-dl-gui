@@ -4,7 +4,8 @@ import {
   BinaryDownloadProgressPayload,
   BinaryDownloadStartPayload,
   BinaryProgress,
-  BinaryCheckPayload, BinaryDownloadErrorPayload,
+  BinaryCheckPayload,
+  BinaryDownloadErrorPayload,
 } from '../tauri/types/binaries';
 import { ref } from 'vue';
 import { invoke } from '@tauri-apps/api/core';

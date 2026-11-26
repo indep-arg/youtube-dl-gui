@@ -34,8 +34,15 @@ export const mediaHandlers: Record<string, IPCHandler> = {
         groupId,
         total: 1,
         item: {
-          id, url, title: 'Scheduled Stream', audioCodecs: [], formats: [], filesize: 0, isLeader: true,
-          isLive: true, scheduledAt: Date.UTC(2030, 0, 15, 18, 0) / 1000,
+          id,
+          url,
+          title: 'Scheduled Stream',
+          audioCodecs: [],
+          formats: [],
+          filesize: 0,
+          isLeader: true,
+          isLive: true,
+          scheduledAt: Date.UTC(2030, 0, 15, 18, 0) / 1000,
         },
       });
       return groupId;
@@ -139,7 +146,12 @@ async function startRecording(groupId: string, id: string): Promise<void> {
   recordings.set(groupId, id);
   await emit('media_progress_stage', { groupId, id, stage: 'downloading' });
   await emit('media_progress', {
-    groupId, id, category: 'video', speedBps: 104_857, downloadedBytes: 3_145_728, recordedSecs: 75,
+    groupId,
+    id,
+    category: 'video',
+    speedBps: 104_857,
+    downloadedBytes: 3_145_728,
+    recordedSecs: 75,
   });
 }
 
@@ -167,11 +179,23 @@ async function finishDownload(groupId: string, id: string): Promise<void> {
 async function emitSiteChanged(groupId: string, id: string): Promise<void> {
   const raw = 'ERROR: [youtube] abc: Unable to extract initial data';
   await emit('media_diagnostic', {
-    groupId, id, level: 'error', code: 'unableToExtractInitialData', component: 'youtube',
-    message: 'Unable to extract initial data', raw, timestamp: Date.now(),
+    groupId,
+    id,
+    level: 'error',
+    code: 'unableToExtractInitialData',
+    component: 'youtube',
+    message: 'Unable to extract initial data',
+    raw,
+    timestamp: Date.now(),
   });
   await emit('media_fatal', {
-    groupId, id, exitCode: 1, internal: false, message: raw, details: null, timestamp: Date.now(),
+    groupId,
+    id,
+    exitCode: 1,
+    internal: false,
+    message: raw,
+    details: null,
+    timestamp: Date.now(),
   });
 }
 
@@ -179,9 +203,22 @@ async function emitSiteChanged(groupId: string, id: string): Promise<void> {
 async function emitEmptyPlaylist(groupId: string, id: string): Promise<void> {
   const message = 'This playlist has no videos, or none of them can be downloaded.';
   await emit('media_diagnostic', {
-    groupId, id, level: 'error', code: 'playlistEmpty', component: null, message, raw: '', timestamp: Date.now(),
+    groupId,
+    id,
+    level: 'error',
+    code: 'playlistEmpty',
+    component: null,
+    message,
+    raw: '',
+    timestamp: Date.now(),
   });
   await emit('media_fatal', {
-    groupId, id, exitCode: 1, internal: false, message, details: null, timestamp: Date.now(),
+    groupId,
+    id,
+    exitCode: 1,
+    internal: false,
+    message,
+    details: null,
+    timestamp: Date.now(),
   });
 }

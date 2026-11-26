@@ -2,7 +2,8 @@ import { listen } from '@tauri-apps/api/event';
 import {
   BinaryDownloadStartPayload,
   BinaryDownloadProgressPayload,
-  BinaryDownloadCompletePayload, BinaryDownloadErrorPayload,
+  BinaryDownloadCompletePayload,
+  BinaryDownloadErrorPayload,
 } from '../types/binaries';
 import { useBinariesStore } from '../../stores/binaries';
 

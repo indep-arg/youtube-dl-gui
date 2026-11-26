@@ -16,6 +16,5 @@ export function formatDuration(totalSeconds: number): string {
 
 export function useDuration(item: Pick<MediaItem, 'duration'>): ComputedRef<string> {
   return computed(() =>
-    formatDuration(item.duration ?? 0),
-  );
+    formatDuration(item.duration ?? 0));
 }

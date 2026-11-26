@@ -19,6 +19,7 @@ export default [
     ignores: [
       '**/*.{yml,yaml}',
       'node_modules/**',
+      'coverage/**',
       'dist/**',
       'dist-isolation/**',
       'src-isolation/**',

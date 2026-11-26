@@ -117,8 +117,7 @@ export const useMediaProgressStore = defineStore('media-progress', () => {
       stateStore.getState(id) === MediaState.downloading
       || stateStore.getState(id) === MediaState.downloadingList
       || stateStore.getState(id) === MediaState.paused
-      || stateStore.getState(id) === MediaState.pausedList,
-    ).length;
+      || stateStore.getState(id) === MediaState.pausedList).length;
     let ready = itemIds.filter(id => stateStore.getState(id) === MediaState.configure).length;
 
     // If we are fetching metadata for a group of multiple items (playlist).

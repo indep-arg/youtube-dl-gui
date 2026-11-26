@@ -1,6 +1,6 @@
 [package]
 name = "open-video-downloader"
-version = "2026.10.8"
+version = "2026.11.0"
 description = "Download videos from all over the web."
 license = "AGPL-3.0-or-later"
 authors = ["Jelle Glebbeek", "indep-arg"]
@@ -55,12 +55,12 @@ include_dir = "0.7.4"
 sys-locale = "0.3.2"
 notify-rust = "4.18.2"
 shlex = "2.0.1"
-lzma-rust2 = { version = "0.23.0", default-features = false, features = ["std", "xz", "optimization"] }
+lzma-rust2 = { version = "0.25.0", default-features = false, features = ["std", "xz", "optimization"] }
 
 [dev-dependencies]
 tauri = { version = "2.12.5", features = ["test"] }
 # Only the tests write .tar.xz files.
-lzma-rust2 = { version = "0.23.0", default-features = false, features = ["std", "xz", "encoder"] }
+lzma-rust2 = { version = "0.25.0", default-features = false, features = ["std", "xz", "encoder"] }
 
 [target.'cfg(unix)'.dependencies]
 libc = "0.2.191"

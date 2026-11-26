@@ -199,8 +199,7 @@ const filteredOptions = computed<MultiSelectOption[]>(() => {
   return props.options.filter((option: MultiSelectOption) =>
     !normalizedQuery
     || option.label.toLowerCase().includes(normalizedQuery)
-    || option.value.toLowerCase().includes(normalizedQuery),
-  );
+    || option.value.toLowerCase().includes(normalizedQuery));
 });
 
 function isValueSelected(value: string): boolean {

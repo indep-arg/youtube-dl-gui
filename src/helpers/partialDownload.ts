@@ -81,8 +81,7 @@ function getChapterKeyForSection(
 ): string | undefined {
   const index = chapters.findIndex(chapter =>
     formatSecondsAsClock(Math.floor(chapter.startTime)) === section.start
-    && formatSecondsAsClock(Math.floor(chapter.endTime)) === section.end,
-  );
+    && formatSecondsAsClock(Math.floor(chapter.endTime)) === section.end);
 
   if (index === -1) return undefined;
 

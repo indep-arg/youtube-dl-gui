@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
-import { nextTick } from 'vue';
+import { nextTick, reactive } from 'vue';
 import BaseSelect from '../../src/components/base/BaseSelect.vue';
 import SettingsOutput from '../../src/components/settings/SettingsOutput.vue';
 import { i18n } from '../../src/i18n';
@@ -42,7 +42,7 @@ describe('post-processing settings', () => {
   });
 
   it('shows the reencode warning for fps30 without rendering custom args', async () => {
-    const settings = structuredClone(defaultSettings);
+    const settings = reactive(structuredClone(defaultSettings));
     const wrapper = mount(SettingsOutput, {
       props: {
         modelValue: settings,
@@ -70,7 +70,7 @@ describe('post-processing settings', () => {
   });
 
   it('shows and binds video ffmpeg args only for the custom preset', async () => {
-    const settings = structuredClone(defaultSettings);
+    const settings = reactive(structuredClone(defaultSettings));
     const wrapper = mount(SettingsOutput, {
       props: {
         modelValue: settings,
@@ -100,7 +100,7 @@ describe('post-processing settings', () => {
   });
 
   it('maps the keep original streams checkbox to the output policies', async () => {
-    const settings = structuredClone(defaultSettings);
+    const settings = reactive(structuredClone(defaultSettings));
     const wrapper = mount(SettingsOutput, {
       props: {
         modelValue: settings,
@@ -128,7 +128,7 @@ describe('post-processing settings', () => {
   });
 
   it('shows the MP4-only alert when mp42 is selected without mp4 output', async () => {
-    const settings = structuredClone(defaultSettings);
+    const settings = reactive(structuredClone(defaultSettings));
     settings.output.video.container = VideoContainer.mkv;
 
     const wrapper = mount(SettingsOutput, {
@@ -155,7 +155,7 @@ describe('post-processing settings', () => {
   });
 
   it('shows the keep-original-streams conflict for custom re-encode mode immediately', async () => {
-    const settings = structuredClone(defaultSettings);
+    const settings = reactive(structuredClone(defaultSettings));
     const wrapper = mount(SettingsOutput, {
       props: {
         modelValue: settings,
@@ -190,7 +190,7 @@ describe('post-processing settings', () => {
   });
 
   it('shows and binds audio ffmpeg args only for the custom preset', async () => {
-    const settings = structuredClone(defaultSettings);
+    const settings = reactive(structuredClone(defaultSettings));
     const wrapper = mount(SettingsOutput, {
       props: {
         modelValue: settings,

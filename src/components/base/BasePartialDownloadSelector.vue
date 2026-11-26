@@ -144,21 +144,18 @@ const chapterOptions = computed<ChapterOption[]>(() =>
     value: `${index}:${chapter.startTime}:${chapter.endTime}`,
     chapter,
     label: `${chapter.title} (${formatSecondsAsClock(Math.floor(chapter.startTime))} - ${formatSecondsAsClock(Math.floor(chapter.endTime))})`,
-  })),
-);
+  })));
 const chapterSelectionOptions = computed<ChapterOption[]>(() => (
   chapterOptions.value.length > 0
     ? [{ value: ALL_CHAPTERS_VALUE, label: t('settings.output.partialDownload.allChapters') }, ...chapterOptions.value]
     : []
 ));
 const chapterOptionMap = computed(() =>
-  new Map(chapterSelectionOptions.value.map(option => [option.value, option])),
-);
+  new Map(chapterSelectionOptions.value.map(option => [option.value, option])));
 const hasChapterOptions = computed(() => chapterOptions.value.length > 0);
 const selectionError = computed(() => validateSelection(selection.value, props.durationSeconds));
 const hasInvalidSelection = computed(() =>
-  selectionError.value.start !== null || selectionError.value.end !== null,
-);
+  selectionError.value.start !== null || selectionError.value.end !== null);
 
 function resetRange() {
   const defaults = createDefaultSection(selection.value.id, props.durationSeconds);

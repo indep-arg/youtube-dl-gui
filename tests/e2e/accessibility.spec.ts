@@ -3,8 +3,16 @@ import { expect, type Page } from '@playwright/test';
 import { test } from './utils/fixtures';
 
 const PAGES = [
-  '/settings', '/settings/app', '/settings/network', '/settings/system', '/settings/about',
-  '/location', '/authentication', '/subtitles', '/input-filters', '/history',
+  '/settings',
+  '/settings/app',
+  '/settings/network',
+  '/settings/system',
+  '/settings/about',
+  '/location',
+  '/authentication',
+  '/subtitles',
+  '/input-filters',
+  '/history',
 ];
 
 async function addLink(page: Page, url: string) {

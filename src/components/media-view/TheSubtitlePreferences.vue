@@ -212,12 +212,10 @@ const availableInventory = computed(() => {
 const availableManualLanguages = computed(() => availableInventory.value.manual);
 const availableAutoLanguages = computed(() => availableInventory.value.auto);
 const hasAnyAvailableLanguages = computed(() =>
-  availableManualLanguages.value.length > 0 || availableAutoLanguages.value.length > 0,
-);
+  availableManualLanguages.value.length > 0 || availableAutoLanguages.value.length > 0);
 
 const orderedFormats = computed(() =>
-  sanitizeSubtitleFormats(subtitleState.value.formatPreference),
-);
+  sanitizeSubtitleFormats(subtitleState.value.formatPreference));
 
 const primaryFormat = computed({
   get: () => orderedFormats.value[0] ?? getPrimarySubtitleFormat(subtitleState.value),

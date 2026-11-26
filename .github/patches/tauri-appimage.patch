@@ -1,5 +1,6 @@
-New AppImage format for tauri-cli, applied on top of the @tauri-apps/cli-v2.12.3
-release (tauri-apps/tauri@59b63ab500da9859f12d8888c3298bc29bba0b92).
+New AppImage format for tauri-cli, originally developed against the
+@tauri-apps/cli-v2.12.3 release (tauri-apps/tauri@59b63ab500da9859f12d8888c3298bc29bba0b92),
+and currently applied to tauri-cli-v2.12.6 (tauri-apps/tauri@9319e539f34237035cb4693bed9246660bc0a926).
 
 The changes come from https://github.com/tauri-apps/tauri/pull/12491 at 3b69f58,
 which is not merged yet. On top of it, quick-sharun is pinned to the latest

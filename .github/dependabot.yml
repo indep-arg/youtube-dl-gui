@@ -38,7 +38,7 @@ updates:
       # typescript-eslint does not support TypeScript 7 yet.
       - dependency-name: typescript
         update-types: ["version-update:semver-major"]
-      # Stays on the major of the Node version used by CI.
+      # New type definitions can expose APIs unavailable in the Node version used by CI.
       - dependency-name: "@types/node"
         update-types: ["version-update:semver-major"]
       # Must match the Playwright image in .github/workflows/vue-ci.yml;

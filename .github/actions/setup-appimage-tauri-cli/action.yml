@@ -23,8 +23,8 @@ runs:
       if: steps.cache.outputs.cache-hit != 'true'
       shell: bash
       env:
-        # @tauri-apps/cli-v2.12.4, the same version as @tauri-apps/cli in package.json.
-        TAURI_REV: 993038c49185307dfc895ab7657d77ca0d5ed7c7
+        # tauri-cli-v2.12.6, matching the version resolved in package-lock.json.
+        TAURI_REV: 9319e539f34237035cb4693bed9246660bc0a926
       run: |
         TAURI_SRC="$RUNNER_TEMP/tauri-src"
         git init -q "$TAURI_SRC"

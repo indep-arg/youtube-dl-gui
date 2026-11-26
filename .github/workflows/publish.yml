@@ -81,7 +81,7 @@ jobs:
       - name: Install cargo-about
         uses: taiki-e/install-action@1e29709c0ec63babbe8f266397a465f29a825f91 # v2.87.31
         with:
-          tool: cargo-about@0.9.2
+          tool: cargo-about@0.9.3
 
       - name: Rust cache
         uses: Swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0 # v2.9.3
@@ -130,7 +130,7 @@ jobs:
           
           $zipName = "Open.Video.Downloader_$($version)_$($arch)-portable.zip"
           $exeName = "Open.Video.Downloader_$($version)_$($arch).exe"
-          $keepFileName = ".keep"
+          $keepFileName = "keep.txt"
           
           $tagName = "app-v$version"
           Write-Host "Building portable bundle for $arch architecture: $zipName"
